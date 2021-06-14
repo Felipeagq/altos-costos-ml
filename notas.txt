@@ -6,7 +6,7 @@ Color amarillo: predeterminado
 Color verde: variables inferidas 
 
 # 10 : corregir a contributivo o SUBSIDIADO, encontrar palabras clave de los regimenes.
-# 11 : NO SALEN CON EL NOMBRE CORRECTO Y SOLO TENGO HISTORIAL CLINICO DE 
+## 11 : NO SALEN CON EL NOMBRE CORRECTO Y SOLO TENGO HISTORIAL CLINICO DE 
 ["COMFAGUAJIRA PGP ONCOLOGIA SUBSIDIADO", "COMFAGUAJIRA EPS-RS EVENTO", ]
 EN LA TABLA SOLO APARECE SUBSIDIADO Y DE VALOR "s"
 agrandar el diccionario de las eps
