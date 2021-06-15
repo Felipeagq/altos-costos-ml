@@ -61,10 +61,10 @@ agrandar el diccionario de las eps
 
 --- cirugia con cancer ---
 74: solo relacionadas con el cancer
-75: 
+75:
 76: realizacion de acto quirurgico  [area = cirugias, descripcion cirugia] -> lista de cirugias relacionadas con el cancer. CC 1123734025 - HC.pdf -> contar con descripcion de cirugia
 77:
-78: 
+78:
 79: [quimio, cirugia y radio]
 80-84: dos cirugias relacinadas con el cancer, la primera y la ultima, igual que la quimioterapia
 85: vivo? se translada, termina procedimiento quirurjico.
@@ -99,7 +99,8 @@ firma PSICOLOGIA, "valoracion por psicologia".
 114.6 psicologia                                                        psicologia comienza en 117
 115 fecha del numero del folio paliativo/psicologia.
 116: cuando es codigo de la clinica y cuando es 98 ????'
-117-119 predeterminada.                                                 Aqui sale predeterminada pero en el excel e igual tampoco sale marcado en amarillo.
+117-119 predeterminada.                                                Aqui sale predeterminada pero en el excel e igual tampoco sale marcado en amarillo.
+PSIQUIATRICA NO SE HACE Y PSICOLOIGIA COMIENZA DESDE EL 114.6
 ########################################################################
 ########################################################################
 --- nutricion ---
@@ -122,11 +123,10 @@ firma PSICOLOGIA, "valoracion por psicologia".
 
 -- -- -- -- -- -- -- -- -- -- -- --- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 RESULTADO FINAL DE LA ATENCIÓN                                                                                                                      --
-if __159 == "2": # paciente fallecido                                                                                                               --
-    __158 = '99'                                                                                                                                    -- 
+if __159 == "2": # paciente fallecido    
+            #125:98 / 126:99 / 127:2 / 128:4 / 129:12                                                                                                           --                                                                                                                                    -- 
     __163 = '' # fechad del folio                                                                                                                   --
-    __164 = '' # buscar en el texto y pregunta si hay area especifica.                                                                              --
-    __157 = '98'                                                                                                                                    --
+    __164 = '' # buscar en el texto y pregunta si hay area especifica. KWIC                                                                         --
 else: # si se encuentra vivo                                                                                                                        --
     __158 = '' # A EVALUAR                                                                                                                          --
     __163 = '1845-01-01' # ¿como evaluar persona con aseguramiento?                                                                                 --
@@ -181,3 +181,54 @@ paciente.split('folio') = { [fecha, palabras clave]
         
     }
 }
+
+
+
+* siempre
+PENDIENTE:
+- formato de las fechas: AAAA-MM-DD.
+- municipios : dataframe.
+- 13 grupo poblacional edad del ultimo folio 31 si edad > 60 sino 5.
+- 18 buscar KWIC con el diccionario. == 24.
+- 21: 6,7y10 son los más comunes y sale generalmente en enfermedad actual, mirar contexto y KWIC.
+- 22: 98(tiene histopatologia) o 6. sino es clinico  # explicar 
+- 23: fecha de la biopsia (fecha de cirugia) toma de la biopsia  tiene su folio (firma patoligia)
+- 25: diagnosticado en la bnndn.
+- 27: diccionario y contexto de Histologia.
+- 28: grado de diferenciación, sale cerca del 27
+- 29: 99(se solicita), DICCIONARIO
+- 30:
+    si 29 == 99: 1800-01-01
+    # fecha en donde se le dijo que era dicha estadisficacion, prevalece la primera.
+    # el primer estadio que le dieron.
+
+## FOLIOS SEPARADOS:
+MAMA:
+- 31: estudio de mama
+- 32: fecha
+- 33 resutlado de estudio
+
+# DUKES: parecido a 29 y 30.
+- 34:
+- 35:
+
+# HODGKIN:
+- 36: KWIC con el la key de hodgkin, tener el listado y buscar por match en dentro de la lista.
+
+# PROSTATA:
+- 37:diccionario unico.
+
+# LEUCEMIA:
+- 38: aparece textual leucemia KWIC, luego buscar el riesgo.
+- 39: fecha del dicho
+
+- 40: (inferencia) si es metastasico, peleativo
+- 41: seguimiento:3, procedimiento:2, programada:1 (fecha de corte) (inferencia)
+
+- 42: antecedente KWIC y buscar.
+
+TRANSPLANTE # PREDERTERMINADO YEIIIIIIII
+
+POR HACER:
+RADIOTERAPIA, CIRUGIA, QUIMIOTERAPIA 
+31 - 44

@@ -22,12 +22,13 @@ __21 = '10'
 __22 = '98'
 __23 = None
 __24 = None
-__25 = '98' # 80010054401
+__25 = '99' # 80010054401
 __26 = None
 __27 = None
 __28 = None
-__29 = None
-__30 = '1845-01-01'
+__29 = '99'
+__30 = '1800-01-01'
+# MAMA
 __31 = '98'
 __32 = '1845-01-01'
 __33 = '98'
@@ -179,6 +180,7 @@ import bd_to_dic_2
 #import pdf_to_txt_3
 import json
 import glob
+import pandas as pd
 import os
 import openpyxl
 from openpyxl import Workbook
@@ -364,6 +366,7 @@ def main(Paciente,row):
         # fecha nacimiento
         __7 = aux(texto,'fecha nacimiento:',True)
         print(__7)
+        __7 = __7.replace('/','-')
         # sexo
         __8 = aux(texto,'sexo:',True)
         if 'masculino' in __8:
@@ -371,27 +374,55 @@ def main(Paciente,row):
         else:
             __8 = 'F'
         print(__8)
+        edad = aux(texto,'edad actual',True)
+        edad = int(edad[:2])
+        print(f'edad{edad}')
+        if edad < 60:
+            __9 = '9622'
+        elif __8 == 'F' and edad > 60:
+            __9 = '9111'
+        else:
+            __9 = '9629'
         # ocupación
-        __9 = aux(texto,'ocupacion:',True)
-        print(__9)
+        #__9 = aux(texto,'ocupacion:',True)
+        #print(__9)
         # afiliado
-        __10 = aux(texto,'afiliado:',True) # si es contributivo o subsidiado.
-        print(__10)
+        #__10 = aux(texto,'afiliado:',True) # si es contributivo o subsidiado.
+        #print(__10)
         # codigo eps
         __11 = aux(texto,'empresa:',True) #COMFAGUAJIRA PGP ONCOLOGIA y SUBSIDIADO son diferentes?
         print(__11)
+        if 'subsidiado' in __11:
+            __10 = 'S'
+        else:
+            __10 = 'C'
         # mirar el df[df['tipo']==11]['texto'].unique()
         #grupo2
-        __12 = aux(texto,'etnia:',True)
+        etnia = aux(texto,'etnia:',True)
+        # PERTENENCIA ETNICA
+        if etnia == 'indigena':
+            __12 = '1'
+        elif  etnia == 'ROM':
+            __12 = '2'
+        elif  etnia == 'Raizal':
+            __12 = '3'
+        elif etnia == 'palenquero':
+            __12 = '4'
+        elif  etnia == 'negro':
+            __12 = '5'
+        else:
+            __12 = '6'
         print(__12)
         __13 = aux(texto,'grupo poblacional: ',True)
         print(__13)
-        # residencia 
+        # residencia
+        #municipios = pd.read_csv('municipios.csv')
+        # poner en minuscula , codigo y hacer
         __14 = aux(texto,'municipio: ',True)
         print(__14)
         __15 = aux(texto,'telefono:',True) # acento
         print(__15)
-        __16 = "na" # en todos los casos a sido na
+        __16 = "1800-01-01" # en todos los casos a sido na
         print(__16)
 
         return __1,__2,__3,__4,__5,__6[0],__7,__8,__9,__10,__11,__12,__13,__14,__15,__16
