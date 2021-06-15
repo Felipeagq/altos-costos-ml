@@ -185,459 +185,466 @@ from openpyxl import Workbook
 from openpyxl import load_workbook
 import nltk
 #import cac_data_4
+def main(Paciente,row):
+    #Convertimos el pdf en texto
+    #pdf_to_txt_3.pdf_to_csv('CC 40925684 - HC')
 
-#Convertimos el pdf en texto
-#pdf_to_txt_3.pdf_to_csv('CC 40925684 - HC')
+    # Cargamos el diccionario
+    file = open("dic_1.json",)
+    dic = json.load(file)
 
-# Cargamos el diccionario
-file = open("dic_1.json",)
-dic = json.load(file)
+    ####################################
+    ### DECLARAMOS ALGUNAS FUNCIONES ###
+    ####################################
 
-####################################
-### DECLARAMOS ALGUNAS FUNCIONES ###
-####################################
+    # Funcion para quitar los acentos 
+    def mayusculas_sec_clave(s):
+        ''' Funcion para volver mayusculas las secciones clave'''
+        replacements =(
+            ('motivo de consulta','MOTIVO DE CONSULTA'),
+            ('enfermedad actual','ENFERMEDAD ACTUAL'),
+            ('examen fisico','EXAMEN FÍSICO'),
+            ('analisis','ANÁLISIS'),
+            ('evolucion medico','EVOLUCION MEDICO'),
+            ('antecedentes','ANTECEDENTES'),
+            ('plan y manejo','PLAN Y MANEJO'),
+            ('diagnostico','DIAGNÓSTICO'),
+            ('diagnóstico','DIAGNÓSTICO'),
+            ('ordenes','ORDENES'),
+            ('órdenes','ÓRDENES'),
+            ('interconsultas','INTERCONSULTAS'),
+            ('notas enfermeria','NOTAS ENFERMERIA'),
+            ('formula médica','FORMULA MÉDICA'),
+            ('formatos','FORMATOS'),
+            ('evolucion medico','EVOLUCION MEDICO'),
+            ('recomendaciones','RECOMENDACIONES'),
+            ('descripcion cirugia',"DESCRIPCIÓN CIRUGÍA"),
+            ('nota de ingreso','NOTA DE INGRESO'),
+            ('observaciones','OBSERVACIONES')
+            )
+        for a, b in replacements:
+            s = s.replace(a, b)
+        return s
 
-# Funcion para quitar los acentos 
-def mayusculas_sec_clave(s):
-    ''' Funcion para volver mayusculas las secciones clave'''
-    replacements =(
-        ('motivo de consulta','MOTIVO DE CONSULTA'),
-        ('enfermedad actual','ENFERMEDAD ACTUAL'),
-        ('examen fisico','EXAMEN FÍSICO'),
-        ('analisis','ANÁLISIS'),
-        ('evolucion medico','EVOLUCION MEDICO'),
-        ('antecedentes','ANTECEDENTES'),
-        ('plan y manejo','PLAN Y MANEJO'),
-        ('diagnostico','DIAGNÓSTICO'),
-        ('diagnóstico','DIAGNÓSTICO'),
-        ('ordenes','ORDENES'),
-        ('órdenes','ÓRDENES'),
-        ('interconsultas','INTERCONSULTAS'),
-        ('notas enfermeria','NOTAS ENFERMERIA'),
-        ('formula médica','FORMULA MÉDICA'),
-        ('formatos','FORMATOS'),
-        ('evolucion medico','EVOLUCION MEDICO'),
-        ('recomendaciones','RECOMENDACIONES'),
-        ('descripcion cirugia',"DESCRIPCIÓN CIRUGÍA"),
-        ('nota de ingreso','NOTA DE INGRESO'),
-        ('observaciones','OBSERVACIONES')
+    def normalize(s):
+        replacements = (
+            ("á", "a"),
+            ("é", "e"),
+            ("í", "i"),
+            ("ó", "o"),
+            ("ó", "o"),
+            ("ú", "u"),
         )
-    for a, b in replacements:
-        s = s.replace(a, b)
-    return s
+        for a, b in replacements:
+            s = s.replace(a, b)
+        return s
 
-def normalize(s):
-    replacements = (
-        ("á", "a"),
-        ("é", "e"),
-        ("í", "i"),
-        ("ó", "o"),
-        ("ó", "o"),
-        ("ú", "u"),
-    )
-    for a, b in replacements:
-        s = s.replace(a, b)
-    return s
-
-def aux(text,search,helper=False):
-    start = text.find(search)
-    aux = text[start:]
-    end = aux.find('\n')
-    fragmento = aux[:end]
-    if helper==True:
-        fragmento = fragmento[fragmento.find(':')+2:]
-        return fragmento.replace('\n','')
-    return fragmento.replace('\n','')
-
-
-def search_text_in_text(texto,dic,tipo):
-    success = 0
-    for item in dic[tipo].keys():
-        if item in texto:
-            success = 1
-        if texto.count(item) != 0:
-            print(f'{item} --> {dic[tipo][item][0]} ')
-    if success == 0:
-        print(dic[tipo]['na'])
-
-def aux_2(text,search):
-    try:
-        start = text.find(search)
-        aux = text[start+3:]
-        end = aux.find('$ $')
-        fragmento = aux[:end]
-        return fragmento
-    except:
-        fragmento = None
-        return fragmento
-
-
-def aux_reg(text,search):
-    try:
+    def aux(text,search,helper=False):
         start = text.find(search)
         aux = text[start:]
-        end = aux.find('sede')
-        if 'sede' not in aux:
-            end = aux.find('75.0 *hosvital*')
+        end = aux.find('\n')
         fragmento = aux[:end]
-        return fragmento
-    except:
-        fragmento = None
-        return fragmento
-
-def findKeyWord(text,keyWord,n):
-    wordlist = text.split()
-    here = []
-    for i in range(len(wordlist)):
-        if wordlist[i] == keyWord:
-            if i > n:
-                nGram = wordlist[i-n:i+n+1]
-            elif i+n > len(wordlist):
-                nGram = wordlist[i-n:]
-            elif ((2*n)+1)>len(wordlist):
-               nGram = wordlist[:]
-            else:
-                nGram = wordlist[:i+n]
-            here.append(nGram)
-    return here
+        if helper==True:
+            fragmento = fragmento[fragmento.find(':')+2:]
+            return fragmento.replace('\n','')
+        return fragmento.replace('\n','')
 
 
+    def search_text_in_text(texto,dic,tipo):
+        success = 0
+        for item in dic[tipo].keys():
+            if item in texto:
+                success = 1
+            if texto.count(item) != 0:
+                print(f'{item} --> {dic[tipo][item][0]} ')
+        if success == 0:
+            print(dic[tipo]['na'])
 
-###########################################
-### EMPEZAMOS EL PROCESAMIENTO GENTERAL ###
-###########################################
-secciones = []
-textos = glob.glob(f'*{p1}*.txt')
-for texto in textos:
-    with open(texto,'rb') as file:
+    def aux_2(text,search):
+        try:
+            start = text.find(search)
+            aux = text[start+3:]
+            end = aux.find('$ $')
+            fragmento = aux[:end]
+            return fragmento
+        except:
+            fragmento = None
+            return fragmento
+
+
+    def aux_reg(text,search):
+        try:
+            start = text.find(search)
+            aux = text[start:]
+            end = aux.find('sede')
+            if 'sede' not in aux:
+                end = aux.find('75.0 *hosvital*')
+            fragmento = aux[:end]
+            return fragmento
+        except:
+            fragmento = None
+            return fragmento
+
+    def findKeyWord(text,keyWord,n):
+        wordlist = text.split()
+        here = []
+        for i in range(len(wordlist)):
+            if wordlist[i] == keyWord:
+                if i > n:
+                    nGram = wordlist[i-n:i+n+1]
+                elif i+n > len(wordlist):
+                    nGram = wordlist[i-n:]
+                elif ((2*n)+1)>len(wordlist):
+                    nGram = wordlist[:]
+                else:
+                    nGram = wordlist[:i+n]
+                here.append(nGram)
+        return here
+
+
+
+    ###########################################
+    ### EMPEZAMOS EL PROCESAMIENTO GENTERAL ###
+    ###########################################
+    secciones = []
+
+    with open(Paciente,'rb') as file:
         paciente = file.read().decode()
         paciente = paciente.lower().replace('\n\n',' \n\n ') # quitamos los "\n"
         paciente = mayusculas_sec_clave(paciente) # agregamos las mayusculas de las secciones
         paciente = normalize(paciente) # quitamos los acentos de la data
         #paciente = remove_punctuation(paciente)
         folios = paciente.split('==>') # separamos por secciones 
-        
+            
 
 
-#with open("HISTORIA CLÍNICA No.CC 84046881 -- WARNER CHISTIAN MONTENEGRO BARROS.txt",'r') as file:
-#    paciente = file.read()
-#paciente = paciente.lower()
-#paciente = mayusculas_sec_clave(paciente)
-#paciente = normalize(paciente)
-
-
-
-# Sacamos la informacion del encabezado
-def info_Encabezado(texto):
-    '''
-    Esta función extrae la información de los items
-    1 --> 16
-    los cuales aparecen en el encabezado del historial clinico
-    -----------
-    Parametros:
-    -----------
-    - texto (string)    :el historial clinico convertido en texto
-                        y normalizado.
-
-    '''
-    import re
-    head = aux(texto,'historia clinica')
-
-    # identificacion
-    __5 = head[head.find('.')+1:head.find('.')+3]
-    __6 = re.findall('[0-9]+', head)
-    name = head[head.find('-- ')+3:].split()
-
-    # nombres
-    try:
-        __1 = name[0]
-        __2 = name[1]
-        __3 = name[2]
-        __4 = name[3]
-        print(__1)
-        print(__2)
-        print(__3)
-        print(__4)
-        print(__5)
-        print(__6[0])
-    except:
-        print('error')
-    # fecha nacimiento
-    __7 = aux(texto,'fecha nacimiento:',True)
-    print(__7)
-    # sexo
-    __8 = aux(texto,'sexo:',True)
-    if 'masculino' in __8:
-        __8 = 'M'
-    else:
-        __8 = 'F'
-    print(__8)
-    # ocupación
-    __9 = aux(texto,'ocupacion:',True)
-    print(__9)
-    # afiliado
-    __10 = aux(texto,'afiliado:',True) # si es contributivo o subsidiado.
-    print(__10)
-    # codigo eps
-    __11 = aux(texto,'empresa:',True) #COMFAGUAJIRA PGP ONCOLOGIA y SUBSIDIADO son diferentes?
-    print(__11)
-    # mirar el df[df['tipo']==11]['texto'].unique()
-    #grupo2
-    __12 = aux(texto,'etnia:',True)
-    print(__12)
-    __13 = aux(texto,'grupo poblacional: ',True)
-    print(__13)
-    # residencia 
-    __14 = aux(texto,'municipio: ',True)
-    print(__14)
-    __15 = aux(texto,'telefono:',True) # acento
-    print(__15)
-    __16 = "na" # en todos los casos a sido na
-    print(__16)
-
-    return __1,__2,__3,__4,__5,__6[0],__7,__8,__9,__10,__11,__12,__13,__14,__15,__16
-
-__1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16 = info_Encabezado(paciente)
-
-
-###################
-### VARIABLE 17 ###
-###################
-def _17(folios,dic):
-    here = []
-    for folio in range(len(folios)):
-        if '$$DIAGNÓSTICO' in folios[folio]:
-            here.append(folio)
-    try:
-        ultimo = max(here)
-        fragmento = aux(folios[ultimo],"$$DIAGNÓSTICO")
-        for valor in dic['17'].values():
-            if valor in fragmento:
-                variable = valor
-                return variable
-            else:
-                variable = 'c'+fragmento[15:18] # preguntar por esto
-            return variable
-    except:
-        return 'No hubo diagnostico'
-__17 = _17(folios,dic)
-print(f'==> 17: {__17}')
+    #with open("HISTORIA CLÍNICA No.CC 84046881 -- WARNER CHISTIAN MONTENEGRO BARROS.txt",'r') as file:
+    #    paciente = file.read()
+    #paciente = paciente.lower()
+    #paciente = mayusculas_sec_clave(paciente)
+    #paciente = normalize(paciente)
 
 
 
-###################
-### VARIABLE 18 ###
-###################
-lista_eliminar = ['patologia', 'enfermedad actual','de patologia','fecha','biopsia','patologia.','cancer de vejiga','desde abril 2009 ','-mamografia bilateral','na','hace , 10 años','cuadrantectomia','ap','cancer cervical hace 13 años','desde hace , mas de 5 años','linfoma']
-[dic['18'].pop(key,None) for key in lista_eliminar]
-lista_agregar = ['desde hace']
-[dic['18'].update({key:None}) for key in lista_agregar]
-def _18(folios,dic):
-    for folio in range(len(folios)):
-        for valor in dic['18'].keys():
-            if valor in folios[folio]:
-                variable = valor
-            else:
-                variable = None
-        #print('Ninguna coincidencia encontrada')
-    if variable:
-        return variable
-    variable = "1800-01-01"
-    return variable
-__18 = _18(folios,dic)
-print(f'==> 18 {__18}')
+    # Sacamos la informacion del encabezado
+    def info_Encabezado(texto):
+        '''
+        Esta función extrae la información de los items
+        1 --> 16
+        los cuales aparecen en el encabezado del historial clinico
+        -----------
+        Parametros:
+        -----------
+        - texto (string)    :el historial clinico convertido en texto
+                            y normalizado.
 
+        '''
+        import re
+        head = aux(texto,'historia clinica')
 
+        # identificacion
+        __5 = head[head.find('.')+1:head.find('.')+3]
+        __6 = re.findall('[0-9]+', head)
+        name = head[head.find('-- ')+3:].split()
 
-###################
-### VARIABLE 26 ###
-###################
-def _26(folios):
-    for folio in folios:
-        frag = aux_reg(folio,'reg. ')
-        if 'oncologia' in frag:
-            start = folio.find('fecha') + 6
-            end = start + 10
-            return folio[start:end]
+        # nombres
+        try:
+            __1 = name[0]
+            __2 = name[1]
+            __3 = name[2]
+            __4 = name[3]
+            print(__1)
+            print(__2)
+            print(__3)
+            print(__4)
+            print(__5)
+            print(__6[0])
+        except:
+            print('error')
+        # fecha nacimiento
+        __7 = aux(texto,'fecha nacimiento:',True)
+        print(__7)
+        # sexo
+        __8 = aux(texto,'sexo:',True)
+        if 'masculino' in __8:
+            __8 = 'M'
         else:
-            return "1800-01-01"
-__26 = _26(folios)
-print(f'==>26 : {__26}')
-print(' ')
+            __8 = 'F'
+        print(__8)
+        # ocupación
+        __9 = aux(texto,'ocupacion:',True)
+        print(__9)
+        # afiliado
+        __10 = aux(texto,'afiliado:',True) # si es contributivo o subsidiado.
+        print(__10)
+        # codigo eps
+        __11 = aux(texto,'empresa:',True) #COMFAGUAJIRA PGP ONCOLOGIA y SUBSIDIADO son diferentes?
+        print(__11)
+        # mirar el df[df['tipo']==11]['texto'].unique()
+        #grupo2
+        __12 = aux(texto,'etnia:',True)
+        print(__12)
+        __13 = aux(texto,'grupo poblacional: ',True)
+        print(__13)
+        # residencia 
+        __14 = aux(texto,'municipio: ',True)
+        print(__14)
+        __15 = aux(texto,'telefono:',True) # acento
+        print(__15)
+        __16 = "na" # en todos los casos a sido na
+        print(__16)
+
+        return __1,__2,__3,__4,__5,__6[0],__7,__8,__9,__10,__11,__12,__13,__14,__15,__16
+
+    __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16 = info_Encabezado(paciente)
+
+
+    ###################
+    ### VARIABLE 17 ###
+    ###################
+    def _17(folios,dic):
+        here = []
+        for folio in range(len(folios)):
+            if '$$DIAGNÓSTICO' in folios[folio]:
+                here.append(folio)
+        try:
+            ultimo = max(here)
+            fragmento = aux(folios[ultimo],"$$DIAGNÓSTICO")
+            for valor in dic['17'].values():
+                if valor in fragmento:
+                    variable = valor
+                    return variable
+                else:
+                    variable = 'c'+fragmento[15:18] # preguntar por esto
+                return variable
+        except:
+            return 'No hubo diagnostico'
+    __17 = _17(folios,dic)
+    print(f'==> 17: {__17}')
+
+
+
+    ###################
+    ### VARIABLE 18 ###
+    ###################
+    lista_eliminar = ['patologia', 'enfermedad actual','de patologia','fecha','biopsia','patologia.','cancer de vejiga','desde abril 2009 ','-mamografia bilateral','na','hace , 10 años','cuadrantectomia','ap','cancer cervical hace 13 años','desde hace , mas de 5 años','linfoma']
+    [dic['18'].pop(key,None) for key in lista_eliminar]
+    lista_agregar = ['desde hace']
+    [dic['18'].update({key:None}) for key in lista_agregar]
+    def _18(folios,dic):
+        for folio in range(len(folios)):
+            for valor in dic['18'].keys():
+                if valor in folios[folio]:
+                    variable = valor
+                else:
+                    variable = None
+            #print('Ninguna coincidencia encontrada')
+        if variable:
+            return variable
+        variable = "1800-01-01"
+        return variable
+    __18 = _18(folios,dic)
+    print(f'==> 18 {__18}')
+
+
+
+    ###################
+    ### VARIABLE 26 ###
+    ###################
+    def _26(folios):
+        for folio in folios:
+            frag = aux_reg(folio,'reg. ')
+            if 'oncologia' in frag:
+                start = folio.find('fecha') + 6
+                end = start + 10
+                return folio[start:end]
+            else:
+                return "1800-01-01"
+    __26 = _26(folios)
+    print(f'==>26 : {__26}')
+    print(' ')
 
 
 
 
-###################
-### VARIABLE 30 ###
-###################
-lista_eliminar = []
-for llave in dic['30'].keys():
-    if 'fecha' in llave:
-        lista_eliminar.append(llave)
-lista_eliminar.append('na')
-[dic['30'].pop(key,None) for key in lista_eliminar]
-def _30(folios,dic):
-    n = len(folios)
-    folio = folios[n-1]
+    ###################
+    ### VARIABLE 30 ###
+    ###################
+    lista_eliminar = []
     for llave in dic['30'].keys():
-        if llave in folio:
-            return dic['30'][llave]
-    start = folio.find('fecha') + 6
-    end = start + 10
-    return folio[start:end]
-__30 = _30(folios,dic)
-print(f'==> 30: {__30}')
+        if 'fecha' in llave:
+            lista_eliminar.append(llave)
+    lista_eliminar.append('na')
+    [dic['30'].pop(key,None) for key in lista_eliminar]
+    def _30(folios,dic):
+        n = len(folios)
+        folio = folios[n-1]
+        for llave in dic['30'].keys():
+            if llave in folio:
+                return dic['30'][llave]
+        start = folio.find('fecha') + 6
+        end = start + 10
+        return folio[start:end]
+    __30 = _30(folios,dic)
+    print(f'==> 30: {__30}')
 
 
 
-###################################
-### DOLOR Y CUIDADOS PALIATIVOS ###
-###################################
-def _140__148(folios):
-    _140 = None
-    for folio in folios:
-        here = []
-        for i in range(len(folio)-5):
-            sub = folio[i:i+4] # n-grams de caracteres
-            if sub == 'reg.':
-                here.append(i)
+    ###################################
+    ### DOLOR Y CUIDADOS PALIATIVOS ###
+    ###################################
+    def _140__148(folios):
+        _140 = None
+        for folio in folios:
+            here = []
+            for i in range(len(folio)-5):
+                sub = folio[i:i+4] # n-grams de caracteres
+                if sub == 'reg.':
+                    here.append(i)
 
-        for ii in here:
-            frag = folio[ii:ii+30]
-            if 'dolor y cuidados' in frag:
-                start = folio.find('fecha') + 6
-                end = start + 10
-                _140 =  "1"
-                _141 = "1"
-                _146 = "1"
-                _147 = folio[start:end]
+            for ii in here:
+                frag = folio[ii:ii+30]
+                if 'dolor y cuidados' in frag:
+                    start = folio.find('fecha') + 6
+                    end = start + 10
+                    _140 =  "1"
+                    _141 = "1"
+                    _146 = "1"
+                    _147 = folio[start:end]
+                    break
+            if _140 =="1":
                 break
-        if _140 =="1":
-            break
-    if _140 == None:
-        _140 = "2"
-        _141 = "2"
-        _146 = "2"
-        _147 =  "1845-01-01"
-    _142,_143,_144,_145 = ("2","2","2","2")
-    _148 = "98" # "80010054401"
-    return _140,_141,_142,_143,_144,_145,_146,_147,_148
-__140,__141,__142,__143,__144,__145,__146,__147,__148 = _140__148(folios)
-print('dolor ')
-print(f'==>140: {__140}')
-print(f'==>141: {__141}')
-print(f'==>142: {__142}')
-print(f'==>143: {__143}')
-print(f'==>144: {__144}')
-print(f'==>145: {__145}')
-print(f'==>146: {__146}')
-print(f'==>147: {__147}')
-print(f'==>148: {__148}')
-print(' ')
+        if _140 == None:
+            _140 = "2"
+            _141 = "2"
+            _146 = "2"
+            _147 =  "1845-01-01"
+        _142,_143,_144,_145 = ("2","2","2","2")
+        _148 = "98" # "80010054401"
+        return _140,_141,_142,_143,_144,_145,_146,_147,_148
+    __140,__141,__142,__143,__144,__145,__146,__147,__148 = _140__148(folios)
+    print('dolor ')
+    print(f'==>140: {__140}')
+    print(f'==>141: {__141}')
+    print(f'==>142: {__142}')
+    print(f'==>143: {__143}')
+    print(f'==>144: {__144}')
+    print(f'==>145: {__145}')
+    print(f'==>146: {__146}')
+    print(f'==>147: {__147}')
+    print(f'==>148: {__148}')
+    print(' ')
 
 
 
 
 
-###################
-### PSIQUIATRIA ###
-###################
-def _149__151(folios):
-    _149 = None
-    for folio in folios:
-        here = []
-        for i in range(len(folio)-5):
-            sub = folio[i:i+4] # n-grams de caracteres
-            if sub == 'reg.':
-                here.append(i)
+    ###################
+    ### PSIQUIATRIA ###
+    ###################
+    def _149__151(folios):
+        _149 = None
+        for folio in folios:
+            here = []
+            for i in range(len(folio)-5):
+                sub = folio[i:i+4] # n-grams de caracteres
+                if sub == 'reg.':
+                    here.append(i)
 
-        for ii in here:
-            frag = folio[ii:ii+30]
-            if 'psicologia' in frag:
-                start = folio.find('fecha') + 6
-                end = start + 10
-                fecha = folio[start:end]
-                _149 =  "1"
-                _150 = fecha
+            for ii in here:
+                frag = folio[ii:ii+30]
+                if 'psicologia' in frag:
+                    start = folio.find('fecha') + 6
+                    end = start + 10
+                    fecha = folio[start:end]
+                    _149 =  "1"
+                    _150 = fecha
+                    break
+            if _149 == "1":
                 break
-        if _149 == "1":
-            break
-    if _149 == None:
-        _149 = "2"
-        _150 = "1845-01-01"
-    _151 = "98" # "80010054401"
-    return _149,_150,_151
-__149,__150,__151 = _149__151(folios)
-print('psicologia')
-print(f'==>149: {__149}')
-print(f'==>150: {__150}')
-print(f'==>151: {__151}')
-print(' ')
+        if _149 == None:
+            _149 = "2"
+            _150 = "1845-01-01"
+        _151 = "98" # "80010054401"
+        return _149,_150,_151
+    __149,__150,__151 = _149__151(folios)
+    print('psicologia')
+    print(f'==>149: {__149}')
+    print(f'==>150: {__150}')
+    print(f'==>151: {__151}')
+    print(' ')
 
 
-###################
-### NUTRICION ###
-###################
-def _152__156(folios):
-    _152 = None
-    for folio in folios:
-        here = []
-        for i in range(len(folio)-5):
-            sub = folio[i:i+4] # n-grams de caracteres
-            if sub == 'reg.':
-                here.append(i)
+    ###################
+    ### NUTRICION ###
+    ###################
+    def _152__156(folios):
+        _152 = None
+        for folio in folios:
+            here = []
+            for i in range(len(folio)-5):
+                sub = folio[i:i+4] # n-grams de caracteres
+                if sub == 'reg.':
+                    here.append(i)
 
-        for ii in here:
-            frag = folio[ii:ii+30]
-        
-            if 'nutricion' in frag:
-                start = folio.find('fecha') + 6
-                end = start + 10
-                _152 =  "1"
-                _153 = folio[start:end]
-                _155 = "1"
+            for ii in here:
+                frag = folio[ii:ii+30]
+            
+                if 'nutricion' in frag:
+                    start = folio.find('fecha') + 6
+                    end = start + 10
+                    _152 =  "1"
+                    _153 = folio[start:end]
+                    _155 = "1"
+                    break
+            if _152 =="1":
                 break
-        if _152 =="1":
-            break
-    if _152 == None:
-        _152 = "2"
-        _155 = "2"
-        _153 = "1845-01-01"
-    _156 = "98"
-    _154 = "98" # "80010054401"
-    return _152,_153,_154,_155,_156
-__152,__153,__154,__155,__156 = _152__156(folios)
-print('Nutricion')
-print(f'==>152: {__152}')
-print(f'==>153: {__153}')
-print(f'==>154: {__154}')
-print(f'==>155: {__155}')
-print(f'==>156: {__156}')
+        if _152 == None:
+            _152 = "2"
+            _155 = "2"
+            _153 = "1845-01-01"
+        _156 = "98"
+        _154 = "98" # "80010054401"
+        return _152,_153,_154,_155,_156
+    __152,__153,__154,__155,__156 = _152__156(folios)
+    print('Nutricion')
+    print(f'==>152: {__152}')
+    print(f'==>153: {__153}')
+    print(f'==>154: {__154}')
+    print(f'==>155: {__155}')
+    print(f'==>156: {__156}')
 
 
 
-def _157__166(folios):
-    pass
+    def _157__166(folios):
+        pass
 
 
-try:
-    variables_final = (__1 ,__2 ,__3 ,__4 ,__5 ,__6 ,__7 ,__8 ,__9 ,__10 ,__11 ,__12 ,__13 ,__14 ,__15 ,__16 ,__17 ,__18 ,__19 ,__20 ,__21 ,__22 ,__23 ,__24 ,__25 ,__26 ,__27 ,__28 ,__29 ,__30 ,__31 ,__32 ,__33 ,__34 ,__35 ,__36 ,__37 ,__38 ,__39 ,__40 ,__41 ,__42 ,__43 ,__44 ,__45 ,__46 ,__47 ,__48 ,__49 ,__50 ,__51 ,__52 ,__53 ,__54 ,__55 ,__56 ,__57 ,__58 ,__59 ,__60 ,__61 ,__62 ,__63 ,__64 ,__65 ,__66 ,__67 ,__68 ,__69 ,__70 ,__71 ,__72 ,__73 ,__74 ,__75 ,__76 ,__77 ,__78 ,__79 ,__80 ,__81 ,__82 ,__83 ,__84 ,__85 ,__86 ,__87 ,__88 ,__89 ,__90 ,__91 ,__92 ,__93 ,__94 ,__95 ,__96 ,__97 ,__98 ,__99 ,__100 ,__101 ,__102 ,__103 ,__104 ,__105 ,__106 ,__107 ,__108 ,__109 ,__110 ,__111 ,__112 ,__113 ,__114 ,__115 ,__116 ,__117 ,__118 ,__119 ,__120 ,__121 ,__122 ,__123 ,__124 ,__125 ,__126 ,__127 ,__128 ,__129 ,__130 ,__131 ,__132 ,__133 ,__134 ,__135 ,__136 ,__137 ,__138 ,__139 ,__140 ,__141 ,__142 ,__143 ,__144 ,__145 ,__146 ,__147 ,__148 ,__149 ,__150 ,__151 ,__152 ,__153 ,__154 ,__155 ,__156 ,__157 ,__158 ,__159 ,__160 ,__161 ,__162 ,__163 ,__164 ,__165 ,__166) 
-except:
-    pass
-
-#########################################
-### TRABAJANDO CON WORKBOOK DE EXCELL ###
-#########################################
-#wb = Workbook() # creamos objeto de Excel
-#wb.save('prueba2.xlsx') 
-wb = load_workbook(filename="prueba2.xlsx")
-#wb.create_sheet('CAC',0)
-ws = wb['CAC']
-for i in range(1,167):
     try:
-        ws.cell(row=4,column=i,value=variables_final[i-1])
+        variables_final = (__1 ,__2 ,__3 ,__4 ,__5 ,__6 ,__7 ,__8 ,__9 ,__10 ,__11 ,__12 ,__13 ,__14 ,__15 ,__16 ,__17 ,__18 ,__19 ,__20 ,__21 ,__22 ,__23 ,__24 ,__25 ,__26 ,__27 ,__28 ,__29 ,__30 ,__31 ,__32 ,__33 ,__34 ,__35 ,__36 ,__37 ,__38 ,__39 ,__40 ,__41 ,__42 ,__43 ,__44 ,__45 ,__46 ,__47 ,__48 ,__49 ,__50 ,__51 ,__52 ,__53 ,__54 ,__55 ,__56 ,__57 ,__58 ,__59 ,__60 ,__61 ,__62 ,__63 ,__64 ,__65 ,__66 ,__67 ,__68 ,__69 ,__70 ,__71 ,__72 ,__73 ,__74 ,__75 ,__76 ,__77 ,__78 ,__79 ,__80 ,__81 ,__82 ,__83 ,__84 ,__85 ,__86 ,__87 ,__88 ,__89 ,__90 ,__91 ,__92 ,__93 ,__94 ,__95 ,__96 ,__97 ,__98 ,__99 ,__100 ,__101 ,__102 ,__103 ,__104 ,__105 ,__106 ,__107 ,__108 ,__109 ,__110 ,__111 ,__112 ,__113 ,__114 ,__115 ,__116 ,__117 ,__118 ,__119 ,__120 ,__121 ,__122 ,__123 ,__124 ,__125 ,__126 ,__127 ,__128 ,__129 ,__130 ,__131 ,__132 ,__133 ,__134 ,__135 ,__136 ,__137 ,__138 ,__139 ,__140 ,__141 ,__142 ,__143 ,__144 ,__145 ,__146 ,__147 ,__148 ,__149 ,__150 ,__151 ,__152 ,__153 ,__154 ,__155 ,__156 ,__157 ,__158 ,__159 ,__160 ,__161 ,__162 ,__163 ,__164 ,__165 ,__166) 
     except:
-        continue
+        pass
 
-wb.save("prueba2.xlsx")
+    #########################################
+    ### TRABAJANDO CON WORKBOOK DE EXCELL ###
+    #########################################
+    #wb = Workbook() # creamos objeto de Excel
+    #wb.save('prueba2.xlsx') 
+    wb = load_workbook(filename="prueba2.xlsx")
+    #wb.create_sheet('CAC',0)
+    ws = wb['CAC']
+    for i in range(1,167):
+        try:
+            ws.cell(row=row,column=i,value=variables_final[i-1])
+        except:
+            continue
+
+    wb.save("prueba2.xlsx")
+
+if __name__ == '__main__':
+    pacientes = glob.glob('HISTORIA*.txt')
+    print(pacientes)
+    row = 4
+    for paciente in pacientes:
+        main(paciente,row)
+        row = row + 1
