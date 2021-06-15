@@ -124,7 +124,7 @@ PSIQUIATRICA NO SE HACE Y PSICOLOIGIA COMIENZA DESDE EL 114.6
 -- -- -- -- -- -- -- -- -- -- -- --- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 RESULTADO FINAL DE LA ATENCIÓN                                                                                                                      --
 if __159 == "2": # paciente fallecido    
-            #125:98 / 126:99 / 127:2 / 128:4 / 129:12                                                                                                           --                                                                                                                                    -- 
+            #125:98 / 126:99 / 127:2 / 128:4 / 129:12                                                                                               --                                                                                                                                    -- 
     __163 = '' # fechad del folio                                                                                                                   --
     __164 = '' # buscar en el texto y pregunta si hay area especifica. KWIC                                                                         --
 else: # si se encuentra vivo                                                                                                                        --

@@ -175,10 +175,12 @@ p3 = "1192943668"
 p1 = p4
 
 
-import connect_db_1
-import bd_to_dic_2
+from pdf_to_txt_3 import pdf_to_csv
+#import connect_db_1
+#import bd_to_dic_2
 #import pdf_to_txt_3
 import json
+import datetime
 import glob
 import pandas as pd
 import os
@@ -227,6 +229,9 @@ def main(Paciente,row):
         for a, b in replacements:
             s = s.replace(a, b)
         return s
+
+    def lower(text):
+        return text.lower()
 
     def normalize(s):
         replacements = (
@@ -341,6 +346,23 @@ def main(Paciente,row):
                             y normalizado.
 
         '''
+        def lower(text):
+            return text.lower()
+
+        def normalize(s):
+            replacements = (
+                ("á", "a"),
+                ("é", "e"),
+                ("í", "i"),
+                ("ó", "o"),
+                ("ó", "o"),
+                ("ú", "u"),
+            )
+            for a, b in replacements:
+                s = s.replace(a, b)
+            return s
+        
+        
         import re
         head = aux(texto,'historia clinica')
 
@@ -364,9 +386,11 @@ def main(Paciente,row):
         except:
             print('error')
         # fecha nacimiento
-        __7 = aux(texto,'fecha nacimiento:',True)
+        fecha = aux(texto,'fecha nacimiento:',True)
+        fecha = fecha.split('/')
+        fecha = (fecha[2],fecha[1],fecha[0])
+        __7 = '-'.join(fecha)
         print(__7)
-        __7 = __7.replace('/','-')
         # sexo
         __8 = aux(texto,'sexo:',True)
         if 'masculino' in __8:
@@ -413,13 +437,24 @@ def main(Paciente,row):
         else:
             __12 = '6'
         print(__12)
-        __13 = aux(texto,'grupo poblacional: ',True)
+        #__13 = aux(texto,'grupo poblacional: ',True)
+        if edad > 60:
+            __13 = '31'
+        else:
+            __13 = '5'
         print(__13)
         # residencia
-        #municipios = pd.read_csv('municipios.csv')
+        data = pd.read_csv('municipios.csv',sep=',')
         # poner en minuscula , codigo y hacer
-        __14 = aux(texto,'municipio: ',True)
-        print(__14)
+        municipio = aux(texto,'municipio: ',True)
+        print(f'{municipio}')
+        data['municipio'] = data['municipio'].apply(lambda x: lower(x))
+        data['municipio'] = data['municipio'].apply(lambda x: normalize(x))
+        for i in range(len(data)):
+            if municipio in data.loc[i,:].values[0]:
+                codigo = data.loc[i,:].values[1]
+        __14 = str(codigo)
+        print(f'==>14: {__14}')
         __15 = aux(texto,'telefono:',True) # acento
         print(__15)
         __16 = "1800-01-01" # en todos los casos a sido na
@@ -673,9 +708,15 @@ def main(Paciente,row):
     wb.save("prueba2.xlsx")
 
 if __name__ == '__main__':
+    hcs = glob.glob('*.pdf')
+    for hc in hcs:
+        #pdf_to_csv(hc[:-4])
+        print('')
     pacientes = glob.glob('HISTORIA*.txt')
     print(pacientes)
     row = 4
     for paciente in pacientes:
         main(paciente,row)
         row = row + 1
+        print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
+    print('-- -- -- -- Proceso terminado -- -- -- -- ')
