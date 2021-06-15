@@ -447,12 +447,11 @@ def main(Paciente,row):
         data = pd.read_csv('municipios.csv',sep=',')
         # poner en minuscula , codigo y hacer
         municipio = aux(texto,'municipio: ',True)
-        print(f'{municipio}')
+        municipio = municipio.replace('\r','').lstrip().rstrip()
+        print(f'----{municipio}----')
         data['municipio'] = data['municipio'].apply(lambda x: lower(x))
         data['municipio'] = data['municipio'].apply(lambda x: normalize(x))
-        for i in range(len(data)):
-            if municipio in data.loc[i,:].values[0]:
-                codigo = data.loc[i,:].values[1]
+        codigo = data[data['municipio']==municipio]['codigo'].values[0]
         __14 = str(codigo)
         print(f'==>14: {__14}')
         __15 = aux(texto,'telefono:',True) # acento
