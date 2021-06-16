@@ -693,10 +693,32 @@ def main(Paciente,row):
     print(f'==>155: {__155}')
     print(f'==>156: {__156}')
 
-
-
+######################################
+### RESULTADO FINAL DE LA ATENCIÓN ###
+######################################
     def _157__166(folios):
-        pass
+        __159 ='2'
+        if __159 == "2": # paciente fallecido    
+            __157 = '98'
+            __158 = '99'
+            __160 = '4'
+            __161 = '12'                                      
+            __163 = '' # fechad del folio                    
+            __164 = '' # buscar en el texto y pregunta si hay area especifica. KWIC                                   
+        else: # si se encuentra vivo                         
+            __158 = '' # A EVALUAR    
+            __157 = '' # A EVALUAR  
+            __160 = '' # inferir                     
+            __161 = '' #inferir
+            __163 = '1845-01-01' # ¿como evaluar persona con aseguramiento?     
+            __164 = '98'        
+            
+            
+        __165 = '98'
+        __162 = '1845-01-01'
+        __166 = '2021-01-01' # encontrar alguna forma de cambiar la fecha de corte ¿cada cuanto es la fecha de corte? 
+        return __157,__158,__159,__160,__161,__162,__163,__164,__165,__166
+    __157,__158,__159,__160,__161,__162,__163,__164,__165,__166 = _157__166(folios)
 
 
     try:
@@ -731,7 +753,8 @@ if __name__ == '__main__':
     for paciente in pacientes:
         try:
             main(paciente,row)
-        except:
+        except Exception as e:
+            print(e)
             continue
         row = row + 1
         print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
