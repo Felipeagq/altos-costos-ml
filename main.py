@@ -166,14 +166,10 @@ __164 = '98'
 __165= '98'
 __166 = '2021-01-01'
 
-
-
-
 p4 = "40925684"
 p2 = "84046881"
 p3 = "1192943668"
 p1 = p4
-
 
 from pdf_to_txt_3 import pdf_to_csv
 #import connect_db_1
@@ -388,7 +384,7 @@ def main(Paciente,row):
         # fecha nacimiento
         fecha = aux(texto,'fecha nacimiento:',True)
         fecha = fecha.split('/')
-        fecha = (fecha[2],fecha[1],fecha[0])
+        fecha = fecha[::-1]
         __7 = '-'.join(fecha)
         print(__7)
         # sexo
@@ -522,7 +518,10 @@ def main(Paciente,row):
             if 'oncologia' in frag:
                 start = folio.find('fecha') + 6
                 end = start + 10
-                return folio[start:end]
+                fecha = folio[start:end]
+                fecha = fecha.split('/')
+                fecha = fecha[::-1]
+                return '-'.join(fecha)
             else:
                 return "1800-01-01"
     __26 = _26(folios)
@@ -549,7 +548,10 @@ def main(Paciente,row):
                 return dic['30'][llave]
         start = folio.find('fecha') + 6
         end = start + 10
-        return folio[start:end]
+        fecha = folio[start:end]
+        fecha = fecha.split('/')
+        fecha = fecha[::-1]
+        return '-'.join(fecha)
     __30 = _30(folios,dic)
     print(f'==> 30: {__30}')
 
@@ -575,7 +577,10 @@ def main(Paciente,row):
                     _140 =  "1"
                     _141 = "1"
                     _146 = "1"
-                    _147 = folio[start:end]
+                    fecha = folio[start:end]
+                    fecha = fecha.split('/')
+                    fecha = fecha[::-1]
+                    _147 = '-'.join(fecha)
                     break
             if _140 =="1":
                 break
@@ -621,9 +626,15 @@ def main(Paciente,row):
                 if 'psicologia' in frag:
                     start = folio.find('fecha') + 6
                     end = start + 10
-                    fecha = folio[start:end]
+                    try:
+                        fecha = folio[start:end]
+                        fecha = fecha.split('/')
+                        fecha = fecha[::-1]
+                        _150 = '-'.join(fecha)
+                    except:
+                        _150 = 'problema'
                     _149 =  "1"
-                    _150 = fecha
+                    
                     break
             if _149 == "1":
                 break
@@ -659,7 +670,10 @@ def main(Paciente,row):
                     start = folio.find('fecha') + 6
                     end = start + 10
                     _152 =  "1"
-                    _153 = folio[start:end]
+                    fecha = folio[start:end]
+                    fecha = fecha.split('/')
+                    fecha = fecha[::-1]
+                    _153 =  '-'.join(fecha)
                     _155 = "1"
                     break
             if _152 =="1":
@@ -715,7 +729,10 @@ if __name__ == '__main__':
     print(pacientes)
     row = 4
     for paciente in pacientes:
-        main(paciente,row)
+        try:
+            main(paciente,row)
+        except:
+            continue
         row = row + 1
         print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
     print('-- -- -- -- Proceso terminado -- -- -- -- ')
