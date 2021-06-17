@@ -581,8 +581,6 @@ def main(Paciente,row):
                     fecha = fecha.split('/')
                     fecha = fecha[::-1]
                     _147 = '-'.join(fecha)
-                    if _147.replace(' ','').isalpha():
-                        _147 = '1845-01-01'
                     break
             if _140 =="1":
                 break
