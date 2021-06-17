@@ -581,6 +581,8 @@ def main(Paciente,row):
                     fecha = fecha.split('/')
                     fecha = fecha[::-1]
                     _147 = '-'.join(fecha)
+                    if _147.replace(' ','').isalpha():
+                        _147 = '1845-01-01'
                     break
             if _140 =="1":
                 break
@@ -608,11 +610,11 @@ def main(Paciente,row):
 
 
 
-
+    """
     ###################
     ### PSICOLOGIA ###
     ###################
-    def _146__148(folios):
+    def _146__148(folios,anterior):
         _146 = None
         for folio in folios:
             here = []
@@ -631,6 +633,8 @@ def main(Paciente,row):
                         fecha = fecha.split('/')
                         fecha = fecha[::-1]
                         _147 = '-'.join(fecha)
+                        if _147.replace(' ','').isalpha():
+                            _147 = '1845-01-01'
                     except:
                         _147 = 'problema'
                     _146 =  "1"
@@ -649,7 +653,7 @@ def main(Paciente,row):
     print(f'==>147: {__147}')
     print(f'==>148: {__148}')
     print(' ')
-
+    """
 
     ###################
     ### NUTRICION ###
@@ -665,7 +669,8 @@ def main(Paciente,row):
 
             for ii in here:
                 frag = folio[ii:ii+30]
-            
+                print(frag)
+                print('---')
                 if 'nutricion' in frag:
                     start = folio.find('fecha') + 6
                     end = start + 10
@@ -674,6 +679,13 @@ def main(Paciente,row):
                     fecha = fecha.split('/')
                     fecha = fecha[::-1]
                     _153 =  '-'.join(fecha)
+                    print(f'-->{_153}--')
+                    if 'hora' in _153:
+                        fecha = folio[end+11:end+21]
+                        fecha = fecha.split('/')
+                        fecha = fecha[::-1]
+                        _153 =  '-'.join(fecha)
+                        print('aqui entro')
                     _155 = "1"
                     break
             if _152 =="1":
@@ -783,3 +795,11 @@ if __name__ == '__main__':
         row = row + 1
         print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
     print('-- -- -- -- Proceso terminado -- -- -- -- ')
+    
+    
+    
+    
+    
+    
+    
+    
