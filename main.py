@@ -450,7 +450,7 @@ def main(Paciente,row):
         codigo = data[data['municipio']==municipio]['codigo'].values[0]
         __14 = str(codigo)
         print(f'==>14: {__14}')
-        __15 = aux(texto,'telefono:',True) # acento
+        __15 = aux(texto,'ono: 3',True) # acento
         print(__15)
         __16 = "1800-01-01" # en todos los casos a sido na
         print(__16)
@@ -703,6 +703,8 @@ def main(Paciente,row):
         lista_agregar = ["muerto", "muerte", "fallecio","fallecimiento","fallecido",'pcte fallecio','se declara muerte clinica','paciente fallecido','se declara fallecido','se entrega acta de defuncion','se declara paciente fallecida','fallecida','muerta','declara fallecido','declara fallecida']
         [dic['159'].update({key:'2'}) for key in lista_agregar]
         for key in dic['159'].keys():
+            here = findKeyWord(folios[-1],key,5)
+            print('var 149 ngram :',here)
             if key in folios[-1]:
                 __159 = '2'
                 break
@@ -768,7 +770,7 @@ if __name__ == '__main__':
     hcs = glob.glob('*.pdf')
     for hc in hcs:
         #pdf_to_csv(hc[:-4])
-        print('')
+        print(hc[:-4])
     pacientes = glob.glob('HISTORIA*.txt')
     print(pacientes)
     row = 7

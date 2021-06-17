@@ -121,22 +121,6 @@ PSIQUIATRICA NO SE HACE Y PSICOLOIGIA COMIENZA DESDE EL 114.6
 125: ["plan y manejo", "formula medica"], si el *ultimo folio* o en los *ultimos folio (mirar las fechas) *  tiene ["Radioterapia","Terapia sistémica","Cirugía"] // tener en cuenta la fecha de los folio y le fecha de corte --> preguntar 
 126: 2 Si ["muerto", "muerte", "fallecio","fallecimiento","fallecido"]
 
--- -- -- -- -- -- -- -- -- -- -- --- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-RESULTADO FINAL DE LA ATENCIÓN                                                                                                                      --
-if __159 == "2": # paciente fallecido    
-            #125:98 / 126:99 / 127:2 / 128:4 / 129:12                                                                                               --                                                                                                                                    -- 
-    __163 = '' # fechad del folio                                                                                                                   --
-    __164 = '' # buscar en el texto y pregunta si hay area especifica. KWIC                                                                         --
-else: # si se encuentra vivo                                                                                                                        --
-    __158 = '' # A EVALUAR                                                                                                                          --
-    __163 = '1845-01-01' # ¿como evaluar persona con aseguramiento?                                                                                 --
-    __164 = '98'                                                                                                                                    --
-    __157 = '' # A EVALUAR                                                                                                                          --
-__165 = '98'                                                                                                                                        --
-__166 = '2021-01-01' # encontrar alguna forma de cambiar la fecha de corte ¿cada cuanto es la fecha de corte?                                       --
-# A EVALUAR:                                                                                                                                        --
-En estos casos optar por NLP para ver las causas y las diferentes opciones de cada variable.                                                        --
--- -- -- -- -- -- -- -- -- -- -- --- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 128: si no fallecio -> 0 (vivo y afiliado)
 129 = 126
@@ -232,3 +216,7 @@ TRANSPLANTE # PREDERTERMINADO YEIIIIIIII
 POR HACER:
 RADIOTERAPIA, CIRUGIA, QUIMIOTERAPIA 
 31 - 44
+
+
+
+folios con paciente fallecido para revisar entrenamiento
