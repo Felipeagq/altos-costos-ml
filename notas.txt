@@ -172,7 +172,6 @@ paciente.split('folio') = { [fecha, palabras clave]
 PENDIENTE:
 - formato de las fechas: AAAA-MM-DD.
 - municipios : dataframe.
-- 13 grupo poblacional edad del ultimo folio 31 si edad > 60 sino 5.
 - 18 buscar KWIC con el diccionario. == 24.
 - 21: 6,7y10 son los más comunes y sale generalmente en enfermedad actual, mirar contexto y KWIC.
 - 22: 98(tiene histopatologia) o 6. sino es clinico  # explicar 

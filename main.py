@@ -365,7 +365,7 @@ def main(Paciente,row):
         # identificacion
         __5 = head[head.find('.')+1:head.find('.')+3]
         __6 = re.findall('[0-9]+', head)
-        name = head[head.find('-- ')+3:].split()
+        name = head[head.find('- ')+2:].split()
 
         # nombres
         try:
@@ -444,7 +444,7 @@ def main(Paciente,row):
         # poner en minuscula , codigo y hacer
         municipio = aux(texto,'municipio: ',True)
         municipio = municipio.replace('\r','').lstrip().rstrip()
-        print(f'----{municipio}----')
+        print(f'{municipio}')
         data['municipio'] = data['municipio'].apply(lambda x: lower(x))
         data['municipio'] = data['municipio'].apply(lambda x: normalize(x))
         codigo = data[data['municipio']==municipio]['codigo'].values[0]
@@ -554,6 +554,78 @@ def main(Paciente,row):
         return '-'.join(fecha)
     __30 = _30(folios,dic)
     print(f'==> 30: {__30}')
+
+
+###################
+### CANCER MAMA ###
+###################
+    def _31__33(folios,dic):
+        lista_eliminar = ['na','0','trastuzumab','pendiente inmunohsitoquimica ','para inicio de protocolo de quimioterapia','viene a protocolo de quimioterapia','vengo a protocolo de quimioterapia','no trajo ihq','inmunohistoquimica pendiente ','receptores de estrogeno 10%, progesterona negativo, her 2 negativo','inmunohistoquimica pendiente','recetores de estrogenos positivos progestagenos negativos her 2 neu negativo','inmunohistoquimica 23-02-2017 re y rp 100% y her 2 +1','se solicita nuevamente el estudio de inmunohistoquimicapara el her 2','receptores de estrogenos y progesterona positivos, her 2 negativo','receptores hormonales + y her 2 negativo','ca de mama izq triple negativo','receptores hormonales positivos, her 2 negativo,','vengo a protocolo de quimioterapia','desde hace']
+        [dic['33'].pop(key,None) for key in lista_eliminar]
+        from scipy import stats
+        resultado = []
+        try:
+            for i in range(len(folios)):
+                #print(folios[i].split(' '))
+                for llave in dic['33'].keys():
+                    if llave in folios[i]:
+                        centro = folios[i].find(llave)
+                        frag = folios[i][centro-5:centro+30]
+                        if 'positivo' in frag:
+                            resultado.append(int(1))
+                        elif 'negativo' in frag:
+                            resultado.append(int(3))
+            _33 = stats.mode(resultado)[0][0]
+            _32 = 'pendiente'
+            _31 = '1'
+            return _31,_32,_33
+        except:
+            _31 = '98'
+            _32 = '1846-01-01'
+            _33 = '98'
+            return _31,_32,_33
+
+    __31,__32,__33 = _31__33(folios,dic)
+    print(f'==>31: {__31}')
+    print(f'==>32: {__32}')
+    print(f'==>33: {__33}')
+    
+
+
+
+
+    ################
+    ### PROSTATA ###
+    ################
+    def _37_(folios,dic):
+        from scipy import stats 
+        lista_eliminar = ['na','0','gleason','gleasson','score']
+        [dic['37'].pop(key,None) for key in lista_eliminar]
+
+        lista_agregar = [('gleason 3+5','14'),('gleason 5+3','14'),('gleason score 8','14'),('gleason grado 8','14'),('gleason 4+5','15'),('gleason 5+4','15'),('gleason 5+5','15'),('gleason grado 10','15'),('gleason score 10','15'),('gleason grado 9','15'),('gleason score 9','15')]
+        [dic['37'].update({key:value}) for key,value in lista_agregar]
+        resultado = []
+        encontrado = 0
+        try:
+            for folio in folios:
+                for llave in dic['37'].keys():
+                    if llave in folio:
+                        gleason = dic['37'][llave]
+                        resultado.append(dic['37'][llave])
+                        encontrado = encontrado + 1
+                        print(f'{llave} : {gleason}')
+            grado = stats.mode(resultado)[0][0]
+        except:
+            if encontrado == 0:
+                grado = '98'
+        return grado 
+
+
+    __37 = _37_(folios,dic)
+
+
+
+
 
 
 
@@ -667,8 +739,6 @@ def main(Paciente,row):
 
             for ii in here:
                 frag = folio[ii:ii+30]
-                print(frag)
-                print('---')
                 if 'nutricion' in frag:
                     start = folio.find('fecha') + 6
                     end = start + 10
@@ -677,7 +747,6 @@ def main(Paciente,row):
                     fecha = fecha.split('/')
                     fecha = fecha[::-1]
                     _153 =  '-'.join(fecha)
-                    print(f'-->{_153}--')
                     if 'hora' in _153:
                         fecha = folio[end+11:end+21]
                         fecha = fecha.split('/')
@@ -714,7 +783,7 @@ def main(Paciente,row):
         [dic['159'].update({key:'2'}) for key in lista_agregar]
         for key in dic['159'].keys():
             here = findKeyWord(folios[-1],key,5)
-            print('var 149 ngram :',here)
+            #print('var 159 ngram :',here)
             if key in folios[-1]:
                 __159 = '2'
                 break
