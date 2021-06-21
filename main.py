@@ -592,11 +592,76 @@ def main(Paciente,row):
     
 
 
+##################
+### HODGKIN 36 ###
+##################
+    def _36_(folios,dic):
+        lista_eliminar = ['na','n',]
+        [dic['36'].pop(key,None) for key in lista_eliminar]
+
+        t_36 = {
+            " estadio i":"1",
+            " estadio ii":"2",
+            " ii":"2",
+            " estadio iii":"3",
+            " iii":"3",
+            " estadio iv":"4",
+            " iv":"4",
+            " estadio ia":"5",
+            " ia":"5",
+            " estadio ib":"6",
+            " ib":"6",
+            " estadio iia":"7",
+            " iia":"7",
+            " estadio iib":"8",
+            " iib":"8",
+            " estadio iiia":"9",
+            " iiia":"9",
+            " estadio iiib":"10",
+            " iiib":"10",
+            " estadio iva":"11",
+            " iva":"11",
+            " estadio ivb":"12",
+            " ivb":"12",
+        }
+
+        dic['36'].update(t_36)
+        from scipy import stats
+        count = 0
+        resultado = []
+        encontrado_hodg = 0
+        for folio in folios:
+            here = []
+
+            count = count + 1
+            for i in range(len(folio)-8):
+                sub = folio[i:i+7] # n-grams de caracteres
+                if sub == 'hodgkin':
+                    here.append(i)
+
+            for ii in here:
+                frag = folio[ii-8:ii+30].replace('l','i')
+                for llave in dic['36'].keys():
+                    if llave in frag:
+                        encontrado_hodg = encontrado_hodg +1
+                        resultado.append(dic['36'][llave])
+        try:                        
+            codigo = stats.mode(resultado)[0][0]
+        except:
+            pass
+        if encontrado_hodg == 0:
+            codigo = '98'
+        return codigo
+    __36 = _36_(folios,dic)
+    print(' ')
+    print(f'==>36 : {__36}')
+    print(' ')
 
 
-    ################
-    ### PROSTATA ###
-    ################
+
+###################
+### PROSTATA 37 ###
+###################
     def _37_(folios,dic):
         from scipy import stats 
         lista_eliminar = ['na','0','gleason','gleasson','score']
@@ -619,10 +684,10 @@ def main(Paciente,row):
             if encontrado == 0:
                 grado = '98'
         return grado 
-
-
     __37 = _37_(folios,dic)
-
+    print(' ')
+    print(f'==>37 : {__37}')
+    print(' ')
 
 
 
@@ -646,6 +711,9 @@ def main(Paciente,row):
                 if 'dolor y cuidados' in frag:
                     start = folio.find('fecha') + 6
                     end = start + 10
+                    fecha = folio[start:end]
+                    fecha = fecha.split('/')
+                    fecha = fecha[::-1]
                     _140 =  "1"
                     _141 = "1"
                     _146 = "1"
@@ -794,8 +862,14 @@ def main(Paciente,row):
             __157 = '98'
             __158 = '99'
             __160 = '4'
-            __161 = '12'                                      
-            __163 = '' # fechad del folio                    
+            __161 = '12' 
+            folio = folios[-1]                
+            start = folio.find('fecha') + 6
+            end = start + 10
+            fecha = folio[start:end]
+            fecha = fecha.split('/')
+            fecha = fecha[::-1]                
+            __163 = '-'.join(fecha)
             __164 = '' # buscar en el texto y pregunta si hay area especifica. KWIC                                   
         else: # si se encuentra vivo       
             print('Vivo')                  
