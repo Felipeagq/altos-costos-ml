@@ -870,17 +870,32 @@ def main(Paciente,row):
             fecha = fecha.split('/')
             fecha = fecha[::-1]                
             __163 = '-'.join(fecha)
-            __164 = '' # buscar en el texto y pregunta si hay area especifica. KWIC                                   
+            __164 = '1' # buscar en el texto y pregunta si hay area especifica. KWIC                                   
         else: # si se encuentra vivo       
             print('Vivo')                  
-            __158 = '' # A EVALUAR    
-            __157 = '' # A EVALUAR  
-            __160 = '' # inferir                     
-            __161 = '' #inferir
+            __158 = '5' # A EVALUAR  
+            if "paciente abandon" in folios[-1]:
+                __158 = '6'
+              
+            '''            
+            if radioterapia():
+                __157 = '1'
+            elif t_sistematica():
+                __157 = '2'
+            elif cirugia():
+                __157 = '3'
+            if pretratamiento():
+                __157 = '7' ,'9'# firma de hematologia
+            '''
+            __157 = '5'
+            __160 = '0' # inferir                     
+            __161 = '1' #inferir
             __163 = '1845-01-01' # ¿como evaluar persona con aseguramiento?     
             __164 = '98'        
             
-            
+        if "paciente abandon" in folios[-1]:
+            __158 = '6'
+            __161 = '8'
         __165 = '98'
         __162 = '1845-01-01'
         __166 = '2021-01-01' # encontrar alguna forma de cambiar la fecha de corte ¿cada cuanto es la fecha de corte? 
