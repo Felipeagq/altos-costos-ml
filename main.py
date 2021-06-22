@@ -689,9 +689,78 @@ def main(Paciente,row):
     print(f'==>37 : {__37}')
     print(' ')
 
-
-
-
+    
+    ###############
+    ### CIRUGIA ###
+    ###############
+    def _100__111(folios):
+        here = []
+        for folio in range(len(folios)):
+            if 'descripcon cirugia' in folios[folio]:
+                here.append(folio)
+        if len(here)!=0:
+            __100 = '1'
+            __101 = str(len(here))
+            folio_1 = here[0]
+            print(folio_1)
+            start = folios[folio_1].find('fecha') + 6
+            end = start + 10
+            fecha = folios[folio_1][start:end]
+            fecha = fecha.split('/')
+            fecha = fecha[::-1]
+            __102 = '-'.join(fecha)
+            __104 = "80010054401"
+            __105 = '1'
+            __106 = '1845-01-01'
+            __107 = '988'
+            __108 = '988'
+            __109 = '988'
+            __110 = '988'
+            __111 = '988'
+            if len(here)>1:
+                folio_2 = here[-1]
+                start = folios[folio_2].find('fecha') + 7
+                end = start + 10
+                fecha = folios[folio_2][start:end]
+                fecha = fecha.split('/')
+                fecha = fecha[::-1]
+                __106 = '-'.join(fecha)
+                __107 = 'falta'
+            else:
+                __106 = '1845-01-01'
+                __107 = '98-'
+                __108 = '98-'
+                __109 = '98-'
+                __110 = '98-'
+                __111 = '98-'
+        else:
+            __100 = '2'
+            __101 = '988'
+            __102 = '988'
+            __104 = "988"
+            __105 = '988'
+            __106 = '1845-01-01'
+            __107 = '988'
+            __108 = '988'
+            __109 = '988'
+            __110 = '988'
+            __111 = '988'
+        __103 = '98'
+        return __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111
+    __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111 = _100__111(folios)
+    print(f'==>100: {__100}')
+    print(f'==>101: {__101}')
+    print(f'==>102: {__102}')
+    print(f'==>103: {__103}')
+    print(f'==>104: {__104}')
+    print(f'==>105: {__105}')
+    print(f'==>106: {__106}')
+    print(f'==>107: {__107}')
+    print(f'==>108: {__108}')
+    print(f'==>109: {__109}')
+    print(f'==>110: {__110}')
+    print(f'==>111: {__111}')
+        
 
 
     ###################################
@@ -714,13 +783,12 @@ def main(Paciente,row):
                     fecha = folio[start:end]
                     fecha = fecha.split('/')
                     fecha = fecha[::-1]
+                    _147 = '-'.join(fecha)
                     _140 =  "1"
                     _141 = "1"
                     _146 = "1"
-                    fecha = folio[start:end]
-                    fecha = fecha.split('/')
-                    fecha = fecha[::-1]
-                    _147 = '-'.join(fecha)
+
+                    
                     break
             if _140 =="1":
                 break
@@ -939,6 +1007,7 @@ if __name__ == '__main__':
     for hc in hcs:
         #pdf_to_csv(hc[:-4])
         print(hc[:-4])
+    
     pacientes = glob.glob('HISTORIA*.txt')
     print(pacientes)
     row = 7
