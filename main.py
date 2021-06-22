@@ -619,12 +619,10 @@ def main(Paciente,row):
         for folio in folios:
             for llave in dic['28'].keys():
                 if llave in folio:
-                    print(llave)
                     variable = llave
-                    print(variable, dic['28'][llave])
                     resultado.append(dic['28'][llave])
         if variable == None:
-            print(94)
+            return '94'
         print(resultado)
         return stats.mode(resultado)[0][0]
     __28 = _28(folios,dic)
@@ -802,17 +800,38 @@ def main(Paciente,row):
         for folio in folios:
             for llave in dic['40'].keys():
                 if llave in folio:
-                    print(llave)
                     variable = llave
-                    print(variable, dic['40'][llave])
                     resultado.append(dic['40'][llave])
         if variable == None:
-            print(94)
+            return '99'
         return stats.mode(resultado)[0][0]
     __40 = _40(folios,dic)
     print(f'==>40 : {__40}')
     print(' ')
 
+
+    ####################
+    ### VARIABLE 40 ####
+    ####################
+    lista_eliminar = ['na','ia']
+    [dic['41'].pop(key,None) for key in lista_eliminar]
+    lista_agregar = ['el reporte biopsia', 'dx en','años de evolucion']
+    [dic['41'].update({key:None}) for key in lista_agregar]
+    def _41(folios,dic):
+        from scipy import stats
+        resultado = []
+        variable = None
+        for folio in folios:
+            for llave in dic['41'].keys():
+                if llave in folio:
+                    variable = llave
+                    resultado.append(dic['41'][llave])
+        if variable == None:
+            return '99'
+        return stats.mode(resultado)[0][0]
+    __41 = _41(folios,dic)
+    print(f'==>41 : {__41}')
+    print(' ')
 
 
 
