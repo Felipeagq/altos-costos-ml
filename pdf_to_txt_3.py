@@ -65,9 +65,10 @@ def pdf_to_csv(documento):
     pix.writeImage("page-{}.png".format(page.number))
 
     imagen = cv2.imread('page-{}.png'.format(page.number))
-    (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 230, imagen.shape[1], imagen.shape[0]
+    (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 245, imagen.shape[1], imagen.shape[0]
     superior = imagen[y:y+h,x:x+w]
     cv2.imwrite('superior.png',superior)
+
 
     imagen = cv2.imread('superior.png')
     imagen = cv2.resize(imagen,(1268,460)) 
@@ -103,7 +104,7 @@ def pdf_to_csv(documento):
         pix = page.get_pixmap()
         pix.writeImage("page-{}.png".format(page.number))
         imagen = cv2.imread('page-{}.png'.format(page.number))
-        (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 230, imagen.shape[1], imagen.shape[0]
+        (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 240, imagen.shape[1], imagen.shape[0]-50
         inferior = imagen[y+h:y2,x:x+w]
         cv2.imwrite('inferior.png',inferior)
         imagen = cv2.imread('inferior.png')
@@ -126,6 +127,6 @@ def pdf_to_csv(documento):
 
 
 if __name__=='__main__':
-    pdf_to_csv('CC 1140907843 - HC')
+    pdf_to_csv('CC 40925684 - HC')
 
     

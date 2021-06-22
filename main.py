@@ -510,11 +510,40 @@ def main(Paciente,row):
 
 
     ###################
+    ### VARIABLE 21 ###
+    ###################
+    lista_eliminar = ['na','n','ap','linfoma ','linfoma no hodgkin','linfoma no hodgkin','linfoma','caso','patologia','reporte','biopsia']
+    [dic['21'].pop(key,None) for key in lista_eliminar]
+    lista_agregar = []
+    [dic['21'].update({key:None}) for key in lista_agregar]
+    agregar  = {
+        "Inmunohistoquímica":'5',
+        "Citometría de flujo":'6',
+        "Clínica exclusivamente":'7',
+        "Otro":'8',
+        "Genética":'9',
+        "Patología básica":'10',
+        "Desconocido":'99',
+        "Persona con aseguramiento":'55'
+    }
+    dic['21'].update(agregar)
+    def __21_(folios,dic):
+        for folio in folios:
+            for llave in dic['21'].keys():
+                if llave in folio:
+                    return dic['21'][llave]
+        return '99'
+    __21 = __21_(folios,dic)
+    print(f'==>21 : {__21}')
+    
+
+    ###################
     ### VARIABLE 26 ###
     ###################
-    def _26(folios):
+    def __26_(folios):
         for folio in folios:
-            frag = aux_reg(folio,'reg. ')
+            n = folio.find('reg. ')
+            frag = folio[n:]
             if 'oncologia' in frag:
                 start = folio.find('fecha') + 6
                 end = start + 10
@@ -522,12 +551,10 @@ def main(Paciente,row):
                 fecha = fecha.split('/')
                 fecha = fecha[::-1]
                 return '-'.join(fecha)
-            else:
-                return "1800-01-01"
-    __26 = _26(folios)
+        return "1800-01-01"
+    __26 = __26_(folios)
     print(f'==>26 : {__26}')
     print(' ')
-
 
 
 
@@ -951,7 +978,6 @@ def main(Paciente,row):
             __158 = '5' # A EVALUAR  
             if "paciente abandon" in folios[-1]:
                 __158 = '6'
-              
             '''            
             if radioterapia():
                 __157 = '1'
