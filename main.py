@@ -556,6 +556,80 @@ def main(Paciente,row):
     print(f'==>26 : {__26}')
     print(' ')
 
+    ###################
+    ### VARIABLE 27 ###
+    ###################
+    lista_eliminar = ['na','n','ap','linfoma ','el reporte biopsia de mama derecha','fecha','biopsia','patologia','patologia','cirugia','carcinoma','carcinoma ','ca de mama','tumor']
+    [dic['27'].pop(key,None) for key in lista_eliminar]
+    lista_agregar = ['el reporte biopsia', 'dx en','años de evolucion']
+    [dic['27'].update({key:None}) for key in lista_agregar]
+    t_27 = { # enfermedad actual
+        "adenocarcinoma":1,
+        "carcinoma escamocelular":2,
+        "carcinoma de células basales":3,
+        "carcinoma diferente":4,
+        "oligodendroglioma":5,
+        "astrocitoma":6,
+        "ependimoma":7,
+        "neuroblastoma":8,
+        "meduloblastoma":9,
+        "hepatoblastoma":10,
+        "rabdomiosarcoma":11,
+        "leiomiosarcoma":12,
+        "osteosarcoma":13,
+        "fibrosarcoma":14,
+        "angiosarcoma":15,
+        "condrosarcoma":16,
+        "otros sarcomas":17,
+        "pancreatoblastoma":18,
+        "blastoma pleuropulmonar":19,
+        "otros tipos histológicos no mencionados":20,
+        "melanoma":21,
+        "carcinoma papilar de tiroides":24,
+        "persona con aseguramiento":25,
+        "no se realizó estudio histopatológico":98
+    }
+    dic['27'].update(t_27)
+    # una lista y marcar la moda como el return 
+    def _27(folios,dic):
+        variable = None
+        for folio in folios:
+            for llave in dic['27'].keys():
+                if llave in folio:
+                    variable = llave
+                    return dic['27'][llave]
+        if variable == None:
+            return dic["Otros tipos histológicos no mencionados"]
+    __27 = _27(folios,dic)
+    print(f'==>27 : {__27}')
+    print(' ')
+
+
+    ###################
+    ### VARIABLE 28 ###
+    ###################
+    lista_eliminar = ['na',]
+    [dic['28'].pop(key,None) for key in lista_eliminar]
+    lista_agregar = ['el reporte biopsia', 'dx en','años de evolucion']
+    [dic['28'].update({key:None}) for key in lista_agregar]
+    def _28(folios,dic):
+        from scipy import stats
+        resultado = []
+        variable = None
+        for folio in folios:
+            for llave in dic['28'].keys():
+                if llave in folio:
+                    print(llave)
+                    variable = llave
+                    print(variable, dic['28'][llave])
+                    resultado.append(dic['28'][llave])
+        if variable == None:
+            print(94)
+        print(resultado)
+        return stats.mode(resultado)[0][0]
+    __28 = _28(folios,dic)
+    print(f'==>28 : {__28}')
+    print(' ')
 
 
     ###################
@@ -651,7 +725,6 @@ def main(Paciente,row):
             " estadio ivb":"12",
             " ivb":"12",
         }
-
         dic['36'].update(t_36)
         from scipy import stats
         count = 0
@@ -659,13 +732,11 @@ def main(Paciente,row):
         encontrado_hodg = 0
         for folio in folios:
             here = []
-
             count = count + 1
             for i in range(len(folio)-8):
                 sub = folio[i:i+7] # n-grams de caracteres
                 if sub == 'hodgkin':
                     here.append(i)
-
             for ii in here:
                 frag = folio[ii-8:ii+30].replace('l','i')
                 for llave in dic['36'].keys():
@@ -715,6 +786,35 @@ def main(Paciente,row):
     print(' ')
     print(f'==>37 : {__37}')
     print(' ')
+
+
+    ####################
+    ### VARIABLE 40 ####
+    ####################
+    lista_eliminar = ['na','ia']
+    [dic['40'].pop(key,None) for key in lista_eliminar]
+    lista_agregar = ['el reporte biopsia', 'dx en','años de evolucion']
+    [dic['40'].update({key:None}) for key in lista_agregar]
+    def _40(folios,dic):
+        from scipy import stats
+        resultado = []
+        variable = None
+        for folio in folios:
+            for llave in dic['40'].keys():
+                if llave in folio:
+                    print(llave)
+                    variable = llave
+                    print(variable, dic['40'][llave])
+                    resultado.append(dic['40'][llave])
+        if variable == None:
+            print(94)
+        return stats.mode(resultado)[0][0]
+    __40 = _40(folios,dic)
+    print(f'==>40 : {__40}')
+    print(' ')
+
+
+
 
     
     ###############
