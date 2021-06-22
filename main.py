@@ -694,6 +694,7 @@ def main(Paciente,row):
     ### CIRUGIA ###
     ###############
     def _100__111(folios):
+        import re
         here = []
         for folio in range(len(folios)):
             if 'descripcon cirugia' in folios[folio]:
@@ -709,7 +710,13 @@ def main(Paciente,row):
             fecha = fecha.split('/')
             fecha = fecha[::-1]
             __102 = '-'.join(fecha)
-            __104 = "80010054401"
+            __103 = "80010054401"
+            n = folios[folio_1].find('codigo')
+            aux = folios[folio_1][n:]
+            start = aux.find('\n')
+            codigo_aux = aux[start+2:start+13]
+            codigo = re.findall('[0-9]',codigo_aux)
+            __104 = ''.join(codigo) 
             __105 = '1'
             __106 = '1845-01-01'
             __107 = '988'
@@ -719,7 +726,7 @@ def main(Paciente,row):
             __111 = '988'
             if len(here)>1:
                 folio_2 = here[-1]
-                start = folios[folio_2].find('fecha') + 7
+                start = folios[folio_2].find('fecha') + 6
                 end = start + 10
                 fecha = folios[folio_2][start:end]
                 fecha = fecha.split('/')
@@ -735,16 +742,16 @@ def main(Paciente,row):
                 __111 = '98-'
         else:
             __100 = '2'
-            __101 = '988'
-            __102 = '988'
-            __104 = "988"
-            __105 = '988'
+            __101 = '98'
+            __102 = '98'
+            __104 = "98"
+            __105 = '98'
             __106 = '1845-01-01'
-            __107 = '988'
-            __108 = '988'
-            __109 = '988'
-            __110 = '988'
-            __111 = '988'
+            __107 = '98'
+            __108 = '98'
+            __109 = '98'
+            __110 = '98'
+            __111 = '98'
         __103 = '98'
         return __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111
     __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111 = _100__111(folios)
