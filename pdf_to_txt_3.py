@@ -127,6 +127,6 @@ def pdf_to_csv(documento):
 
 
 if __name__=='__main__':
-    pdf_to_csv('CC 40925684 - HC')
+    pdf_to_csv('CC39491523')
 
     
