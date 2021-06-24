@@ -940,8 +940,14 @@ def main(Paciente,row):
 
     def _112__131(folios,dic):
         __114 = None
+        __120 = None
+        folios_r =[]
         import re
         for folio in folios:
+
+            if 'tratamiento de radioterapia' in folio:
+                folios_r.append(folio)
+        for folio in folios_r:
             if 'tratamiento de radioterapia' in folio:
                 por_aca = folio.find('tratamiento de radioterapia')
                 aux = folio[por_aca-10:por_aca+50]
@@ -953,18 +959,19 @@ def main(Paciente,row):
                 __112 = 1 ##
                 n1 = folio.find('inigio tratamiento')
                 if n1 != -1:
+                    print('inicio')
                     inicio = folio[n1+20:n1+30].replace(' ','').replace(':','').split('-')[::-1]
                     inicio = '-'.join(inicio)
                     __114 = inicio##
-                    print(inicio)
+                    
                 elif n1 == -1:
                     n5 = folio.find('fecha y hora de aplicacion:')
                     if n5 != -1:
-                        print(folio[n5+26:n5+37])
+                        print('por fecha y hora')
                         inicio = folio[n5+26:n5+37].replace(' ','').replace(':','').split('/')[::-1]
                         inicio = '-'.join(inicio)
                         __114 = inicio##
-                        print(inicio)
+                        
                 else:
                     pass
 
@@ -976,9 +983,33 @@ def main(Paciente,row):
                     __121 = '1'
                     __122 = '98'
                 else:
-                    __120 = '1800-01-01'
                     __121 = '2' ## revisar aquí
                     __122 = '2'
+                print(__114, __120)
+                if  __114 == None:
+                    print('entró')
+                    start = folio.find('fecha') + 6
+                    end = start + 10
+                    fecha = folio[start:end]
+                    fecha = fecha.split('/')
+                    fecha = fecha[::-1]
+                    __114 = '-'.join(fecha)
+                    print(__114)
+                if __120 == None:
+                    __120 = '1800-01-01'
+                """if __114==None and __120==None:
+                    match = re.search("entre el [0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9] y el [0-9][0-9]-[0-9][0-9]-[0-9][0-9]",folio)
+                    print('Math')
+                    if match == True:
+                        lista = match.split(' y el ')
+                        inicio = re.search('[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]',lista[0])[0]
+                        inicio = '-'.join(inicio.split('-')[::-1])
+                        print(inicio)
+                        __114 = inicio
+                        final = re.search('[0-9][0-9]-[0-9][0-9]-[0-9][0-9]',lista[1])[0]
+                        final = '-'.join(final.split('-')[::-1])
+                        print(final)
+                        __120 = final"""
                 n3 = folio.find('gy')
                 if n3 != -1:
                     frag = folio[n3-10:n3+30]
@@ -1003,38 +1034,39 @@ def main(Paciente,row):
                 __117 = '1'
                 __118 = '80010054401'
                 __119 = '98'
-                __115= "por aquí"
-                __123= "por aquí"
-                __124= "por aquí"
-                __125= "por aquí"
-                __126= "por aquí"
-                __127= "por aquí"
-                __128= "por aquí"
-                __129= "por aquí"
-                __130= "por aquí"
-                __131= "por aquí"
-            else:
-                __112= '98'
-                __113= '98'
-                if __114 == None:
-                    __114= '1845-01-01'
-                __115= '98'
-                __116= '98'
-                __117= '98'
-                __118= '98'
-                __119= '98' # predeterminado
-                __120= '1845-01-01'
-                __121= '98'
-                __122= '98'
-                __123= '1845-01-01'
-                __124= '98'
-                __125= '98'
-                __126= '98'
-                __127= '98'
+                __115= "3" # PENDIENTEEE
+                __123= '1845-01-01'# PENDIENTEEE
+                __124= '98'# PENDIENTEEE
+                __125= '98'# PENDIENTEEE
+                __126= '98'# PENDIENTEEE
+                __127= '98'# PENDIENTEEE
                 __128= '98' # predeterminado
                 __129= '1845-01-01'
-                __130= '98'
-                __131= '98'
+                __130= '98'# PENDIENTEEE
+                __131= '98'# PENDIENTEEE
+                
+        if len(folios_r)==0:
+            __112= '98'
+            __113= '98'
+            if __114 == None:
+                __114= '1845-01-01'
+            __115= '98'
+            __116= '98'
+            __117= '98'
+            __118= '98'
+            __119= '98' # predeterminado
+            __120= '1845-01-01'
+            __121= '98'
+            __122= '98'
+            __123= '1845-01-01'
+            __124= '98'
+            __125= '98'
+            __126= '98'
+            __127= '98'
+            __128= '98' # predeterminado
+            __129= '1845-01-01'
+            __130= '98'
+            __131= '98'
 
         return __112,__113,__114,__115,__116,__117,__118,__119,__120,__121,__122,__123,__124,__125,__126,__127,__128,__129,__130,__131
 
@@ -1317,8 +1349,8 @@ if __name__ == '__main__':
     #print(pacientes)
     print(' ')
     row = 7
-    #main("HISTORIA CLÍNICA No.CC 1140907843 -- KELLY JOHANNA GARCIA ALVAREZ.txt",row)
-#    """
+    #main("HISTORIA CLÍNICA No.CC 40925684 -- NAYIBIS NONE MORELO MARIMON.txt",row)
+    #"""
     for paciente in pacientes:
         try:
             main(paciente,row)
