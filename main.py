@@ -939,6 +939,7 @@ def main(Paciente,row):
     dic['116'].update(dic_16) 
 
     def _112__131(folios,dic):
+        __114 = None
         import re
         for folio in folios:
             if 'tratamiento de radioterapia' in folio:
@@ -955,6 +956,17 @@ def main(Paciente,row):
                     inicio = folio[n1+20:n1+30].replace(' ','').replace(':','').split('-')[::-1]
                     inicio = '-'.join(inicio)
                     __114 = inicio##
+                    print(inicio)
+                elif n1 == -1:
+                    n5 = folio.find('fecha y hora de aplicacion:')
+                    if n5 != -1:
+                        print(folio[n5+26:n5+37])
+                        inicio = folio[n5+26:n5+37].replace(' ','').replace(':','').split('/')[::-1]
+                        inicio = '-'.join(inicio)
+                        __114 = inicio##
+                        print(inicio)
+                else:
+                    pass
 
                 n2 = folio.find('finalizo tratamiento')
                 if n2 != -1:
@@ -967,7 +979,6 @@ def main(Paciente,row):
                     __120 = '1800-01-01'
                     __121 = '2' ## revisar aquí
                     __122 = '2'
-
                 n3 = folio.find('gy')
                 if n3 != -1:
                     frag = folio[n3-10:n3+30]
@@ -992,7 +1003,6 @@ def main(Paciente,row):
                 __117 = '1'
                 __118 = '80010054401'
                 __119 = '98'
-
                 __115= "por aquí"
                 __123= "por aquí"
                 __124= "por aquí"
@@ -1003,11 +1013,11 @@ def main(Paciente,row):
                 __129= "por aquí"
                 __130= "por aquí"
                 __131= "por aquí"
-
             else:
                 __112= '98'
                 __113= '98'
-                __114= '1845-01-01'
+                if __114 == None:
+                    __114= '1845-01-01'
                 __115= '98'
                 __116= '98'
                 __117= '98'
@@ -1321,7 +1331,7 @@ if __name__ == '__main__':
             continue
         row = row + 1
         print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
-    print('-- -- -- -- Proceso terminado -- -- -- -- ')
+    print('-- -- -- -- PROCESO TERMINADO -- -- -- -- ')
     #"""
     
     
