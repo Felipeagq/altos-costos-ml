@@ -497,10 +497,20 @@ def main(Paciente,row):
     lista_agregar = ['desde hace']
     [dic['18'].update({key:None}) for key in lista_agregar]
     def _18(folios,dic):
+        import re
         for folio in range(len(folios)):
             for valor in dic['18'].keys():
                 if valor in folios[folio]:
-                    variable = valor
+                    n = folios[folio].find(valor)
+                    #print(valor)
+                    text = folios[folio][n-70:n+70]
+                    #print('-- -- -- -- -- -- -- -- --')
+                    x = re.search('[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]',text)
+                    if x:
+                        #print(x[0])
+                        return '-'.join(x[0].split('-')[::-1])
+                    
+                    #print(x)
                 else:
                     variable = None
             #print('Ninguna coincidencia encontrada')
@@ -799,6 +809,28 @@ def main(Paciente,row):
     #print(' ')
 
 
+    ################
+    ### LEUCEMIA ###
+    ################
+    def _38__39_(folios):
+        for folio in folios:
+            if 'leucemia' in folio:
+                __38 = '3'
+                start = folio.find('fecha') + 6
+                end = start + 10
+                fecha = folio[start:end]
+                fecha = fecha.split('/')
+                fecha = fecha[::-1]
+                __39 = '-'.join(fecha)
+                return __38,__39
+        return '98','1845-01-01'
+    __38,__39 = _38__39_(folios)
+
+
+
+
+
+
     ####################
     ### VARIABLE 40 ####
     ####################
@@ -886,7 +918,7 @@ def main(Paciente,row):
             __109 = '98'
             __110 = '98'
             __111 = '98'
-            print(len(here))
+            ##print(len(here))
             if len(here)>1:
                 folio_2 = here[-1]
                 start = folios[folio_2].find('fecha') + 6
@@ -1362,12 +1394,12 @@ if __name__ == '__main__':
     #print(pacientes)
     print(' ')
     row = 7
-    #main("HISTORIA CLÍNICA No.CC 40925684 -- NAYIBIS NONE MORELO MARIMON.txt",row)
+    #main("HISTORIA CLÍNICA No.CC 1192943668 -- YORAIMA ARACELLY MEJIA URIANA.txt",row)
     #"""
     for paciente in pacientes:
         try:
             main(paciente,row)
-            print(paciente)
+            print(row,paciente)
         except Exception as e:
             print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
             print(e)
