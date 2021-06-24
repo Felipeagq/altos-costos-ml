@@ -410,9 +410,10 @@ def main(Paciente,row):
         #__10 = aux(texto,'afiliado:',True) # si es contributivo o subsidiado.
         #print(__10)
         # codigo eps
-        __11 = aux(texto,'empresa:',True) #COMFAGUAJIRA PGP ONCOLOGIA y SUBSIDIADO son diferentes?
+        eps = aux(texto,'empresa:',True) #COMFAGUAJIRA PGP ONCOLOGIA y SUBSIDIADO son diferentes?
+        __11 = None
         #print(__11)
-        if 'subsidiado' in __11:
+        if 'subsidiado' in eps:
             __10 = 'S'
         else:
             __10 = 'C'
@@ -448,9 +449,12 @@ def main(Paciente,row):
         data['municipio'] = data['municipio'].apply(lambda x: lower(x))
         data['municipio'] = data['municipio'].apply(lambda x: normalize(x))
         codigo = data[data['municipio']==municipio]['codigo'].values[0]
+        codigo = int(codigo)
         __14 = str(codigo)
         #print(f'==>14: {__14}')
         __15 = aux(texto,'ono: 3',True) # acento
+        if __15 == '':
+            __15 = '0'
         #print(__15)
         __16 = "1800-01-01" # en todos los casos a sido na
         #print(__16)
@@ -555,6 +559,15 @@ def main(Paciente,row):
     __26 = __26_(folios)
     #print(f'==>26 : {__26}')
     #print(' ')
+
+    ###################
+    ### VARIABLE 25 ###
+    ###################
+    def _25_(v26):
+        if v26 != '1800-01-01':
+            return '80010054401'
+        return '99'
+    __25 = _25_(__26)
 
     ###################
     ### VARIABLE 27 ###
@@ -959,7 +972,7 @@ def main(Paciente,row):
                 __112 = 1 ##
                 n1 = folio.find('inigio tratamiento')
                 if n1 != -1:
-                    print('inicio')
+                    #print('inicio')
                     inicio = folio[n1+20:n1+30].replace(' ','').replace(':','').split('-')[::-1]
                     inicio = '-'.join(inicio)
                     __114 = inicio##
@@ -967,7 +980,7 @@ def main(Paciente,row):
                 elif n1 == -1:
                     n5 = folio.find('fecha y hora de aplicacion:')
                     if n5 != -1:
-                        print('por fecha y hora')
+                        #print('por fecha y hora')
                         inicio = folio[n5+26:n5+37].replace(' ','').replace(':','').split('/')[::-1]
                         inicio = '-'.join(inicio)
                         __114 = inicio##
@@ -985,30 +998,30 @@ def main(Paciente,row):
                 else:
                     __121 = '2' ## revisar aquí
                     __122 = '2'
-                print(__114, __120)
+                #print(__114, __120)
                 if  __114 == None:
-                    print('entró')
+                    #print('entró')
                     start = folio.find('fecha') + 6
                     end = start + 10
                     fecha = folio[start:end]
                     fecha = fecha.split('/')
                     fecha = fecha[::-1]
                     __114 = '-'.join(fecha)
-                    print(__114)
+                    #print(__114)
                 if __120 == None:
                     __120 = '1800-01-01'
                 """if __114==None and __120==None:
                     match = re.search("entre el [0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9] y el [0-9][0-9]-[0-9][0-9]-[0-9][0-9]",folio)
-                    print('Math')
+                    #print('Math')
                     if match == True:
                         lista = match.split(' y el ')
                         inicio = re.search('[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]',lista[0])[0]
                         inicio = '-'.join(inicio.split('-')[::-1])
-                        print(inicio)
+                        #print(inicio)
                         __114 = inicio
                         final = re.search('[0-9][0-9]-[0-9][0-9]-[0-9][0-9]',lista[1])[0]
                         final = '-'.join(final.split('-')[::-1])
-                        print(final)
+                        #print(final)
                         __120 = final"""
                 n3 = folio.find('gy')
                 if n3 != -1:
@@ -1358,7 +1371,7 @@ if __name__ == '__main__':
         except Exception as e:
             print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
             print(e)
-            print(paciente)
+            print(row ,paciente)
             print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
             continue
         row = row + 1
