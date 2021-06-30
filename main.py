@@ -698,7 +698,7 @@ def main(Paciente,row):
                         elif 'negativo' in frag:
                             resultado.append(int(3))
             _33 = stats.mode(resultado)[0][0]
-            _32 = 'pendiente'
+            _32 = '1800-01-01'
             _31 = '1'
             return _31,_32,_33
         except:
@@ -752,18 +752,10 @@ def main(Paciente,row):
         resultado = []
         encontrado_hodg = 0
         for folio in folios:
-            here = []
-            count = count + 1
-            for i in range(len(folio)-8):
-                sub = folio[i:i+7] # n-grams de caracteres
-                if sub == 'hodgkin':
-                    here.append(i)
-            for ii in here:
-                frag = folio[ii-8:ii+30].replace('l','i')
-                for llave in dic['36'].keys():
-                    if llave in frag:
-                        encontrado_hodg = encontrado_hodg +1
-                        resultado.append(dic['36'][llave])
+            for llave in dic['36'].keys():
+                if llave in folio:
+                    encontrado_hodg = encontrado_hodg +1
+                    resultado.append(dic['36'][llave])
         try:                        
             codigo = stats.mode(resultado)[0][0]
         except:
@@ -856,7 +848,7 @@ def main(Paciente,row):
 
 
     ####################
-    ### VARIABLE 40 ####
+    ### VARIABLE 41 ####
     ####################
     lista_eliminar = ['na','ia']
     [dic['41'].pop(key,None) for key in lista_eliminar]
@@ -1386,7 +1378,7 @@ def main(Paciente,row):
 if __name__ == '__main__':
     hcs = glob.glob('*.pdf')
     for hc in hcs:
-        pdf_to_csv(hc[:-4])
+        #pdf_to_csv(hc[:-4])
         #print(hc[:-4])
         continue
     
