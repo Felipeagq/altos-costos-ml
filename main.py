@@ -183,7 +183,7 @@ import os
 import openpyxl
 from openpyxl import Workbook
 from openpyxl import load_workbook
-import nltk
+#import nltk
 #import cac_data_4
 def main(Paciente,row):
     #Convertimos el pdf en texto
