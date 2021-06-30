@@ -173,8 +173,8 @@ p1 = p4
 
 from pdf_to_txt_3 import pdf_to_csv
 #import connect_db_1
-#import bd_to_dic_2
-#import pdf_to_txt_3
+import bd_to_dic_2
+import pdf_to_txt_3
 import json
 import datetime
 import glob
@@ -1386,7 +1386,7 @@ def main(Paciente,row):
 if __name__ == '__main__':
     hcs = glob.glob('*.pdf')
     for hc in hcs:
-        #pdf_to_csv(hc[:-4])
+        pdf_to_csv(hc[:-4])
         #print(hc[:-4])
         continue
     
