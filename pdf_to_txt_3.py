@@ -13,6 +13,7 @@ Tercer paso de Altos Costos:
 colocando "==>" en cada FOLIO y colocando "$$" en cada seccion 
 """ 
 
+#pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
 def normalize(s):
     de = ['MOTIVO DE CONSULTA',
@@ -53,6 +54,7 @@ def normalize(s):
 
 
 def pdf_to_csv(documento):
+    print('comenzó pdf_to_txt')
     # Ruta del documento de pdf
     pdf_documento = '{}.pdf'.format(documento)
 
@@ -91,7 +93,7 @@ def pdf_to_csv(documento):
     texto = texto.replace("Atención Especial","\nAtención Especial")
     texto = texto.replace("\n\nDiscapacidad","\nDiscapacidad")
     texto = texto.replace("Grupo Poblacional","\nGrupo Poblacional")
-    print(texto)
+    #print(texto)
     file = open(f"{paciente}.txt","w")
     file.write(texto)
     file.close()
@@ -104,6 +106,7 @@ def pdf_to_csv(documento):
         pix = page.get_pixmap()
         pix.writeImage("page-{}.png".format(page.number))
         imagen = cv2.imread('page-{}.png'.format(page.number))
+        print(f"Vamos por la pagina {page.number} / {paginas}")
         (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 240, imagen.shape[1], imagen.shape[0]-50
         inferior = imagen[y+h:y2,x:x+w]
         cv2.imwrite('inferior.png',inferior)
@@ -129,4 +132,5 @@ def pdf_to_csv(documento):
 if __name__=='__main__':
     pdf_to_csv('CC39491523')
 
+    
     
