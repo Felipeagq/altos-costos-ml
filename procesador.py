@@ -1429,14 +1429,14 @@ def main(Paciente,row,Fcorte,Eps):
                     print( max(sessiones_aux_2),min(sessiones_aux_2) )
                     __113 = max(sessiones_aux_2)//min(sessiones_aux_2)
                     print( f"Numero de presuntas sesiones { __113 }" )
-                except Exception as es:
+                except Exception as e:
                     print(e)
             
             print(match[:])
             try:
-                __123,__129 = "20"+"-".join(match[0].split("/")[::-1]),"20"+"-".join(match[1].split("/")[::-1]) #114 # 120
+                __114,__120 = "20"+"-".join(match[0].split("/")[::-1]),"20"+"-".join(match[1].split("/")[::-1]) #114 # 120
             except:
-                __123,__129 = "N/A","N/A" #114 # 120
+                __114,__120 = "N/A","N/A" #114 # 120
             print(f"El numero de folios con braqui: {len(braqui)}")
             if braquiterapia:
                 print("ESTE PACIENTE TUVO BRAQUITERAPIA")
@@ -1445,18 +1445,18 @@ def main(Paciente,row,Fcorte,Eps):
                         fecha_inicio_braqui = re.findall(patron_3,folio)
                         print(fecha_inicio_braqui[0])
                         if "/" in fecha_inicio_braqui[0]:
-                            __123 = "-".join(fecha_inicio_braqui[0].split("/")[::-1]) #114
+                            __114 = "-".join(fecha_inicio_braqui[0].split("/")[::-1]) #114
                         else:
-                            __123 = "-".join(fecha_inicio_braqui[0].split("-")[::-1]) #114
+                            __114 = "-".join(fecha_inicio_braqui[0].split("-")[::-1]) #114
                         break
                 for folio in braqui:
                     if "4/4" in folio:
                         fecha_fin_braqui = re.findall(patron_3,folio)
                         print(fecha_fin_braqui[0])
                         if "/" in fecha_inicio_braqui[0]:
-                            __129 = "-".join(fecha_fin_braqui[0].split("/")[::-1]) # 120
+                            __120 = "-".join(fecha_fin_braqui[0].split("/")[::-1]) # 120
                         else:
-                            __129 = "-".join(fecha_fin_braqui[0].split("-")[::-1]) # 120
+                            __120 = "-".join(fecha_fin_braqui[0].split("-")[::-1]) # 120
                         break
                 __113 = __113 + 4
                 print( f"la cantidad de sesiones de radio son {__113}" )
@@ -1467,8 +1467,8 @@ def main(Paciente,row,Fcorte,Eps):
             __121 = "98"
             __122 = "98"
             __116 = "98"
-            __123 = "98" #114
-            __129 = "98" # 120
+            __114 = "98" #114
+            __120 = "98" # 120
             __113 = "98"
             
             
@@ -1476,8 +1476,8 @@ def main(Paciente,row,Fcorte,Eps):
         print("__112:", __112)
         print("__116:",__116)
 
-        return __112,__113,__116,__117,__118,__121,__122,__123,__129
-    __112,__113,__116,__117,__118,__121,__122,__123,__129 = _112__131(folios,dic)
+        return __112,__113,__114,__116,__117,__118,__120,__121,__122
+    __112,__113,__114,__116,__117,__118,__120,__121,__122 = _112__131(folios,dic)
 
 
     ###################################
