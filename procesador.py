@@ -1386,6 +1386,7 @@ def main(Paciente,row,Fcorte,Eps):
                 for patron in patrones:
                     match = re.findall(patron,folio[start:])
 
+            # Busco gy en folios_r
             try:
                 encontrados = re.findall(r"[-+]?\d*\.\d+|\d+",folios_r[0])
                 sesiones = []
@@ -1396,15 +1397,40 @@ def main(Paciente,row,Fcorte,Eps):
                             sesiones.append( gy_encontrado[0] )                            
                 for i in range(len(sesiones)):
                     sesiones[i] = sesiones[i].replace("gy","").replace(" ","")
-                print( "No de sesiones: ", sesiones )
+                print( "No de sesiones: ",sesiones )
                 sessiones_aux = float(sesiones[0]),float(sesiones[1])
-                print(max(sessiones_aux),min(sessiones_aux))
+                print( max(sessiones_aux),min(sessiones_aux) )
                 __113 = max(sessiones_aux)//min(sessiones_aux)
                 print( f"Numero de presuntas sesiones { __113 }" )
             except:
                 print("No se pudo calcular los gy")
-                __113 = "N/A"
-            
+                __113 = 0
+                
+            # si __113 == 0 busco gy en todos los folios
+            if __113 == 0:
+                print("Entrando a la seccion auxiliar")
+                folios2_gy = []
+                for folio in folios:
+                    if "gy" in folio:
+                        folios2_gy.append(folio)
+                for folio in folios2_gy:
+                    encontrados_2 = re.findall(r"[-+]?\d*\.\d+|\d+",folio)
+                sesiones_2 = []
+                for encontrado2 in encontrados_2:
+                    if encontrado2 != "0":
+                        gy_encontrado2 = re.findall(f"{encontrado2} gy",folios2_gy[0])
+                        if len(gy_encontrado2) > 0:
+                            sesiones_2.append( gy_encontrado2[0] )
+                for i in range(len(sesiones_2)):
+                    sesiones_2[i] = sesiones_2[i].replace("gy","").replace(" ","")
+                print( "No de sesiones_2: ",sesiones_2 )
+                try:
+                    sessiones_aux_2 = float(sesiones_2[0]),float(sesiones_2[1])
+                    print( max(sessiones_aux_2),min(sessiones_aux_2) )
+                    __113 = max(sessiones_aux_2)//min(sessiones_aux_2)
+                    print( f"Numero de presuntas sesiones { __113 }" )
+                except Exception as es:
+                    print(e)
             
             print(match[:])
             try:
@@ -1432,6 +1458,8 @@ def main(Paciente,row,Fcorte,Eps):
                         else:
                             __129 = "-".join(fecha_fin_braqui[0].split("-")[::-1]) # 120
                         break
+                __113 = __113 + 4
+                print( f"la cantidad de sesiones de radio son {__113}" )
                 
         else:
             __117 = "98"
