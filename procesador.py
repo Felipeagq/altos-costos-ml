@@ -1374,6 +1374,7 @@ def main(Paciente,row,Fcorte,Eps):
                     if 'ABANDONO TRATAMIENTO'.lower() in folio:
                         __121 = "2"
                         __122 = "5"
+                        print("PACIENTE ABANDONÓ TRATAMIENTO")
             patron_1 = "[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]"
             patron_2 = "[0-9][0-9]-[0-9][0-9]-[0-9][0-9]"
             patron_3 = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
@@ -1385,10 +1386,24 @@ def main(Paciente,row,Fcorte,Eps):
                 for patron in patrones:
                     match = re.findall(patron,folio[start:])
 
-            sesiones = re.findall(r"[-+]?\d*\.\d+|\d+ gy",folios_r[0])
-            for i in range(len(sesiones)):
-                sesiones[i] = sesiones[i].replace("gy","").replace(" ","")
-            print( "No de sesiones: ", sesiones )
+            try:
+                encontrados = re.findall(r"[-+]?\d*\.\d+|\d+",folios_r[0])
+                sesiones = []
+                for encontrado in encontrados:
+                    if encontrado != "0":
+                        gy_encontrado = re.findall(f"{encontrado} gy",folios_r[0])
+                        if len(gy_encontrado) > 0:
+                            sesiones.append( gy_encontrado[0] )                            
+                for i in range(len(sesiones)):
+                    sesiones[i] = sesiones[i].replace("gy","").replace(" ","")
+                print( "No de sesiones: ", sesiones )
+                sessiones_aux = float(sesiones[0]),float(sesiones[1])
+                print(max(sessiones_aux),min(sessiones_aux))
+                __113 = max(sessiones_aux)//min(sessiones_aux)
+                print( f"Numero de presuntas sesiones { __113 }" )
+            except:
+                print("No se pudo calcular los gy")
+                __113 = "N/A"
             
             
             print(match[:])
@@ -1426,14 +1441,15 @@ def main(Paciente,row,Fcorte,Eps):
             __116 = "98"
             __123 = "98" #114
             __129 = "98" # 120
+            __113 = "98"
             
             
         print("resultado radioterapia".upper())
         print("__112:", __112)
         print("__116:",__116)
 
-        return __112,__116,__117,__118,__121,__122,__123,__129
-    __112,__116,__117,__118,__121,__122,__123,__129 = _112__131(folios,dic)
+        return __112,__113,__116,__117,__118,__121,__122,__123,__129
+    __112,__113,__116,__117,__118,__121,__122,__123,__129 = _112__131(folios,dic)
 
 
     ###################################
