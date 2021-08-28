@@ -1,0 +1,57 @@
+image: alpine
+
+clone:
+  lfs: true
+
+options:
+  max-time: 5
+
+definitions:
+  steps:
+    - step: &Deploy-production
+        name: Deploy using docker
+        image: docker:git
+        script:
+          # Build Image
+          - docker build -t $REGISTRY_HOST/$IMAGE_NAME:$BITBUCKET_TAG .
+          # Tag Image
+          - docker tag $REGISTRY_HOST/$IMAGE_NAME:$BITBUCKET_TAG $REGISTRY_HOST/$IMAGE_NAME:stable
+          # Docker Login
+          - docker login $REGISTRY_HOST --username $REGISTRY_USER --password $REGISTRY_PASSWORD
+          # Push Build Image
+          - docker push $REGISTRY_HOST/$IMAGE_NAME:$BITBUCKET_TAG
+          # Push Tag Image
+          - docker push $REGISTRY_HOST/$IMAGE_NAME:stable
+          - apk add curl
+          - curl -v -f -m 1 -H "Authorization:Bearer ${WATCHTOWER_TOKEN}" ${WATCHTOWER_HOST}/v1/update || true
+        services:
+          - docker
+    - step: &Deploy-staging
+        name: Deploy using docker
+        image: docker:git
+        script:
+          # Build Image
+          - docker build -t $REGISTRY_HOST/$IMAGE_NAME:build-$BITBUCKET_BUILD_NUMBER .
+          # Tag Image
+          - docker tag $REGISTRY_HOST/$IMAGE_NAME:build-$BITBUCKET_BUILD_NUMBER $REGISTRY_HOST/$IMAGE_NAME:develop
+          # Docker Login
+          - docker login $REGISTRY_HOST --username $REGISTRY_USER --password $REGISTRY_PASSWORD
+          # Push Build Image
+          - docker push $REGISTRY_HOST/$IMAGE_NAME:build-$BITBUCKET_BUILD_NUMBER
+          # Push Tag Image
+          - docker push $REGISTRY_HOST/$IMAGE_NAME:develop
+          - apk add curl
+          - curl -v -f -m 1 -H "Authorization:Bearer ${WATCHTOWER_TOKEN}" ${WATCHTOWER_HOST}/v1/update || true
+        services:
+          - docker
+pipelines:
+  custom:
+    stage:
+      - step: *Deploy-staging
+  branches:
+    develop:
+      - step: *Deploy-staging
+  tags:
+    v*:
+      - step: *Deploy-production
+
