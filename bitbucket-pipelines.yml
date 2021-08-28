@@ -49,7 +49,7 @@ pipelines:
     stage:
       - step: *Deploy-staging
   branches:
-    develop:
+    master:
       - step: *Deploy-staging
   tags:
     v*:
