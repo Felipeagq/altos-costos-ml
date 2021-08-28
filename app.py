@@ -3,7 +3,7 @@ from flask import Flask, request,send_file
 from flask_cors import CORS, cross_origin
 import os 
 from dotenv import load_dotenv
-from werkzeug.utils import redirect, send_file
+#from werkzeug.utils import redirect, send_file
 import boto3
 import io
 import requests
@@ -132,6 +132,7 @@ def handle_messages(client, userdata, message):
                 "hash":hash,
                 "step":"finished",
                 "percentage":"100%",
+                "page":"done",
                 "link": link
             })
             mqtt_2.publish(hash,data)

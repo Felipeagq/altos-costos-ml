@@ -1,4 +1,4 @@
+*/.env
 .env
-*.txt
-dockerfile
-*.pyc
+*/*.env
+./.env

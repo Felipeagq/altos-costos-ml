@@ -3,6 +3,7 @@ import fitz
 import cv2
 import os
 import sys
+import glob
 import pandas as pd
 import pytesseract
 
@@ -53,7 +54,7 @@ def normalize(s):
 
 
 
-def pdf_to_csv(documento):
+def pdf_to_txt(documento):
     print('comenzó pdf_to_txt')
     # Ruta del documento de pdf
     pdf_documento = '{}.pdf'.format(documento)
@@ -64,15 +65,15 @@ def pdf_to_csv(documento):
     # Guardamos la pagina 0 como imagen 
     page = documento[0]
     pix = page.get_pixmap()
-    pix.writeImage("page-{}.jpg".format(page.number))
+    pix.writeImage("page-{}.png".format(page.number))
 
-    imagen = cv2.imread('page-{}.jpg'.format(page.number))
+    imagen = cv2.imread('page-{}.png'.format(page.number))
     (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 245, imagen.shape[1], imagen.shape[0]
     superior = imagen[y:y+h,x:x+w]
-    cv2.imwrite('superior.jpg',superior)
+    cv2.imwrite('superior.png',superior)
 
 
-    imagen = cv2.imread('superior.jpg')
+    imagen = cv2.imread('superior.png')
     imagen = cv2.resize(imagen,(1268,460)) 
     text = pytesseract.image_to_string(imagen,lang='spa')
 
@@ -103,25 +104,15 @@ def pdf_to_csv(documento):
     paginas = len(documento)
     for pagina in range(0,paginas):
         page = documento[pagina]
-        pix = page.get_pixmap()
-        pix.writeImage("page-{}.jpg".format(page.number))
-        imagen = cv2.imread('page-{}.jpg'.format(page.number))
-        pagina_actual = page.number +1
-        print(f"Vamos por la pagina {pagina_actual} / {paginas}")
-        (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 240, imagen.shape[1], imagen.shape[0]-50
-        inferior = imagen[y+h:y2,x:x+w]
-        cv2.imwrite('inferior.jpg',inferior)
-        imagen = cv2.imread('inferior.jpg')
-        imagen = cv2.resize(imagen,(2377,2190)) 
-        text = pytesseract.image_to_string(imagen,lang='spa')
+        text = page.getText("text")
         texto.append(text)
-        if os.path.exists("page-{}.jpg".format(page.number)):
-            os.remove("page-{}.jpg".format(page.number))
+        if os.path.exists("page-{}.png".format(page.number)):
+            os.remove("page-{}.png".format(page.number))
 
-    if os.path.exists("inferior.jpg"):
-        os.remove("inferior.jpg")
-    if os.path.exists("superior.jpg"):
-        os.remove("superior.jpg")
+    if os.path.exists("inferior.png"):
+        os.remove("inferior.png")
+    if os.path.exists("superior.png"):
+        os.remove("superior.png")
 
     file = open(f"{paciente}.txt","a")
     for text in texto:
@@ -131,6 +122,7 @@ def pdf_to_csv(documento):
 
 
 if __name__=='__main__':
-    pdf_to_csv('CC39491523')
-
-    
+    hcs = glob.glob('*.pdf')
+    for hc in hcs:
+        print(hc[:-4])
+        pdf_to_txt(hc[:-4])

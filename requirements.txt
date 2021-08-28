@@ -1,0 +1,14 @@
+openpyxl==3.0.7
+pandas
+pytesseract==0.3.7
+Flask==1.1.2
+PyMuPDF==1.18.10
+scipy
+awscli
+boto3==1.17.80
+python-dotenv
+requests
+opencv-python==4.5.1.48
+flask-cors
+paho-mqtt
+flask_mqtt
