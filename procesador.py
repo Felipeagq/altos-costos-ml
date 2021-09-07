@@ -1264,13 +1264,17 @@ def main(Paciente,row,Fcorte,Eps):
     lista_agregar = ["muerto", "muerte", "fallecio","fallecimiento","fallecido",'pcte fallecio','se declara muerte clinica','paciente fallecido','se declara fallecido','se entrega acta de defuncion','se declara paciente fallecida','fallecida','muerta','declara fallecido','declara fallecida']
     [dic['159'].update({key:'2'}) for key in lista_agregar]
     def _100__111(folios,dic):
+        __100 = '98'
+        print(__100)
         import re
         here = []
         for folio in range(len(folios)):
             if 'descripcon cirugia' in folios[folio]:
                 here.append(folio)
+
         if len(here)!=0:
             __100 = '1'
+            print(__100)
             __101 = str(len(here))
             folio_1 = here[0]
 
@@ -1296,7 +1300,10 @@ def main(Paciente,row,Fcorte,Eps):
             __110 = '98'
             __111 = '1'
             
+            
             if len(here)>1:
+                __100 = '1'
+                print(__100)
                 folio_2 = here[-1]
                 start = folios[folio_2].find('fecha') + 6
                 end = start + 10
@@ -1315,31 +1322,29 @@ def main(Paciente,row,Fcorte,Eps):
                 __110 = '1' # PENDIENTEEE
                 __111 = '1'
                 for llave in dic['159'].keys():
-                    if llave in folio_2:
-                        __111 = '2'
-                
-                
+                    if llave in folios[folio_2]:
+                        __111 = '2'  
         else:
             __100 = '2'
+            print(__100)
             __101 = '98'
             __102 = '1845-01-01'
             __103 = '98'
             __104 = "98"
             __105 = '98'
-            #__105 = " "
             __106 = '1845-01-01'
             __107 = '98'
             __108 = '98'
             __109 = '98'
             __110 = '98'
             __111 = '98'
-        
+        print(__100)        
         return __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111
     try:
         __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111 = _100__111(folios,dic)
-    except:
+    except Exception as e:
+        print(e)
         print("falló _100__111")
-
 
 
 
@@ -1625,44 +1630,73 @@ def main(Paciente,row,Fcorte,Eps):
     print(f'==>148: {__148}')
     print(' ')
     """
-
+    print("entrando a nutricion")
     ###################
     ### NUTRICION ###
     ###################
     def _152__156(folios):
-        _152 = None
+        _152 = "98"
         patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
         for folio in folios:
             folio = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
             start = folio.find("reg.")
             frag = folio[start:start+60]
             if 'nutricion' in frag:
-                print("RECIBIO NUTRICION")
                 start = folio.find('fecha') + 6
                 end = start + 10
-                #_152 =  "1"
                 _152 = "1"
                 fechas = re.findall(patron_fecha,folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
                 fecha = fechas[0]
                 _153 = '-'.join(fecha.split("/")[::-1])
-
                 _155 = "1"
                 _154 = "80010054401"
                 break
-            if _152 =="1":
-                break
-        if _152 == None:
+        if _152 == "1":
+            here = []
+            for folio in folios:
+                folio = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
+                start = folio.find("reg.")
+                frag = folio[start:start+60]
+                if 'nutricion' in frag:
+                    here.append(folio)
+            enteral = False 
+            parenteral = False
+            for aqui in here[::-1]:
+                if 'parenteral' in aqui:
+                    parenteral = True
+                    _155 = '2'
+                    break
+                elif ' enteral' in aqui:
+                    enteral = True
+                    _155 = '1'
+                    break
+                else :
+                    _155 = '4'
+
+            for aqui in here[::-1]:
+                if 'parenteral' in aqui:
+                    parenteral = True
+                if ' enteral' in aqui:
+                    enteral = True
+                if parenteral and enteral:
+                    _155 = '3'
+                    break
+                else:
+                    parenteral = False
+                    enteral = False
+            print(_155)           
+        if _152 == "98":
             _152 = "98"
             _155 = "4"
+            _154 = "98"
             _153 = "1845-01-01"
         _156 = "98"
-        _154 = "98" # "80010054401"
         return _152,_153,_154,_155,_156
     try:
         __152,__153,__154,__155,__156 = _152__156(folios)
     except Exception as e:
-        print(e)
         print("falló _152__156")
+        print(e)
 
 ###################################### 
 ### RESULTADO FINAL DE LA ATENCIÓN ###
@@ -1785,14 +1819,12 @@ def main(Paciente,row,Fcorte,Eps):
     try:
         __157,__158,__159,__160,__161,__162,__163,__164,__165,__166,__41 = _157__166(folios,dic,__45,__100,__112)
     except Exception as e:
-        print(e)
         print("falló _157__166")
-        pass
+        
 
     __11 = Eps
     __166 = Fcorte
-
-    
+    __16 = "1800-01-01"
     variables_final = (__1 ,__2 ,__3 ,__4 ,__5 ,__6 ,__7 ,__8 ,__9 ,__10 ,__11 ,__12 ,__13 ,__14 ,__15 ,__16 ,__17 ,__18 ,__19 ,__20 ,__21 ,__22 ,__23 ,__24 ,__25 ,__26 ,__27 ,__28 ,__29 ,__30 ,__31 ,__32 ,__33 ,__34 ,__35 ,__36 ,__37 ,__38 ,__39 ,__40 ,__41 ,__42 ,__43 ,__44 ,__45 ,__46 ,__47 ,__48 ,__49 ,__50 ,__51 ,__52 ,__53 ,__54 ,__55 ,__56 ,__57 ,__58 ,__59 ,__60 ,__61 ,__62 ,__63 ,__64 ,__65 ,__66 ,__67 ,__68 ,__69 ,__70 ,__71 ,__72 ,__73 ,__74 ,__75 ,__76 ,__77 ,__78 ,__79 ,__80 ,__81 ,__82 ,__83 ,__84 ,__85 ,__86 ,__87 ,__88 ,__89 ,__90 ,__91 ,__92 ,__93 ,__94 ,__95 ,__96 ,__97 ,__98 ,__99 ,__100 ,__101 ,__102 ,__103 ,__104 ,__105 ,__106 ,__107 ,__108 ,__109 ,__110 ,__111 ,__112 ,__113 ,__114 ,__115 ,__116 ,__117 ,__118 ,__119 ,__120 ,__121 ,__122 ,__123 ,__124 ,__125 ,__126 ,__127 ,__128 ,__129 ,__130 ,__131 ,__132 ,__133 ,__134 ,__135 ,__136 ,__137 ,__138 ,__139 ,__140 ,__141 ,__142 ,__143 ,__144 ,__145 ,__146 ,__147 ,__148 ,__149 ,__150 ,__151 ,__152 ,__153 ,__154 ,__155 ,__156 ,__157 ,__158 ,__159 ,__160 ,__161 ,__162 ,__163 ,__164 ,__165 ,__166) 
 
     #########################################
