@@ -171,6 +171,7 @@ __166 = '2021-01-01'
 import time 
 from pdf_to_txt1 import pdf_to_txt
 import glob
+import os
 import json
 import pandas as pd
 from openpyxl import Workbook
@@ -1141,6 +1142,8 @@ def main(Paciente,row,Fcorte,Eps):
             if len(encontrados2) > 0:
                 __45 = '1'
             #__73 = '98'
+        __57 = " "
+        __75 = " "
         return __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76
     try:
         __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76 = _45__77_(folios,__17)
@@ -1239,9 +1242,11 @@ def main(Paciente,row,Fcorte,Eps):
             if __55 == 1:
                 __78 = '97'
                 #__78 = " "
-        return __78,__55,__80,__81,__82,__83,__84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95,__96,__97,__98,__99
+        __79 = " "
+        __97 = " "
+        return __78,__79,__55,__80,__81,__82,__83,__84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95,__96,__97,__98,__99
     try:
-        __78,__55,__80,__81,__82,__83,__84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95,__96,__97,__98,__99 = _78__99_(folios,__17,__55)
+        __78,__79,__55,__80,__81,__82,__83,__84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95,__96,__97,__98,__99 = _78__99_(folios,__17,__55)
     except:
         print("falló _78__99_")
 
@@ -1681,35 +1686,48 @@ def main(Paciente,row,Fcorte,Eps):
 
     def _157__166(folios,dic,__45,__100,__112):
         dic['159'].clear()
-        lista_agregar = ["muerto", "muerte", "fallecio","fallecimiento","fallecido",'pcte fallecio','se declara muerte clinica','paciente fallecido','se declara fallecido','se entrega acta de defuncion','se declara paciente fallecida','fallecida','muerta','declara fallecido','declara fallecida']
+        lista_agregar = ['pcte fallecio','se declara muerte clinica','paciente fallecido','declara fallecido','se entrega acta de defuncion','declara paciente fallecida','declara fallecido','declara fallecida', 'sin signos vitales','declarada paciente fallecida','declarado paciente fallecido', 'acta defuncion','sala de paz','sala de reposo','morgue','anuncian defuncion','anunciar muerte','certificado defuncion']
         [dic['159'].update({key:'2'}) for key in lista_agregar]
-        
+        patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
         for key in dic['159'].keys():
+            folios[-1] = folios[-1].replace('\n',' ')
             here = findKeyWord(folios[-1],key,5)
+            
+            if key in folios[-1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
+                print("encontrado muerto -1")
+                __159 = '2'
+                fechas = re.findall(patron_fecha,folios[-1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                fecha = fechas[0]
+                __163 = '-'.join(fecha.split("/")[::-1])
+                break
 
-            if key in folios[-1]:
+            elif key in folios[-2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
+                print("encontrado muerto -2")
                 __159 = '2'
+                fechas = re.findall(patron_fecha,folios[-2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                fecha = fechas[0]
+                __163 = '-'.join(fecha.split("/")[::-1])                
                 break
-            elif key in folios[-2]:
+            
+            
+
+            elif key in folios[-3].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
+                print("encontrado muerto -3")
                 __159 = '2'
-                break
+                fechas = re.findall(patron_fecha,folios[-3].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                fecha = fechas[0]
+                __163 = '-'.join(fecha.split("/")[::-1])                
+                break            
             else:
                 __159 = '1'
         
 
         if __159 == "2": # paciente fallecido    
-
             __157 = '98'
             __158 = '99'
             __160 = '4'
             __161 = '12' 
-            folio = folios[-1]                
-            start = folio.find('fecha') + 6
-            end = start + 10
-            fecha = folio[start:end]
-            fecha = fecha.split('/')
-            fecha = fecha[::-1]
-            __163 = '-'.join(fecha)
+
             __164 = '1' # buscar en el texto y pregunta si hay area especifica. KWIC
         else: # si se encuentra vivo
 
@@ -1798,7 +1816,7 @@ def main(Paciente,row,Fcorte,Eps):
     #########################################
     #wb = Workbook() # creamos objeto de Excel
     #wb.save('prueba2.xlsx') 
-    print("Comenzando con los pdfs")
+
     wb = load_workbook(filename="prueba2.xlsx")
     #wb.create_sheet('CAC',0)
     ws = wb['CAC']
@@ -1818,6 +1836,8 @@ if __name__ == '__main__':
         continue
     
     pacientes = glob.glob('HISTORIA*.txt')
+    #pacientes = glob.glob('*6828*.txt')
+    print(f"La cantidad de pacientes es {len(pacientes)}")
 
     print(' ')
     row = 7
@@ -1835,9 +1855,7 @@ if __name__ == '__main__':
         row = row + 1
         for i in range(3):
             print(' ')
-        
             
     print('-- -- -- -- PROCESO TERMINADO -- -- -- -- ')
     print("desde bnndn5") 
     
-    #main("HISTORIA CLÍNICA No.CC 32657114 -- NIDIAN ZENIT POLO ESCORCIA.txt",row,f,eps)
