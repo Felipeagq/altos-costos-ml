@@ -1541,36 +1541,29 @@ def main(Paciente,row,Fcorte,Eps):
         print("falló _112__131")
         pass
     print("Salio de radio")
+
+
     ###################################
     ### DOLOR Y CUIDADOS PALIATIVOS ###
     ###################################
     def _140__148(folios):
         _140 = None
+        patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
         for folio in folios:
-            here = []
-            for i in range(len(folio)-5):
-                sub = folio[i:i+4] # n-grams de caracteres
-                if sub == 'reg.':
-                    here.append(i)
+            folio = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
+            start = folio.find("reg.")
+            frag = folio[start:start+60]
 
-            for ii in here:
-                frag = folio[ii:ii+30]
-                if 'dolor y cuidados' in frag:
-                    start = folio.find('fecha') + 6
-                    end = start + 10
-                    fecha = folio[start:end]
-                    fecha = fecha.split('/')
-                    fecha = fecha[::-1]
-                    _147 = '-'.join(fecha)
-                    _140 =  "1"
-                    _141 = "1"
-                    _146 = "1"
-                    _148 = "80010054401"
-
-                    
-                    break
-            if _140 =="1":
+            if 'dolor y cuidados' in frag:
+                fechas = re.findall(patron_fecha,folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                fecha = fechas[0]
+                _147 = '-'.join(fecha.split("/")[::-1])
+                _140 =  "1"
+                _141 = "1"
+                _146 = "1"
+                _148 = "80010054401"                
                 break
+
         if _140 == None:
             _140 = "2"
             _141 = "2"
