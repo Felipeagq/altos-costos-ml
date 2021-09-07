@@ -1815,9 +1815,9 @@ def main(Paciente,row,Fcorte,Eps):
     ### TRABAJANDO CON WORKBOOK DE EXCELL ###
     #########################################
     #wb = Workbook() # creamos objeto de Excel
-    #wb.save('prueba2.xlsx') 
+    #wb.save('prueba2 - Copy.xlsx') 
 
-    wb = load_workbook(filename="prueba2.xlsx")
+    wb = load_workbook(filename="prueba2 - Copy.xlsx")
     #wb.create_sheet('CAC',0)
     ws = wb['CAC']
     for i in range(1,167):
@@ -1826,7 +1826,7 @@ def main(Paciente,row,Fcorte,Eps):
         except:
             ws.cell(row=row,column=i,value="N/A")
 
-    wb.save("prueba2.xlsx")
+    wb.save("prueba2 - Copy.xlsx")
 
 if __name__ == '__main__':
     hcs = glob.glob('*.pdf')
