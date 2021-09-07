@@ -1631,40 +1631,24 @@ def main(Paciente,row,Fcorte,Eps):
     ###################
     def _152__156(folios):
         _152 = None
+        patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
         for folio in folios:
-            here = []
-            for i in range(len(folio)-5):
-                sub = folio[i:i+4] # n-grams de caracteres
-                if sub == 'reg.':
-                    here.append(i)
+            folio = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
+            start = folio.find("reg.")
+            frag = folio[start:start+60]
+            if 'nutricion' in frag:
+                print("RECIBIO NUTRICION")
+                start = folio.find('fecha') + 6
+                end = start + 10
+                #_152 =  "1"
+                _152 = "1"
+                fechas = re.findall(patron_fecha,folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                fecha = fechas[0]
+                _153 = '-'.join(fecha.split("/")[::-1])
 
-            for ii in here:
-                frag = folio[ii:ii+30]
-                if 'nutricion' in frag:
-                    start = folio.find('fecha') + 6
-                    end = start + 10
-                    #_152 =  "1"
-                    if 'enteral' in folio:
-                        _152 = '1'
-                    elif 'parenteral' in folio:
-                        _152 = '2'
-                    elif ('enteral' in folio) and ('parenteral' in folio):
-                        _152 = '3'
-                    else :
-                        _152 = '4' 
-                    fecha = folio[start:end]
-                    fecha = fecha.split('/')
-                    fecha = fecha[::-1]
-                    _153 =  '-'.join(fecha)
-                    if 'hora' in _153:
-                        fecha = folio[end+11:end+21]
-                        fecha = fecha.split('/')
-                        fecha = fecha[::-1]
-                        _153 =  '-'.join(fecha)
-
-                    _155 = "1"
-                    _154 = "80010054401"
-                    break
+                _155 = "1"
+                _154 = "80010054401"
+                break
             if _152 =="1":
                 break
         if _152 == None:
