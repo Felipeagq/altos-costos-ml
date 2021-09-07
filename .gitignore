@@ -4,3 +4,4 @@
 ./.env
 *pdf
 HISTORIA *.txt
+__pycache__
