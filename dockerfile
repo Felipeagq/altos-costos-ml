@@ -1,7 +1,4 @@
-FROM python:3.8
-
-
-WORKDIR /opt/build
+FROM python:3.9
 
 ENV OPENCV_VERSION="4.5.1"
 
@@ -61,14 +58,14 @@ RUN apt-get -qq update \
     pip3 install opencv-python -y
 
 
-### MODIFICAR A PARTIR DE AQUI ### 
+### MODIFICAR A PARTIR DE AQUI ###
 WORKDIR /usr/src/app
 
 COPY ./requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt
 
-COPY ./ ./ 
+COPY ./ ./
 
 
 EXPOSE 6062

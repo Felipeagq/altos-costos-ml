@@ -172,6 +172,7 @@ import time
 from pdf_to_txt1 import pdf_to_txt
 import glob
 import os
+import requests
 import json
 import pandas as pd
 from openpyxl import Workbook
@@ -359,20 +360,26 @@ def main(Paciente,row,Fcorte,Eps):
 
         # identificacion
         head2 = head[head.find('.')+1:head.find('.')+3]
-        __5 = head2.upper()
-        __6 = re.findall('[0-9]+', head)
         name = head[head.find('- ')+2:].split()
+        __5 = head2.upper()
+        __6 = re.findall('[0-9]+', head)[0]
+        header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
+        res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
+        persona = json.loads(res.text)
 
         # nombres
         try:
+            __1 = persona["data"][0]["fName"]          
+            __2 = persona["data"][0]["sName"]            
+            __3 = persona["data"][0]["fLastname"]
+            __4 = persona["data"][0]["sLastname"]
+        # nombres
+        except:
             __1 = name[0].upper()            
             __2 = name[1].upper()            
             __3 = name[2].upper()            
             __4 = name[3].upper()
 
-        except:
-            print('error en el nombre')
-            __4 = 'NONE'
         # fecha nacimiento
         fecha = aux(texto,'fecha nacimiento:',True)
         fecha = fecha.split('/')
@@ -454,7 +461,7 @@ def main(Paciente,row,Fcorte,Eps):
         __16 = "" # en todos los casos a sido na
 
 
-        return __1,__2,__3,__4,__5,__6[0],__7,__8,__9,__10,__11,__12,__13,__14,__15,__16
+        return __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16
     try:
         __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16 = info_Encabezado(paciente)
     except:
@@ -956,7 +963,7 @@ def main(Paciente,row,Fcorte,Eps):
         # identifico todos los folios donde sale la palabra clave 
         quimios = []
         CIE = ['C835', 'C910', 'C920', 'C924','C925']
-        leucemias = ['C910', 'C920', 'C924', 'C925', 'C930','C940', 'C942', 'C918', 'C926', 'C928', 'C933']
+        leucemias = ['C910', 'C920', 'C924', 'C925', 'C93-0','C940', 'C942', 'C918', 'C926', 'C928', 'C933']
         if diag in leucemias:
             leucemia = True
         else:
@@ -1264,6 +1271,8 @@ def main(Paciente,row,Fcorte,Eps):
     lista_agregar = ["muerto", "muerte", "fallecio","fallecimiento","fallecido",'pcte fallecio','se declara muerte clinica','paciente fallecido','se declara fallecido','se entrega acta de defuncion','se declara paciente fallecida','fallecida','muerta','declara fallecido','declara fallecida']
     [dic['159'].update({key:'2'}) for key in lista_agregar]
     def _100__111(folios,dic):
+        __100 = "2"
+        patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
         __100 = '98'
         print(__100)
         import re
@@ -1278,12 +1287,10 @@ def main(Paciente,row,Fcorte,Eps):
             __101 = str(len(here))
             folio_1 = here[0]
 
-            start = folios[folio_1].find('fecha') + 6
-            end = start + 10
-            fecha = folios[folio_1][start:end]
-            fecha = fecha.split('/')
-            fecha = fecha[::-1]
-            __102 = '-'.join(fecha)
+
+            fechas = re.findall(patron_fecha,folios[folio_1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+            fecha = fechas[0]
+            __102 = '-'.join(fecha.split("/")[::-1])            
             __103 = "80010054401"
             n = folios[folio_1].find('codigo')
             aux = folios[folio_1][n:]
@@ -1299,18 +1306,20 @@ def main(Paciente,row,Fcorte,Eps):
             __109 = '98'
             __110 = '98'
             __111 = '1'
+            start = folios[folio_1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ").find("grupo quirurgico")
+            folio_ciru = folios[folio_1][start+16:]
+            codigo = re.findall('[0-9]+', folio_ciru)[0]
+            __104 = codigo 
+            __105 = "1"
             
             
             if len(here)>1:
                 __100 = '1'
                 print(__100)
                 folio_2 = here[-1]
-                start = folios[folio_2].find('fecha') + 6
-                end = start + 10
-                fecha = folios[folio_2][start:end]
-                fecha = fecha.split('/')
-                fecha = fecha[::-1]
-                __106 = '-'.join(fecha)
+                fechas = re.findall(patron_fecha,folios[folio_2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                fecha = fechas[0]
+                __106 = '-'.join(fecha.split("/")[::-1])   
                 __107 = '1' # PENDIENTEEE
                 __108 = '80010054401'
                 n2 = folios[folio_2].find('codigo')
@@ -1318,7 +1327,10 @@ def main(Paciente,row,Fcorte,Eps):
                 start1 = aux2.find('\n')
                 codigo_aux2 = aux2[start1+2:start1+13]
                 codigo2 = re.findall('[0-9]',codigo_aux2)
-                __109 = ''.join(codigo2) 
+                start = folios[folio_1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ").find("grupo quirurgico")
+                folio_ciru = folios[folio_1][start+16:]
+                codigo2 = re.findall('[0-9]+', folio_ciru)[0]                
+                __109 = codigo2
                 __110 = '1' # PENDIENTEEE
                 __111 = '1'
                 for llave in dic['159'].keys():
@@ -1345,6 +1357,8 @@ def main(Paciente,row,Fcorte,Eps):
     except Exception as e:
         print(e)
         print("falló _100__111")
+
+    print("100 : ",__100)
 
 
 
@@ -1548,6 +1562,7 @@ def main(Paciente,row,Fcorte,Eps):
     ###################################
     def _140__148(folios):
         _140 = None
+        _146 = None
         patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
         for folio in folios:
             folio = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
@@ -1560,9 +1575,16 @@ def main(Paciente,row,Fcorte,Eps):
                 _147 = '-'.join(fecha.split("/")[::-1])
                 _140 =  "1"
                 _141 = "1"
-                _146 = "1"
-                _148 = "80010054401"                
+                _148 = "80010054401"
                 break
+        if _140 == "1":
+            for folio in folios:
+                folio = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
+                start = folio.find("reg.")
+                frag = folio[start:start+60]
+                if 'psicologia' in frag:
+                    _146 = "1"
+
 
         if _140 == None:
             _140 = "2"
@@ -1571,7 +1593,7 @@ def main(Paciente,row,Fcorte,Eps):
             _147 =  "1845-01-01"
             _148 = "98" # "80010054401"
         _142,_143,_144,_145 = ("2","2","2","2")
-        
+  
         return _140,_141,_142,_143,_144,_145,_146,_147,_148
     try:
         __140,__141,__142,__143,__144,__145,__146,__147,__148 = _140__148(folios)
@@ -1824,9 +1846,9 @@ def main(Paciente,row,Fcorte,Eps):
     ### TRABAJANDO CON WORKBOOK DE EXCELL ###
     #########################################
     #wb = Workbook() # creamos objeto de Excel
-    #wb.save('prueba2 - Copy.xlsx') 
+    #wb.save('prueba2.xlsx') 
 
-    wb = load_workbook(filename="prueba2 - Copy.xlsx")
+    wb = load_workbook(filename="prueba2.xlsx")
     #wb.create_sheet('CAC',0)
     ws = wb['CAC']
     for i in range(1,167):
@@ -1835,7 +1857,7 @@ def main(Paciente,row,Fcorte,Eps):
         except:
             ws.cell(row=row,column=i,value="N/A")
 
-    wb.save("prueba2 - Copy.xlsx")
+    wb.save("prueba2.xlsx")
 
 if __name__ == '__main__':
     hcs = glob.glob('*.pdf')
