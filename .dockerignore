@@ -1,2 +1,8 @@
+*/.env
+.env
+*/*.env
+./.env
+*pdf
 HISTORIA *.txt
-*.pdf
+__pycache__
+*Copy.xlsx

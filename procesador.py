@@ -363,12 +363,12 @@ def main(Paciente,row,Fcorte,Eps):
         name = head[head.find('- ')+2:].split()
         __5 = head2.upper()
         __6 = re.findall('[0-9]+', head)[0]
-        header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
-        res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
-        persona = json.loads(res.text)
 
         # nombres
         try:
+            header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
+            res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
+            persona = json.loads(res.text)
             __1 = persona["data"][0]["fName"]          
             __2 = persona["data"][0]["sName"]            
             __3 = persona["data"][0]["fLastname"]
@@ -472,24 +472,47 @@ def main(Paciente,row,Fcorte,Eps):
     ### VARIABLE 17 ###
     ###################
     def _17(folios,dic):
-        here = []
-        for folio in range(len(folios)):
-            if '$$DIAGNÓSTICO' in folios[folio]:
-                
-                here.append(folio)
+        import statistics
         try:
-            # preguntar si es el primer diagnostico
-            # el ultimo diagnostico
-            # o el más frecuente
-            ultimo = max(here)
-            to_back = folios[ultimo].find("$$DIAGNÓSTICO")
-            __17 = folios[ultimo][to_back-5:to_back]
-            print("Diagnostico encontrado")
-            print(__17)
-            return __17.replace("\n","").replace("c","C")
-            
+            header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
+            res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
+            persona = json.loads(res.text)
+            diag = []
+            for i in range(len(persona["data"])):
+                diag.append(persona["data"][i]["diagnostics_cod"])
+            diag =  [x for x in diag if x is not None]
+            print(diag)
+            diagx = statistics.mode(diag)
+            print(diagx)
+            print("llega aca")
+            if "C" in diagx:
+                print("entra al if")
+                return diagx
+            print("entrando al for")
+            for c in diag:
+                print(c)
+                if "C" in c:
+                    return c
+            print("termino el try")             
         except:
-            return 'No hubo diagnostico'
+            print("entrando en except")
+            here = []
+            for folio in range(len(folios)):
+                if '$$DIAGNÓSTICO' in folios[folio]:
+                    here.append(folio)
+            try:
+                # preguntar si es el primer diagnostico
+                # el ultimo diagnostico
+                # o el más frecuente
+                ultimo = max(here)
+                to_back = folios[ultimo].find("$$DIAGNÓSTICO")
+                __17 = folios[ultimo][to_back-5:to_back]
+                print("Diagnostico encontrado")
+                print(__17)
+                return __17.replace("\n","").replace("c","C")
+                
+            except:
+                return 'No hubo diagnostico'
     try:
         __17 = _17(folios,dic)
     except:
@@ -1716,46 +1739,73 @@ def main(Paciente,row,Fcorte,Eps):
 ###################################### 
 ### RESULTADO FINAL DE LA ATENCIÓN ###
 ######################################
-
-    def _157__166(folios,dic,__45,__100,__112):
-        dic['159'].clear()
-        lista_agregar = ['pcte fallecio','se declara muerte clinica','paciente fallecido','declara fallecido','se entrega acta de defuncion','declara paciente fallecida','declara fallecido','declara fallecida', 'sin signos vitales','declarada paciente fallecida','declarado paciente fallecido', 'acta defuncion','sala de paz','sala de reposo','morgue','anuncian defuncion','anunciar muerte','certificado defuncion']
-        [dic['159'].update({key:'2'}) for key in lista_agregar]
-        patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
-        for key in dic['159'].keys():
-            folios[-1] = folios[-1].replace('\n',' ')
-            here = findKeyWord(folios[-1],key,5)
-            
-            if key in folios[-1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
-                print("encontrado muerto -1")
-                __159 = '2'
-                fechas = re.findall(patron_fecha,folios[-1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
-                fecha = fechas[0]
-                __163 = '-'.join(fecha.split("/")[::-1])
-                break
-
-            elif key in folios[-2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
-                print("encontrado muerto -2")
-                __159 = '2'
-                fechas = re.findall(patron_fecha,folios[-2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
-                fecha = fechas[0]
-                __163 = '-'.join(fecha.split("/")[::-1])                
-                break
-            
-            
-
-            elif key in folios[-3].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
-                print("encontrado muerto -3")
-                __159 = '2'
-                fechas = re.findall(patron_fecha,folios[-3].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
-                fecha = fechas[0]
-                __163 = '-'.join(fecha.split("/")[::-1])                
-                break            
+    print("resultado final")
+    def _157__166(folios,dic,__45,__100,__112,__6,__5):
+        print("entrando a resultado final")
+        try:
+            header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
+            print("Header")
+            res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
+            print("res")
+            persona = json.loads(res.text)
+            print("Persona")
+            if persona["data"] is not None:
+                for n in persona["data"]:
+                    if n["deceased"] == 1:
+                        __159 = "2"
+                        __163 = n["deathDate"][:10]
+                        print("variables",__159,__163)
+                        break
+                    else:
+                        print("entro al else")
+                        __159 = "1"
+                        __163 = "1845-01-01"
             else:
-                __159 = '1'
-        
+                raise Exception
+        except:
+            dic['159'].clear()
+            lista_agregar = ['pcte fallecio','se declara muerte clinica','paciente fallecido','declara fallecido','se entrega acta de defuncion','declara paciente fallecida','declara fallecido','declara fallecida', 'sin signos vitales','declarada paciente fallecida','declarado paciente fallecido', 'acta defuncion','sala de paz','sala de reposo','morgue','anuncian defuncion','anunciar muerte','certificado defuncion']
+            [dic['159'].update({key:'2'}) for key in lista_agregar]
+            patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
+            for key in dic['159'].keys():
+                folios[-1] = folios[-1].replace('\n',' ')
+                here = findKeyWord(folios[-1],key,5)
+                
+                if key in folios[-1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
+                    print("encontrado muerto -1")
+                    __159 = '2'
+                    fechas = re.findall(patron_fecha,folios[-1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                    fecha = fechas[0]
+                    __163 = '-'.join(fecha.split("/")[::-1])
+                    break
+
+                elif key in folios[-2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
+                    print("encontrado muerto -2")
+                    __159 = '2'
+                    fechas = re.findall(patron_fecha,folios[-2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                    fecha = fechas[0]
+                    __163 = '-'.join(fecha.split("/")[::-1])                
+                    break
+                
+                
+
+                elif key in folios[-3].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
+                    print("encontrado muerto -3")
+                    __159 = '2'
+                    fechas = re.findall(patron_fecha,folios[-3].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
+                    fecha = fechas[0]
+                    __163 = '-'.join(fecha.split("/")[::-1])                
+                    break            
+                else:
+                    __159 = '1'
+        print("salio del try except")
+        print("__159",__159)
+        print("__45",__45)
+        print("__100",__100)
+        print("__112",__112)
 
         if __159 == "2": # paciente fallecido    
+            print("paciente fallecido")
             __157 = '98'
             __158 = '99'
             __160 = '4'
@@ -1832,8 +1882,9 @@ def main(Paciente,row,Fcorte,Eps):
         
         return __157,__158,__159,__160,__161,__162,__163,__164,__165,__166,__41
     try:
-        __157,__158,__159,__160,__161,__162,__163,__164,__165,__166,__41 = _157__166(folios,dic,__45,__100,__112)
+        __157,__158,__159,__160,__161,__162,__163,__164,__165,__166,__41 = _157__166(folios,dic,__45,__100,__112,__6,__5)
     except Exception as e:
+        print(e)
         print("falló _157__166")
         
 
