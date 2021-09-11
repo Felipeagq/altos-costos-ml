@@ -467,11 +467,11 @@ def main(Paciente,row,Fcorte,Eps):
     except:
         pass
 
-
+    print(__5,__6)
     ###################
     ### VARIABLE 17 ###
     ###################
-    def _17(folios,dic):
+    def _17(folios,dic,__6,__5):
         import statistics
         try:
             header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
@@ -514,7 +514,7 @@ def main(Paciente,row,Fcorte,Eps):
             except:
                 return 'No hubo diagnostico'
     try:
-        __17 = _17(folios,dic)
+        __17 = _17(folios,dic,__6,__5)
     except:
         print("fallo __17")
 
@@ -982,25 +982,114 @@ def main(Paciente,row,Fcorte,Eps):
     ############################
     ### QUIMIOTERAPIA 45 -77 ###
     ############################
-    def _45__77_(folios,diag):
+    def _45__77_(folios,diag,C,CC):
+        print("Quimioterapia")
         # identifico todos los folios donde sale la palabra clave 
-        quimios = []
-        CIE = ['C835', 'C910', 'C920', 'C924','C925']
-        leucemias = ['C910', 'C920', 'C924', 'C925', 'C93-0','C940', 'C942', 'C918', 'C926', 'C928', 'C933']
-        if diag in leucemias:
-            leucemia = True
-        else:
-            leucemia = False        
-        if diag in CIE:
-            for i in range(len(folios)):
-                if ('se inicia protocolo de quimioterapia' in folios[i]) or ('se administra segun protocolo de quimioterapia' in folios[i]) or ('aplica protocolo de quimioterapia' in folios[i]) or ('aplica quimioterapia segun protocolo' in folios[i]) or ('realizar protocolo quimioterapia' in folios[i]) or (' DA INICIO A PROTOCOLO DE QUIMIOTERAPIA'.lower() in folios[i]) or ('ADMINISTRA QUIMIOTERAPIA'.lower() in folios[i]) or ('ADMINISTRA PROTOGOLO DE QUIMIOTERAPIA'.lower() in folios[i]):
-                    quimios.append(i)
-
-            if len(quimios)>1 :
-                print(f'cantidad de quimios es {len(quimios)}')
-                __45 = '1'
-                #__46 = str(len(quimios))
-                __46 = '98'
+        leucemias = ['C910', 'C920', 'C924', 'C925', 'C930','C940', 'C942', 'C918', 'C926', 'C928', 'C933']
+        if diag not in leucemias:
+            try:
+                def info(C,CC):
+                    """C : numero de documento 
+                        CC: tipo de documento"""
+                    header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
+                    link = f"http://190.131.222.108:8088/api/v1/macna/patient/{C}/type/{CC}/information"
+                    print(link)
+                    res = requests.get(url= link,headers=header,timeout=5)
+                    persona = json.loads(res.text)
+                    return persona
+                c1 = '55312587'
+                c2 = 'CC'
+                persona = info(C,CC)
+                import pandas as pd
+                fechas = []
+                data_med = pd.read_csv('atc_medicamentos.csv')
+                #data['codigo_atc'] = data['codigo_atc'].apply(lambda x: x.lower())
+                medicamentos = list(data_med['codigo_atc'].unique())
+                med = []
+                for data in persona["data"][0]["admissions"]:
+                    if data["attentionType"] == "HOSPITAL_DIA":
+                        inicio = data["admDate"][:10]
+                        fin = data["outputDate"][:10]
+                        if int(fin[:4])>=2021:
+                            print(fin[:4])
+                            print("tuvo fin en el 2021")
+                        #if True:
+                            fechas.append([inicio,fin])
+                            med2 = []
+                            for order in data["folios"]:
+                                #print(order["admConsecutive"])
+                                if order["ordering"] != []:
+                                    for orden in order["ordering"]:
+                                        #print(orden["sumDesc"])
+                                        for medicamento in medicamentos:
+                                            if medicamento in orden["sumACTCod"]:
+                                                if medicamento == "H02AB02":
+                                                    continue
+                                                codigo = medicamento
+                                                med2.append(codigo)
+                            med.append(set(med2))
+                print("medicamentos:" ,med)
+                if len(med[0])>0: # si si tiene quimio
+                    quimio = True
+                    __45 = "1"
+                    __46 = "98"
+                    __47 = '97' 
+                    __48 = '97'
+                    __49 = '97'
+                    __50 = '97'
+                    __51 = '97'
+                    __52 = '97'
+                    __53 = '97'
+                    __54 = '97'
+                    __55 = len(fechas)
+                    __56 = " "
+                    __57 = fechas[0][0]
+                    __58 = "1"
+                    __59 = "80010054401"
+                    __60 = "98"
+                    __61 = len(med[0])
+                    encontrados = list(med[0]).copy()
+                    for i in range(12):
+                        encontrados.append('97')
+                    __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]                
+                    __74 = "2"
+                    __75 = fechas[0][1]
+                    __76 = "1"
+                    __77 = "98"
+                    terminado = True
+                    print("termino si tuvo")
+                else: # si no tiene quimio
+                    __45 = "98"
+                    __46 = "97"
+                    __47 = '97' 
+                    __48 = '97'
+                    __49 = '97'
+                    __50 = '97'
+                    __51 = '97'
+                    __52 = '97'
+                    __53 = '97'
+                    __54 = '97'
+                    __55 = "98"
+                    __56 = "98"
+                    __57 = "1845-01-01"
+                    __58 = "98"
+                    __59 = "98"
+                    __60 = "98"
+                    __61 = "98"
+                    encontrados = []
+                    for i in range(12):
+                        encontrados.append('97')
+                    __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+                    __74 = "98"
+                    __75 = "1845-01-01"
+                    __76 = "98"
+                    __77 = "98"
+                    print("termino no tuvo")
+            except Exception as e:
+                print(e)
+                print("entro al except")
+                __45 = "98"
+                __46 = "97"
                 __47 = '97' 
                 __48 = '97'
                 __49 = '97'
@@ -1009,175 +1098,52 @@ def main(Paciente,row,Fcorte,Eps):
                 __52 = '97'
                 __53 = '97'
                 __54 = '97'
-                __55 = str(len(quimios))
-                __56 = ''
-                start = folios[quimios[0]].find('fecha') + 6
-                end = start + 10
-                fecha = folios[quimios[0]][start:end]
-                fecha = fecha.split('/')
-                fecha = fecha[::-1]
-                __57 = '-'.join(fecha)
-                __58 = '80010054401'
-                __59 = '80010054401'
-                __60 = '98'
-                ## medicamentos ##
+                __55 = "98"
+                __56 = "98"
+                __57 = "1845-01-01"
+                __58 = "98"
+                __59 = "98"
+                __60 = "98"
+                __61 = "98"
                 encontrados = []
-                data = pd.read_csv('atc_medicamentos.csv')
-                data['descripcion_atc'] = data['descripcion_atc'].apply(lambda x: lower(x))
-                data['descripcion_atc'] = data['descripcion_atc'].apply(lambda x: normalize(x))
-                medicamentos = list(data['descripcion_atc'].unique())
-                for i in quimios:
-                    for medicamento in medicamentos:
-                        if medicamento in folios[i]:
-                            if leucemia == False:
-                                if medicamento == 'dexametasona':
-                                    continue                                 
-                            encontrados.append(medicamento)
-                __61 = str(len(encontrados))
-                if 'intratecal' in folios[quimios[0]]:
-                    __74 = '1'
-                else :
-                    __74 = '2'
-                if  'termina infusion de quimioterapia sin complicaciones' in folios[quimios[0]]:
-                    start = folios[quimios[-1]].find('fecha') + 6
-                    end = start + 10
-                    fecha = folios[quimios[-1]][start:end]
-                    fecha = fecha.split('/')
-                    fecha = fecha[::-1]
-                    __75 = '-'.join(fecha)                     
-                    __76 = '1'
-                else : 
-                    __76 = '1'
-                    # aqui se puede colocar si el paciente murio o si abandono
-
-        else:
-            for i in range(len(folios)):
-                if ('se inicia protocolo de quimioterapia' in folios[i]) or ('se administra segun protocolo de quimioterapia' in folios[i]) or ('aplica protocolo de quimioterapia' in folios[i]) or ('aplica quimioterapia segun protocolo' in folios[i]) or ('realizar protocolo quimioterapia' in folios[i]) or (' DA INICIO A PROTOCOLO DE QUIMIOTERAPIA'.lower() in folios[i]) or ('ADMINISTRA QUIMIOTERAPIA'.lower() in folios[i]) or ('ADMINISTRA PROTOGOLO DE QUIMIOTERAPIA'.lower() in folios[i]):
-                    quimios.append(i)
-            if len(quimios)>0 :
-                __45 = '1'
-                #__46 = str(len(quimios))
-                __46 = '98'
-                __55 = str(len(quimios))
-            else:
-                __45 = '98'
-                __46 = '98'
-                __55 = '98'
-            __47 = '97' 
-            __48 = '97'
-            __49 = '97'
-            __50 = '97'
-            __51 = '97'
-            __52 = '97'
-            __53 = '97'
-            __54 = '97'
-            #__55 = '98'
-            __56 = ''
-            if len(quimios)>0 :
-                start = folios[quimios[0]].find('fecha') + 6
-                end = start + 10
-                fecha = folios[quimios[0]][start:end]
-                fecha = fecha.split('/')
-                fecha = fecha[::-1]
-                __57 = '-'.join(fecha)
-                __58 = '1'
-                __59 = '80010054401'
-                encontrados = []
-                data = pd.read_csv('atc_medicamentos.csv')
-                data['descripcion_atc'] = data['descripcion_atc'].apply(lambda x: lower(x))
-                data['descripcion_atc'] = data['descripcion_atc'].apply(lambda x: normalize(x))
-                medicamentos = list(data['descripcion_atc'].unique())
-
-                for medicamento in medicamentos:
-                    if medicamento in folios[quimios[0]]:
-                        if leucemia == False:
-                            if medicamento == 'dexametasona':
-                                continue                        
-                        values = data[data['descripcion_atc']==medicamento]['codigo_atc'].values[0]
-                        encontrados.append(values)
-
-                encontrados = set(encontrados)
-                encontrados = list(encontrados)
-                __61 = str(len(encontrados))
                 for i in range(12):
                     encontrados.append('97')
                 __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
-                __74 = "2"
-                __75 = "22"
-                if 'intratecal' in folios[quimios[0]]:
-                    __74 = '1'
-                else :
-                    __74 = '2'
-                if  'termina infusion de quimioterapia sin complicaciones' in folios[quimios[0]]:
-                    __76 = '1'
-                    start = folios[quimios[0]].find('fecha') + 6
-                    end = start + 10
-                    fecha = folios[quimios[0]][start:end]
-                    fecha = fecha.split('/')
-                    fecha = fecha[::-1]
-                    __75 = '-'.join(fecha)                
-                else : 
-                    __76 = 'N/A'
-                    __75 = ' '          
-            else:
-                __57 = '1845-01-01'
-                __56 = '98'
-                __58 = '98'
-                __59 = '98'
-                __61 = '98'
-                __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76 = '98','98','98','98','98','98','98','98','98','98','98','98','98','98','98'
-                
-            __60 = '98'
-
-        if __45 == '98':
-            __59 = '98'
-        elif __45 == '1':
-            __59 = '80010054401'
+                __74 = "98"
+                __75 = "1845-01-01"
+                __76 = "98"
+                __77 = "98" 
         else:
-            __59 = ' '
-            
-        if int(__45) == 1 and leucemia == False:
-            start = folios[quimios[0]].find('fecha') + 6
-            end = start + 10
-            fecha = folios[quimios[0]][start:end]
-            fecha = fecha.split('/')
-            fecha = fecha[::-1]
-            __75 = '-'.join(fecha)  
-        # ESPERANDO
-        
-        if int(__45) == 98:
-            encontrados2 = []
-            folios2 = []
-            data_aplica = pd.read_csv('aplica_atc_medicamentos.csv')
-            data_aplica['descripcion_atc'] = data_aplica['descripcion_atc'].apply(lambda x: lower(x))
-            data_aplica['descripcion_atc'] = data_aplica['descripcion_atc'].apply(lambda x: normalize(x))
-            medicamentos2 = list(data_aplica['descripcion_atc'].unique())
-            for folio in folios:
-                for medicamento2 in medicamentos2:
-                    if medicamento2 in folio:
-                        encontrados2.append(medicamento2)
-                        folios2.append(folio)
-            """start = folios2[0].find('fecha') + 6
-            end = start + 10
-            fecha = folios2[0][start:end]
-            fecha = fecha.split('/')
-            fecha = fecha[::-1]
-            __75 = '-'.join(fecha)"""            
-            try:
-                __61 = '1'
-                __62 = data_aplica[data_aplica['descripcion_atc']==encontrados2[0]]['codigo_atc'].values[0]
-                __74 = '2'
-            except:
-                __61 = '98'
-            if len(encontrados2) > 0:
-                __45 = '1'
-            #__73 = '98'
-        __57 = " "
-        __75 = " "
+            __45 = "98"
+            __46 = "f"
+            __47 = 'f' 
+            __48 = 'f'
+            __49 = 'f'
+            __50 = 'f'
+            __51 = 'f'
+            __52 = 'f'
+            __53 = 'f'
+            __54 = 'f'
+            __55 = "98"
+            __56 = "98"
+            __57 = "1845-01-01"
+            __58 = "98"
+            __59 = "98"
+            __60 = "98"
+            __61 = "98"
+            encontrados = []
+            for i in range(12):
+                encontrados.append('97')
+            __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+            __74 = "98"
+            __75 = "1845-01-01"
+            __76 = "98"
+            __77 = "98"                             
         return __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76
     try:
-        __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76 = _45__77_(folios,__17)
-    except:
+        __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76 = _45__77_(folios,__17,__6,__5)
+    except Exception as e:
+        print(e)
         print("falló _45__77_")
 
     print("-- -- -- -- -- -- -- -- -- -- -- --")
@@ -1409,7 +1375,7 @@ def main(Paciente,row,Fcorte,Eps):
         folios_r = []
         for folio in folios:
             if'tratamiento de radioterapia' in folio:
-                folios_r.append(folio)
+                folios_r.append(folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
         
         for folio in folios:
             if "BRAQUITERAPIA".lower() in folio:
@@ -1472,11 +1438,15 @@ def main(Paciente,row,Fcorte,Eps):
             patron_3 = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
             patron_4 = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9]"
             patrones = (patron_1,patron_2,patron_3,patron_4)  
-            match = []          
+            match = []     
+            print("----")     
             for folio in folios_r:
                 start = folio.find("inicio tratamiento")
+                aux = folio[start:]
+                end = aux.find("$$")
+                print(aux[:end])
                 for patron in patrones:
-                    match = re.findall(patron,folio[start:])
+                    match.append(re.findall(patron,aux[:end]))
 
             # Busco gy en folios_r
             try:
@@ -1524,11 +1494,23 @@ def main(Paciente,row,Fcorte,Eps):
                 except Exception as e:
                     print(e)
             
-            print(match[:])
+            print('match:',match)
+            match = [x for x in match if x]
+            print(match)
             try:
-                __114,__120 = "20"+"-".join(match[0].split("/")[::-1]),"20"+"-".join(match[1].split("/")[::-1]) #114 # 120
+                if "/" in match[0][0]:
+                    __114 = "-".join(match[0][0].split("/")[::-1])
+                if "/" in match[0][1]:
+                    __120 = "-".join(match[0][1].split("/")[::-1]) #114 # 120
+
+                if "-" in match[0][0]:
+                    __114 = "-".join(match[0][0].split("/")[::-1])
+                if "-s" in match[0][1]:
+                    __120 = "-".join(match[0][1].split("/")[::-1]) #114 # 120
+                print(__114,"  /  ",__120)
             except:
                 __114,__120 = "N/A","N/A" #114 # 120
+                print(__114,__120)
             print(f"El numero de folios con braqui: {len(braqui)}")
             if braquiterapia:
                 print("ESTE PACIENTE TUVO BRAQUITERAPIA")
@@ -1918,7 +1900,7 @@ if __name__ == '__main__':
         continue
     
     pacientes = glob.glob('HISTORIA*.txt')
-    #pacientes = glob.glob('*6828*.txt')
+    #pacientes = glob.glob('*32638813*.txt')
     print(f"La cantidad de pacientes es {len(pacientes)}")
 
     print(' ')
