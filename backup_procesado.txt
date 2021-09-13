@@ -2217,3 +2217,33 @@ if not leucemia:
             no Q 
 else:
     leucemia
+
+
+
+
+
+                    __45 = "98"
+                    __46 = "97"
+                    __47 = '97' 
+                    __48 = '97'
+                    __49 = '97'
+                    __50 = '97'
+                    __51 = '97'
+                    __52 = '97'
+                    __53 = '97'
+                    __54 = '97'
+                    __55 = "98"
+                    __56 = "98"
+                    __57 = "1845-01-01"
+                    __58 = "98"
+                    __59 = "98"
+                    __60 = "98"
+                    __61 = "98"
+                    encontrados = []
+                    for i in range(12):
+                        encontrados.append('97')
+                    __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+                    __74 = "98"
+                    __75 = "1845-01-01"
+                    __76 = "98"
+                    __77 = "98"

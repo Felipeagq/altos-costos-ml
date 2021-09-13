@@ -1010,10 +1010,10 @@ def main(Paciente,row,Fcorte,Eps):
                     if data["attentionType"] == "HOSPITAL_DIA":
                         inicio = data["admDate"][:10]
                         fin = data["outputDate"][:10]
-                        if int(fin[:4])>=2021:
-                            print(fin[:4])
-                            print("tuvo fin en el 2021")
-                        #if True:
+                        #if int(fin[:4])>=2021:
+                        #    print(fin[:4])
+                        #    print("tuvo fin en el 2021")
+                        if True:
                             fechas.append([inicio,fin])
                             med2 = []
                             for order in data["folios"]:
@@ -1027,8 +1027,10 @@ def main(Paciente,row,Fcorte,Eps):
                                                     continue
                                                 codigo = medicamento
                                                 med2.append(codigo)
-                            med.append(set(med2))
+                            med.append(list(set(med2)))
                 print("medicamentos:" ,med)
+                if len(med) == 0:
+                    med.append([])
                 if len(med[0])>0: # si si tiene quimio
                     quimio = True
                     __45 = "1"
@@ -1132,42 +1134,42 @@ def main(Paciente,row,Fcorte,Eps):
             except Exception as e:
                 print(e)
                 print("entro al except DE QUIMIOTERAPIA")
-                __45 = "98"
-                __46 = "97"
-                __47 = '97' 
-                __48 = '97'
-                __49 = '97'
-                __50 = '97'
-                __51 = '97'
-                __52 = '97'
-                __53 = '97'
-                __54 = '97'
-                __55 = "98"
-                __56 = "98"
-                __57 = "1845-01-01"
-                __58 = "98"
-                __59 = "98"
-                __60 = "98"
-                __61 = "98"
+                __45 = "0"
+                __46 = "N/A"
+                __47 = 'N/A' 
+                __48 = 'N/A'
+                __49 = 'N/A'
+                __50 = 'N/A'
+                __51 = 'N/A'
+                __52 = 'N/A'
+                __53 = 'N/A'
+                __54 = 'N/A'
+                __55 = "N/A"
+                __56 = "N/A"
+                __57 = "N/A"
+                __58 = "N/A"
+                __59 = "N/A"
+                __60 = "N/A"
+                __61 = "N/A"
                 encontrados = []
                 for i in range(12):
                     encontrados.append('97')
                 __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
-                __74 = "98"
-                __75 = "1845-01-01"
-                __76 = "98"
-                __77 = "98" 
+                __74 = "N/A"
+                __75 = "N/A"
+                __76 = "N/A"
+                __77 = "N/A" 
         else:
             __45 = "98"
-            __46 = "f"
-            __47 = 'f' 
-            __48 = 'f'
-            __49 = 'f'
-            __50 = 'f'
-            __51 = 'f'
-            __52 = 'f'
-            __53 = 'f'
-            __54 = 'f'
+            __46 = "98"
+            __47 = '98' 
+            __48 = '98'
+            __49 = '98'
+            __50 = '98'
+            __51 = '98'
+            __52 = '98'
+            __53 = '98'
+            __54 = '98'
             __55 = "98"
             __56 = "98"
             __57 = "1845-01-01"

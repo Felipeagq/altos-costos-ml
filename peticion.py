@@ -7,12 +7,13 @@ def info(C,CC):
     header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
     link = f"http://190.131.222.108:8088/api/v1/macna/patient/{C}/type/{CC}/information"
     print(link)
-    res = requests.get(url= link,headers=header,timeout=10)
+    res = requests.get(url= link,headers=header,timeout=10
+    )
     persona = json.loads(res.text)
     return persona
 
 
-c1 = '32840720'
+c1 = '40942274'
 c2 = 'CC'
 persona = info(c1,c2)
 import pandas as pd
@@ -45,6 +46,8 @@ for data in persona["data"][0]["admissions"]:
                 #print("se encontro orden")
             #print(order["ordering"])
 print(fechas)
-print(fechas[0][0])
+
 print(med)
-print(len(med[0]))
+
+
+print("=="*75)
