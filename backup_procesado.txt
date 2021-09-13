@@ -2121,6 +2121,7 @@ CC / #:
                 for i in range(12):
                     encontrados.append('97')
                 __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+
                 __74 = "2"
                 __75 = "22"
                 if 'intratecal' in folios[quimios[0]]:
@@ -2200,3 +2201,19 @@ CC / #:
         print("falló _45__77_")
 
     print("-- -- -- -- -- -- -- -- -- -- -- --")
+
+
+
+
+
+
+if not leucemia:
+    if Qt:
+        Qt
+    else:
+        if H:
+            H
+        else:
+            no Q 
+else:
+    leucemia

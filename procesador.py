@@ -983,7 +983,7 @@ def main(Paciente,row,Fcorte,Eps):
     ### QUIMIOTERAPIA 45 -77 ###
     ############################
     def _45__77_(folios,diag,C,CC):
-        print("Quimioterapia")
+        print("- - - - -Quimioterapia- - - - -")
         # identifico todos los folios donde sale la palabra clave 
         leucemias = ['C910', 'C920', 'C924', 'C925', 'C930','C940', 'C942', 'C918', 'C926', 'C928', 'C933']
         if diag not in leucemias:
@@ -1058,36 +1058,80 @@ def main(Paciente,row,Fcorte,Eps):
                     __77 = "98"
                     terminado = True
                     print("termino si tuvo")
-                else: # si no tiene quimio
-                    __45 = "98"
-                    __46 = "97"
-                    __47 = '97' 
-                    __48 = '97'
-                    __49 = '97'
-                    __50 = '97'
-                    __51 = '97'
-                    __52 = '97'
-                    __53 = '97'
-                    __54 = '97'
-                    __55 = "98"
-                    __56 = "98"
-                    __57 = "1845-01-01"
-                    __58 = "98"
-                    __59 = "98"
-                    __60 = "98"
-                    __61 = "98"
-                    encontrados = []
-                    for i in range(12):
-                        encontrados.append('97')
-                    __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
-                    __74 = "98"
-                    __75 = "1845-01-01"
-                    __76 = "98"
-                    __77 = "98"
-                    print("termino no tuvo")
+                else: # si no tiene quimio por tratamiento especial
+                    hormonoterapia = pd.read_csv("hormonoterapia.csv")
+                    hormo_fechas = []
+                    patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
+                    hormo_med = hormonoterapia["DESCRIPCIÓN_ATC"].values
+                    med_encontrados = []
+                    med_encontrados2 = []
+                    for folio in folios:
+                        
+                        folio_actual = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
+                        for med_hormo in hormo_med:
+                            if med_hormo in folio:
+                                med_encontrados.append(hormonoterapia[hormonoterapia["DESCRIPCIÓN_ATC"]==med_hormo]["CODIGO_ATC"].values)
+                                fechas = re.findall(patron_fecha,folio_actual)
+                                fecha = fechas[0]
+                                hormo_fechas.append('-'.join(fecha.split("/")[::-1]) )
+                        med_encontrados2.append(set(med_encontrados))
+                    b = [i for i in hormo_fechas if i != []]
+                    if  len(b)>0:
+                        print("El paciente tuvo hormonoterapia")
+                        __45 = "1"
+                        __46 = "97"
+                        __47 = '97' 
+                        __48 = '97'
+                        __49 = '97'
+                        __50 = '97'
+                        __51 = '97'
+                        __52 = '97'
+                        __53 = '97'
+                        __54 = '97'
+                        __55 = "1"
+                        __57 = hormo_fechas[0][0]
+                        __58 = "1"
+                        __59 = "80010054401"
+                        __60 = "98"
+                        encontrados = list(med_encontrados2[0]).copy()
+                        for i in range(12):
+                            encontrados.append('97')
+                        __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]                
+                        __74 = "N/A"
+                        __75 = "1800-01-01"
+                        __76 = "1"
+                        __77 = "98"
+                        print("TUVO HORMONOTERAPIA")
+                    else:
+                        __45 = "98"
+                        __46 = "97"
+                        __47 = '97' 
+                        __48 = '97'
+                        __49 = '97'
+                        __50 = '97'
+                        __51 = '97'
+                        __52 = '97'
+                        __53 = '97'
+                        __54 = '97'
+                        __55 = "98"
+                        __56 = "98"
+                        __57 = "1845-01-01"
+                        __58 = "98"
+                        __59 = "98"
+                        __60 = "98"
+                        __61 = "98"
+                        encontrados = []
+                        for i in range(12):
+                            encontrados.append('97')
+                        __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+                        __74 = "98"
+                        __75 = "1845-01-01"
+                        __76 = "98"
+                        __77 = "98"                        
+                    print("TERMINO PERO NO TUVO QUIMIOTERAPIA")
             except Exception as e:
                 print(e)
-                print("entro al except")
+                print("entro al except DE QUIMIOTERAPIA")
                 __45 = "98"
                 __46 = "97"
                 __47 = '97' 
