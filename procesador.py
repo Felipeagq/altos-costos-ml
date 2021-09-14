@@ -473,6 +473,7 @@ def main(Paciente,row,Fcorte,Eps):
     ###################
     def _17(folios,dic,__6,__5):
         import statistics
+        from statistics import mode
         try:
             header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
             res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
@@ -497,6 +498,7 @@ def main(Paciente,row,Fcorte,Eps):
         except:
             print("entrando en except")
             here = []
+            diagnosticos = []
             for folio in range(len(folios)):
                 if '$$DIAGNÓSTICO' in folios[folio]:
                     here.append(folio)
@@ -504,11 +506,19 @@ def main(Paciente,row,Fcorte,Eps):
                 # preguntar si es el primer diagnostico
                 # el ultimo diagnostico
                 # o el más frecuente
-                ultimo = max(here)
-                to_back = folios[ultimo].find("$$DIAGNÓSTICO")
-                __17 = folios[ultimo][to_back-5:to_back]
+                for i in here:
+                    to_back = folios[i].find("$$DIAGNÓSTICO")
+                    diagnostic = folios[i][to_back-5:to_back]
+                    diagnostic = diagnostic.replace("\n","")
+                    if not diagnostic.isalnum():
+                        continue
+                    if "c" in diagnostic:
+                        diagnosticos.append(diagnostic)
                 print("Diagnostico encontrado")
-                print(__17)
+                print(diagnosticos)
+                diag = mode(diagnosticos)
+                print(diag)
+                __17 = diag
                 return __17.replace("\n","").replace("c","C")
                 
             except:
@@ -1010,10 +1020,10 @@ def main(Paciente,row,Fcorte,Eps):
                     if data["attentionType"] == "HOSPITAL_DIA":
                         inicio = data["admDate"][:10]
                         fin = data["outputDate"][:10]
-                        #if int(fin[:4])>=2021:
-                        #    print(fin[:4])
-                        #    print("tuvo fin en el 2021")
-                        if True:
+                        if int(fin[:4])>=2021:
+                            print(fin[:4])
+                            print("tuvo fin en el 2021")
+                        #if True:
                             fechas.append([inicio,fin])
                             med2 = []
                             for order in data["folios"]:
@@ -1061,13 +1071,44 @@ def main(Paciente,row,Fcorte,Eps):
                     encontrados = list(med[0]).copy()
                     for i in range(12):
                         encontrados.append('97')
-                    __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]                
+                    __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
                     __74 = "2"
                     __75 = fechas[0][1]
                     __76 = "1"
                     __77 = "98"
                     terminado = True
                     print("termino si tuvo")
+                    if len(med2)>1:
+                        print("tuvo más de una quimioterapia")
+                        __79 = fechas[-1][0]
+                        __80 = "1"
+                        __81 = "80010054401"
+                        __82 = "98"
+                        __83 = len(med2[-1])
+                        med_q2 = list(med2[-1]).copy()
+                        for i in range(12):
+                            med_q2.append('97')
+                        __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+                        __96 = " - "
+                        __97 = fechas[-1][1]
+                        __98 = "1"
+                        __99 = "98"
+                        print(f"fechas de la segunda quimio {__79} / {__97}")
+                    else:
+                        __78 = "98"
+                        __79 = "97"
+                        __80 = '97' 
+                        __81 = '97'
+                        __82 = '97'
+                        __83 = '97'
+                        encontrados = []
+                        for i in range(12):
+                            encontrados.append('97')
+                        __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+                        __96 = "98"
+                        __97 = "1845-01-01"
+                        __98 = "98"
+                        __99 = "98"
                 else: # si no tiene quimio por tratamiento especial
                     print("entro a hormonoterapia")
                     hormonoterapia = pd.read_csv("hormonoterapia.csv")
@@ -1083,6 +1124,7 @@ def main(Paciente,row,Fcorte,Eps):
                             if med_hormo in folio:
                                 med_encontrados.append(hormonoterapia[hormonoterapia["DESCRIPCIÓN_ATC"]==med_hormo]["CODIGO_ATC"].values)
                                 fechas = re.findall(patron_fecha,folio_actual)
+                                print(fechas)
                                 fecha = fechas[0]
                                 #print("fecha de hormonoterapia",fecha)
                                 hormo_fechas.append('-'.join(fecha.split("/")[::-1]))
@@ -1092,6 +1134,7 @@ def main(Paciente,row,Fcorte,Eps):
                     b = [i for i in hormo_fechas if i != []]
                     c = [j for j in med_encontrados2 if j != []]
                     print(hormo_fechas)
+                    print("hormo fechas en lista",list(hormo_fechas))
                     print("b",b)
                     if  len(c)>0:
                         print("El paciente tuvo hormonoterapia")
@@ -1118,6 +1161,19 @@ def main(Paciente,row,Fcorte,Eps):
                         __75 = "1800-01-01"
                         __76 = "1"
                         __77 = "98"
+                        __78 = "98"
+                        __79 = "97"
+                        __80 = '97' 
+                        __81 = '97'
+                        __82 = '97'
+                        __83 = '97'
+                        encontrados = []
+                        for i in range(12):
+                            encontrados.append('97')
+                        __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+                        __96 = "98"
+                        __97 = "1845-01-01"
+                        __98 = "98"                        
                         print("TUVO HORMONOTERAPIA")
                     else:
                         __45 = "98"
@@ -1144,7 +1200,21 @@ def main(Paciente,row,Fcorte,Eps):
                         __74 = "98"
                         __75 = "1845-01-01"
                         __76 = "98"
-                        __77 = "98"                        
+                        __77 = "98" 
+                        __78 = "98"
+                        __79 = "97"
+                        __80 = '97' 
+                        __81 = '97'
+                        __82 = '97'
+                        __83 = '97'
+                        encontrados = []
+                        for i in range(12):
+                            encontrados.append('97')
+                        __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+                        __96 = "98"
+                        __97 = "1845-01-01"
+                        __98 = "98"
+                        __99 = "98"                        
                     print("TERMINO PERO NO TUVO QUIMIOTERAPIA")
             except Exception as e:
                 print(e)
@@ -1173,7 +1243,20 @@ def main(Paciente,row,Fcorte,Eps):
                 __74 = "N/A"
                 __75 = "N/A"
                 __76 = "N/A"
-                __77 = "N/A" 
+                __77 = "N/A"
+                __79 = "N/A"
+                __80 = 'N/A' 
+                __81 = 'N/A'
+                __82 = 'N/A'
+                __83 = 'N/A'
+                encontrados = []
+                for i in range(12):
+                    encontrados.append('N/A')
+                __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+                __96 = "N/A"
+                __97 = "1845-01-01"
+                __98 = "N/A"
+                __99 = "N/A"                
         else:
             __45 = "98"
             __46 = "98"
@@ -1199,10 +1282,24 @@ def main(Paciente,row,Fcorte,Eps):
             __74 = "98"
             __75 = "1845-01-01"
             __76 = "98"
-            __77 = "98"                             
-        return __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76
+            __77 = "98"
+            __78 = "98"
+            __79 = "97"
+            __80 = '97' 
+            __81 = '97'
+            __82 = '97'
+            __83 = '97'
+            encontrados = []
+            for i in range(12):
+                encontrados.append('97')
+            __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
+            __96 = "98"
+            __97 = "1845-01-01"
+            __98 = "98"
+            __99 = "98"            
+        return __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76,__79, __80, __81, __82, __83, __84, __85, __86, __87, __88, __89, __90, __91, __92, __93, __94, __95, __96, __97, __98, __99
     try:
-        __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76 = _45__77_(folios,__17,__6,__5)
+        __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76,__79, __80, __81, __82, __83, __84, __85, __86, __87, __88, __89, __90, __91, __92, __93, __94, __95, __96, __97, __98, __99 = _45__77_(folios,__17,__6,__5)
     except Exception as e:
         print(e)
         print("falló _45__77_")
@@ -1213,6 +1310,7 @@ def main(Paciente,row,Fcorte,Eps):
 
 
 
+    """
     ############################
     ### QUIMIOTERAPIA 78 -77 ###
     ############################
@@ -1306,9 +1404,7 @@ def main(Paciente,row,Fcorte,Eps):
         __78,__79,__55,__80,__81,__82,__83,__84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95,__96,__97,__98,__99 = _78__99_(folios,__17,__55)
     except:
         print("falló _78__99_")
-
-
-
+    """ 
 
 
 
@@ -1412,7 +1508,7 @@ def main(Paciente,row,Fcorte,Eps):
 
 
 
-    print("Entró a radio")
+    print("-- -- --RADIOTERAPIA-- -- -- ")
     ####################
     ### RADIOTERAPIA ###
     ####################
@@ -1503,11 +1599,19 @@ def main(Paciente,row,Fcorte,Eps):
             print("----")     
             for folio in folios_r:
                 start = folio.find("inicio tratamiento")
-                aux = folio[start:]
-                end = aux.find("$$")
-                print(aux[:end])
-                for patron in patrones:
-                    match.append(re.findall(patron,aux[:end]))
+                if start != -1:
+                    aux = folio[start:]
+                    end = aux.find("$$")
+                    print(aux[:end])
+                    for patron in patrones:
+                        match.append(re.findall(patron,aux[:end]))
+                if start == -1:
+                    start = folio.find("completo tratamiento")
+                    aux = folio[start:]
+                    end = aux.find("$$")
+                    print(aux[:end])
+                    for patron in patrones:
+                        match.append(re.findall(patron,aux[:end]))                    
 
             # Busco gy en folios_r
             try:
@@ -1557,7 +1661,10 @@ def main(Paciente,row,Fcorte,Eps):
             
             print('match:',match)
             match = [x for x in match if x]
-            print(match)
+            print("\n",match)
+            if len(match[0]) ==1:
+                print("\n le quitamos el primero")
+                match = match[1:]
             try:
                 if "/" in match[0][0]:
                     __114 = "-".join(match[0][0].split("/")[::-1])
@@ -1566,7 +1673,7 @@ def main(Paciente,row,Fcorte,Eps):
 
                 if "-" in match[0][0]:
                     __114 = "-".join(match[0][0].split("/")[::-1])
-                if "-s" in match[0][1]:
+                if "-" in match[0][1]:
                     __120 = "-".join(match[0][1].split("/")[::-1]) #114 # 120
                 print(__114,"  /  ",__120)
             except:
@@ -1782,7 +1889,7 @@ def main(Paciente,row,Fcorte,Eps):
 ###################################### 
 ### RESULTADO FINAL DE LA ATENCIÓN ###
 ######################################
-    print("resultado final")
+    print("\n\nresultado final")
     def _157__166(folios,dic,__45,__100,__112,__6,__5):
         print("entrando a resultado final")
         try:
@@ -1961,7 +2068,7 @@ if __name__ == '__main__':
         continue
     
     pacientes = glob.glob('HISTORIA*.txt')
-    #pacientes = glob.glob('*32638813*.txt')
+    #pacientes = glob.glob('*7464273*.txt')
     print(f"La cantidad de pacientes es {len(pacientes)}")
 
     print(' ')
