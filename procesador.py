@@ -994,7 +994,7 @@ def main(Paciente,row,Fcorte,Eps):
                     header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
                     link = f"http://190.131.222.108:8088/api/v1/macna/patient/{C}/type/{CC}/information"
                     print(link)
-                    res = requests.get(url= link,headers=header,timeout=5)
+                    res = requests.get(url= link,headers=header,timeout=15)
                     persona = json.loads(res.text)
                     return persona
                 c1 = '55312587'
@@ -1028,10 +1028,18 @@ def main(Paciente,row,Fcorte,Eps):
                                                 codigo = medicamento
                                                 med2.append(codigo)
                             med.append(list(set(med2)))
-                print("medicamentos:" ,med)
-                if len(med) == 0:
-                    med.append([])
-                if len(med[0])>0: # si si tiene quimio
+                med2 = []
+                fechas2 = []
+                for m in range(len(med)):
+                    if med[m] != []:
+                        med2.append(med[m])
+                        fechas2.append(fechas[m])
+                print("med2",med2)
+                print(" ")
+                print("fechas2",fechas2)
+                print(" ")
+                if len(med2)>0: # si si tiene quimio
+                    print("entró al if de medicamentos")
                     quimio = True
                     __45 = "1"
                     __46 = "98"
@@ -1061,24 +1069,31 @@ def main(Paciente,row,Fcorte,Eps):
                     terminado = True
                     print("termino si tuvo")
                 else: # si no tiene quimio por tratamiento especial
+                    print("entro a hormonoterapia")
                     hormonoterapia = pd.read_csv("hormonoterapia.csv")
                     hormo_fechas = []
                     patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
                     hormo_med = hormonoterapia["DESCRIPCIÓN_ATC"].values
                     med_encontrados = []
                     med_encontrados2 = []
+                    print("medicamentos hromonoterapia")
                     for folio in folios:
-                        
                         folio_actual = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
                         for med_hormo in hormo_med:
                             if med_hormo in folio:
                                 med_encontrados.append(hormonoterapia[hormonoterapia["DESCRIPCIÓN_ATC"]==med_hormo]["CODIGO_ATC"].values)
                                 fechas = re.findall(patron_fecha,folio_actual)
                                 fecha = fechas[0]
-                                hormo_fechas.append('-'.join(fecha.split("/")[::-1]) )
-                        med_encontrados2.append(set(med_encontrados))
+                                #print("fecha de hormonoterapia",fecha)
+                                hormo_fechas.append('-'.join(fecha.split("/")[::-1]))
+                                #print("fechas",hormo_fechas)
+                        med_encontrados2.append(list(set(med_encontrados)))
+
                     b = [i for i in hormo_fechas if i != []]
-                    if  len(b)>0:
+                    c = [j for j in med_encontrados2 if j != []]
+                    print(hormo_fechas)
+                    print("b",b)
+                    if  len(c)>0:
                         print("El paciente tuvo hormonoterapia")
                         __45 = "1"
                         __46 = "97"
@@ -1091,7 +1106,7 @@ def main(Paciente,row,Fcorte,Eps):
                         __53 = '97'
                         __54 = '97'
                         __55 = "1"
-                        __57 = hormo_fechas[0][0]
+                        __57 = hormo_fechas[0]
                         __58 = "1"
                         __59 = "80010054401"
                         __60 = "98"
@@ -1771,15 +1786,14 @@ def main(Paciente,row,Fcorte,Eps):
     def _157__166(folios,dic,__45,__100,__112,__6,__5):
         print("entrando a resultado final")
         try:
+            print("Entró en el try")
             header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
-            print("Header")
             res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
-            print("res")
             persona = json.loads(res.text)
-            print("Persona")
             if persona["data"] is not None:
                 for n in persona["data"]:
                     if n["deceased"] == 1:
+                        print("persona encontrada muerta")
                         __159 = "2"
                         __163 = n["deathDate"][:10]
                         print("variables",__159,__163)
@@ -1791,6 +1805,7 @@ def main(Paciente,row,Fcorte,Eps):
             else:
                 raise Exception
         except:
+            print("Comenzóel except")
             dic['159'].clear()
             lista_agregar = ['pcte fallecio','se declara muerte clinica','paciente fallecido','declara fallecido','se entrega acta de defuncion','declara paciente fallecida','declara fallecido','declara fallecida', 'sin signos vitales','declarada paciente fallecida','declarado paciente fallecido', 'acta defuncion','sala de paz','sala de reposo','morgue','anuncian defuncion','anunciar muerte','certificado defuncion']
             [dic['159'].update({key:'2'}) for key in lista_agregar]

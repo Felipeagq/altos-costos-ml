@@ -1,5 +1,7 @@
 import requests
+import glob
 import json 
+import re
 
 def info(C,CC):
     """C : numero de documento 
@@ -12,42 +14,18 @@ def info(C,CC):
     persona = json.loads(res.text)
     return persona
 
+personas = glob.glob("*CC *.txt")
 
-c1 = '40942274'
-c2 = 'CC'
-persona = info(c1,c2)
-import pandas as pd
-fechas = []
-data_med = pd.read_csv('atc_medicamentos.csv')
-#data['codigo_atc'] = data['codigo_atc'].apply(lambda x: x.lower())
-medicamentos = list(data_med['codigo_atc'].unique())
-med = []
-for data in persona["data"][0]["admissions"]:
-    if data["attentionType"] == "HOSPITAL_DIA":
-        inicio = data["admDate"][:10]
-        fin = data["outputDate"][:10]
-        #if int(fin[:4])>=2021:
-        if True:
-            fechas.append([inicio,fin])
-            med2 = []
-            for order in data["folios"]:
-                #print(order["admConsecutive"])
-                if order["ordering"] != []:
-                    for orden in order["ordering"]:
-                        #print(orden["sumACTCod"])
-                        for medicamento in medicamentos:
-                            if medicamento in orden["sumACTCod"]:
-                                if medicamento == "H02AB02":
-                                    continue
-                                codigo = data_med[data_med['codigo_atc']==medicamento]['codigo_atc'].values[0]
-                                med2.append(codigo)
-            med.append(set(med2))
+personas2 = [re.findall(r'\d+',i)[0] for i in personas]
 
-                #print("se encontro orden")
-            #print(order["ordering"])
-print(fechas)
+for persona in personas2:
+    try:
+        print(" ")
+        sujeto = info(persona,"CC")
+        for admisiones in sujeto["data"][0]["admissions"]:
+            for ad in admisiones["folios"]:
+                for prod in ad["procedures"]:
+                        print(prod)
+    except Exception as e:
+        print(e,"PRI PRA EXPLOTOOOO")
 
-print(med)
-
-
-print("=="*75)
