@@ -14,7 +14,10 @@ def info(C,CC):
     persona = json.loads(res.text)
     return persona
 
-personas = glob.glob("*CC *.txt")
+info("1364176","SC")
+
+
+"""personas = glob.glob("*CC *.txt")
 
 personas2 = [re.findall(r'\d+',i)[0] for i in personas]
 
@@ -26,6 +29,7 @@ for persona in personas2:
             for ad in admisiones["folios"]:
                 for prod in ad["procedures"]:
                         print(prod)
+            
     except Exception as e:
-        print(e,"PRI PRA EXPLOTOOOO")
+        print(e,"PRI PRA EXPLOTOOOO")"""
 

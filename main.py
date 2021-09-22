@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import glob
 import os
 import procesador
@@ -232,16 +232,18 @@ def main(fecha,eps,cliente_mqtt,hash):
     with open("prueba2.xlsx","rb") as archivo_file:
         data = archivo_file.read()
     # definimos los parametros de subida
+    rigth_now = datetime.now()
+    timestamp = datetime.timestamp(rigth_now)
     response = s3_client.put_object(
         Body= data,
         Bucket = "macna-data",
-        Key= f"pdf-upload/,/MACNA-{eps}-{fecha}.xlsx"
+        Key= f"pdf-upload/,/MACNA-{eps}-{fecha}-{int(timestamp)}.xlsx"
     )
     print(response)
     archivo_file.close()
     # Generamos el link de descarga del xlsx
     print("generamos link")
-    link =  create_presigned_url(s3_client,"macna-data",f"pdf-upload/,/MACNA-{eps}-{fecha}.xlsx")
+    link =  create_presigned_url(s3_client,"macna-data",f"pdf-upload/,/MACNA-{eps}-{fecha}-{int(timestamp)}.xlsx")
     
     time.sleep(5)
     
