@@ -18,16 +18,16 @@ __17 = None
 __18 = None
 __19 = ' '
 __20 = ' '
-__21 = '10'
-__22 = '98' # PREDETERMINADA
-__23 = None
-__24 = None
-__25 = '99' # 80010054401
-__26 = None
-__27 = None
-__28 = None
+__21 = ' '
+__22 = ' ' # PREDETERMINADA
+__23 = " "
+__24 = " "
+__25 = ' ' # 80010054401
+__26 = " "
+__27 = " "
+__28 = " "
 __29 = ' '
-__30 = '1800-01-01'
+__30 = ' '
 # MAMA
 __31 = '98'
 __32 = '1845-01-01'
@@ -532,7 +532,7 @@ def main(Paciente,row,Fcorte,Eps):
 
 
 
-    ###################
+    """    ###################
     ### VARIABLE 18 ###
     ###################
     lista_eliminar = ['patologia', 'enfermedad actual','de patologia','fecha','biopsia','patologia.','cancer de vejiga','desde abril 2009 ','-mamografia bilateral','na','hace , 10 años','cuadrantectomia','ap','cancer cervical hace 13 años','desde hace , mas de 5 años','linfoma']
@@ -566,12 +566,12 @@ def main(Paciente,row,Fcorte,Eps):
     try:
         __18 = _18(folios,dic)
     except:
-        print("fallo _18")
+        print("fallo _18")"""
 
 
 
 
-    ###################
+    """###################
     ### VARIABLE 21 ###
     ###################
     lista_eliminar = ['na','n','ap','linfoma ','linfoma no hodgkin','linfoma no hodgkin','linfoma','caso','patologia','reporte','biopsia']
@@ -598,41 +598,12 @@ def main(Paciente,row,Fcorte,Eps):
     try:
         __21 = __21_(folios,dic)
     except:
-        print("fallo __21_")
+        print("fallo __21_")"""
 
     
 
-    ###################
-    ### VARIABLE 26 ###
-    ###################
-    def __26_(folios):
-        for folio in folios:
-            n = folio.find('reg. ')
-            frag = folio[n:]
-            if 'oncologia' in frag:
-                start = folio.find('fecha') + 6
-                end = start + 10
-                fecha = folio[start:end]
-                fecha = fecha.split('/')
-                fecha = fecha[::-1]
-                return '-'.join(fecha)
-        return " "
-    try:
-        __26 = __26_(folios)
-    except:
-        print("fallo __26_")
 
-
-    ###################
-    ### VARIABLE 25 ###
-    ###################
-    def _25_():
-        __25, __26 = ' ',' '
-        return __25, __26
-    __25, __26 = _25_()
-
-
-    ###################
+    """###################
     ### VARIABLE 27 ###
     ###################
     lista_eliminar = ['na','n','ap','linfoma ','el reporte biopsia de mama derecha','fecha','biopsia','patologia','patologia','cirugia','carcinoma','carcinoma ','ca de mama','tumor']
@@ -680,7 +651,7 @@ def main(Paciente,row,Fcorte,Eps):
     try:
         __27 = _27(folios,dic)
     except:
-        print("fallo _27")
+        print("fallo _27")"""
 
 
 
@@ -722,7 +693,7 @@ def main(Paciente,row,Fcorte,Eps):
 
 
 
-    ###################
+    """###################
     ### VARIABLE 30 ###
     ###################
     lista_eliminar = []
@@ -749,7 +720,7 @@ def main(Paciente,row,Fcorte,Eps):
         __30 = _30(folios,dic)
     except:
         print("falló _30")
-
+"""
 
 ###################
 ### CANCER MAMA ###
@@ -776,7 +747,7 @@ def main(Paciente,row,Fcorte,Eps):
             return _31,_32,_33
         except:
             _31 = '98'
-            _32 = ' '
+            _32 = '1845-01-01'
             _33 = '98'
             return _31,_32,_33
     try:
@@ -789,7 +760,8 @@ def main(Paciente,row,Fcorte,Eps):
     ### ColoRectal 34 ###
     #####################
     def _34_(__17):
-        colorectal = ['c180','c181','c182','c183','c184','c185','c186','c187','c188','c189','c19x','c20x','c210','c211','c212','c218','d010','d011','d012','d013']
+        print("__17",__17)
+        colorectal = ['C180','C181','C182','C183','C184','C185','C186','C187','C188','C189','C19x','C20x','C210','C211','C212','C218','D010','D011','D012','D013']
         if __17 in colorectal:
             __34 = '99'
         else:
@@ -848,6 +820,7 @@ def main(Paciente,row,Fcorte,Eps):
                         resultado.append(dic['36'][llave])
         try:                        
             codigo = stats.mode(resultado)[0][0]
+            codigo = " "
         except:
             pass
         if encontrado_hodg == 0:
@@ -936,7 +909,7 @@ def main(Paciente,row,Fcorte,Eps):
 
 
 
-    ####################
+    """####################
     ### VARIABLE 40 ####
     ####################
     lista_eliminar = ['na','ia']
@@ -961,7 +934,7 @@ def main(Paciente,row,Fcorte,Eps):
     try:
         __40 = _40(folios,dic,__29)
     except:
-        print("falló __40")
+        print("falló __40")"""
 
 
     ####################
@@ -1092,7 +1065,7 @@ def main(Paciente,row,Fcorte,Eps):
                         for i in range(12):
                             med_q2.append('97')
                         __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
-                        __96 = "98´"
+                        __96 = "2"
                         __97 = fechas[-1][1]
                         __98 = "1"
                         __99 = "98"
