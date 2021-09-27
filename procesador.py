@@ -456,11 +456,12 @@ def main(Paciente,row,Fcorte,Eps):
 
         __15 = aux(texto,'ono: 3',True) # acento
         __15 = re.findall('[0-9]+',__15)
+        __15 = __15[0]
         if __15 == '':
             __15 = '0'
 
         __16 = "" # en todos los casos a sido na
-
+        print("telefono :",__15)
 
         return __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16
     try:
