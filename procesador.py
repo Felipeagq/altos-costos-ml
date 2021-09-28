@@ -338,6 +338,7 @@ def main(Paciente,row,Fcorte,Eps):
                             y normalizado.
 
         '''
+        __1 = None
         def lower(text):
             return text.lower()
 
@@ -360,8 +361,13 @@ def main(Paciente,row,Fcorte,Eps):
 
         # identificacion
         head2 = head[head.find('.')+1:head.find('.')+3]
+        print(head2)
         name = head[head.find('- ')+2:].split()
-        __5 = head2.upper()
+        try:
+            __5 = head2.upper()
+            print(__5)
+        except:
+            __5 = "CC"
         __6 = re.findall('[0-9]+', head)[0]
 
         # nombres
@@ -379,7 +385,7 @@ def main(Paciente,row,Fcorte,Eps):
             __2 = name[1].upper()            
             __3 = name[2].upper()            
             __4 = name[3].upper()
-
+        print(__1,__2,__3,__4)
         # fecha nacimiento
         fecha = aux(texto,'fecha nacimiento:',True)
         fecha = fecha.split('/')
@@ -456,20 +462,41 @@ def main(Paciente,row,Fcorte,Eps):
 
         __15 = aux(texto,'ono: 3',True) # acento
         __15 = re.findall('[0-9]+',__15)
-        __15 = __15[0]
+        print(__15)
+        print("Hasta aqui")
+        try:
+            __15 = __15[0]
+        except:
+            __15 = " "
         if __15 == '':
             __15 = '0'
-
         __16 = "" # en todos los casos a sido na
+
         print("telefono :",__15)
-
         return __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16
-    try:
-        __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16 = info_Encabezado(paciente)
-    except:
-        pass
+    
+    __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16 = info_Encabezado(paciente)
 
-    print(__5,__6)
+    print("salio Encabezado \n\n")
+
+    v_head = [__1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16]
+
+    print(v_head)
+
+    for i in range(1,17):
+        try:
+            wb = load_workbook(filename="prueba2.xlsx")
+            ws = wb['CAC']
+            ws.cell(row=row,column=i,value=v_head[i-1])
+            wb.save("prueba2.xlsx")
+        except:
+            wb = load_workbook(filename="prueba2.xlsx")
+            ws = wb['CAC']
+            ws.cell(row=row,column=i,value="N/A")
+            wb.save("prueba2.xlsx")
+
+
+    
     ###################
     ### VARIABLE 17 ###
     ###################
@@ -2080,14 +2107,20 @@ def main(Paciente,row,Fcorte,Eps):
     #wb = Workbook() # creamos objeto de Excel
     #wb.save('prueba2.xlsx') 
 
+
+    #wb.create_sheet('CAC',0)
+
+
+
+
     wb = load_workbook(filename="prueba2.xlsx")
     #wb.create_sheet('CAC',0)
     ws = wb['CAC']
-    for i in range(1,167):
+    for i in range(16,167):
         try:
             ws.cell(row=row,column=i,value=variables_final[i-1])
         except:
-            ws.cell(row=row,column=i,value="N/A")
+            ws.cell(row=row,column=i,value=" ")
 
     wb.save("prueba2.xlsx")
 
@@ -2098,7 +2131,7 @@ if __name__ == '__main__':
 
         continue
     
-    pacientes = glob.glob('*7205297*.txt')
+    pacientes = glob.glob('*21658713*.txt')
     pacientes = glob.glob('HISTORIA*.txt')
     print(f"La cantidad de pacientes es {len(pacientes)}")
 
@@ -2114,7 +2147,7 @@ if __name__ == '__main__':
             main(paciente,row,f,eps)
         except Exception as e:
             print(e)
-            continue
+
         row = row + 1
         for i in range(3):
             print(' ')
