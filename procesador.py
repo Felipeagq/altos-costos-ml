@@ -326,7 +326,7 @@ def main(Paciente,row,Fcorte,Eps):
 
 
     # Sacamos la informacion del encabezado
-    def info_Encabezado(texto):
+    def info_Encabezado(texto,Eps):
         '''
         Esta función extrae la información de los items
         1 --> 16
@@ -390,7 +390,7 @@ def main(Paciente,row,Fcorte,Eps):
         fecha = aux(texto,'fecha nacimiento:',True)
         fecha = fecha.split('/')
         fecha = fecha[::-1]
-        __7 = '-'.join(fecha)
+        __7 = '-'.join(fecha).replace(" ","")
 
         # sexo
         __8 = aux(texto,'sexo:',True)
@@ -416,7 +416,7 @@ def main(Paciente,row,Fcorte,Eps):
 
         # codigo eps
         eps = aux(texto,'empresa:',True) #COMFAGUAJIRA PGP ONCOLOGIA y SUBSIDIADO son diferentes?
-        __11 = None
+        __11 = Eps
 
         if 'subsidiado' in eps:
             __10 = 'S'
@@ -475,7 +475,7 @@ def main(Paciente,row,Fcorte,Eps):
         print("telefono :",__15)
         return __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16
     
-    __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16 = info_Encabezado(paciente)
+    __1,__2,__3,__4,__5,__6,__7,__8,__9,__10,__11,__12,__13,__14,__15,__16 = info_Encabezado(paciente,Eps)
 
     print("salio Encabezado \n\n")
 
@@ -1178,9 +1178,9 @@ def main(Paciente,row,Fcorte,Eps):
                         for i in range(12):
                             encontrados.append('98')
                         __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]                
-                        __74 = "98"
+                        __74 = "2"
                         __75 = "1800-01-01"
-                        __76 = "1"
+                        __76 = "3"
                         __77 = "98"
                         if len(hormo_fechas)>1:
                             __78 = " "
@@ -1191,7 +1191,7 @@ def main(Paciente,row,Fcorte,Eps):
                             __83 = '98'
                             encontrados = list(med_encontrados2[-1]).copy()
                             for i in range(12):
-                                encontrados.append('98')
+                                encontrados.append('97')
                             __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
                             __96 = "98"
                             __97 = "1845-01-01"
@@ -1207,7 +1207,7 @@ def main(Paciente,row,Fcorte,Eps):
                             __83 = '97'
                             encontrados = []
                             for i in range(12):
-                                encontrados.append('97')
+                                encontrados.append('98')
                             __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
                             __96 = "98"
                             __97 = "1845-01-01"
@@ -1453,94 +1453,9 @@ def main(Paciente,row,Fcorte,Eps):
     ###############
     ### CIRUGIA ###
     ###############
-    dic['159'].clear()
-    lista_agregar = ["muerto", "muerte", "fallecio","fallecimiento","fallecido",'pcte fallecio','se declara muerte clinica','paciente fallecido','se declara fallecido','se entrega acta de defuncion','se declara paciente fallecida','fallecida','muerta','declara fallecido','declara fallecida']
-    [dic['159'].update({key:'2'}) for key in lista_agregar]
-    def _100__111(folios,dic):
-        print("Entrando a cirugia")
-        __100 = "2"
-        patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
-        __100 = '98'
-        print("__print: ",__100)
-        import re
-        here = []
-        for folio in range(len(folios)):
-            if 'descripcon cirugia' in folios[folio]:
-                here.append(folio)
-
-        if len(here)!=0:
-            __100 = '1'
-            print(__100)
-            __101 = str(len(here))
-            folio_1 = here[0]
-
-
-            fechas = re.findall(patron_fecha,folios[folio_1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
-            fecha = fechas[0]
-            __102 = '-'.join(fecha.split("/")[::-1])            
-            __103 = "80010054401"
-            n = folios[folio_1].find('codigo')
-            aux = folios[folio_1][n:]
-            start = aux.find('\n')
-            codigo_aux = aux[start+2:start+13]
-            codigo = re.findall('[0-9]',codigo_aux)
-            __104 = ''.join(codigo) 
-            #__105 = '1'
-            __105 = " "
-            __106 = '1845-01-01'
-            __107 = '98'
-            __108 = '98'
-            __109 = '98'
-            __110 = ' '
-            __111 = '1'
-            start = folios[folio_1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ").find("grupo quirurgico")
-            folio_ciru = folios[folio_1][start+16:]
-            codigo = re.findall('[0-9]+', folio_ciru)[0]
-            __104 = codigo 
-            __105 = "1"
-            
-            
-            if len(here)>1:
-                __100 = '1'
-                print(__100)
-                folio_2 = here[-1]
-                fechas = re.findall(patron_fecha,folios[folio_2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
-                fecha = fechas[0]
-                __106 = '-'.join(fecha.split("/")[::-1])   
-                __107 = '1' # PENDIENTEEE
-                __108 = '80010054401'
-                n2 = folios[folio_2].find('codigo')
-                aux2 = folios[folio_2][n2:]
-                start1 = aux2.find('\n')
-                codigo_aux2 = aux2[start1+2:start1+13]
-                codigo2 = re.findall('[0-9]',codigo_aux2)
-                start = folios[folio_1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ").find("grupo quirurgico")
-                folio_ciru = folios[folio_1][start+16:]
-                codigo2 = re.findall('[0-9]+', folio_ciru)[0]                
-                __109 = codigo2
-                __110 = ' ' # 1
-                __111 = '1'
-                for llave in dic['159'].keys():
-                    if llave in folios[folio_2]:
-                        __111 = '2'  
-        else:
-            __100 = '2'
-            print(__100)
-            __101 = '98'
-            __102 = '1845-01-01'
-            __103 = '98'
-            __104 = "98"
-            __105 = '98'
-            __106 = '1845-01-01'
-            __107 = '98'
-            __108 = '98'
-            __109 = '98'
-            __110 = ' '
-            __111 = '98'
-        print(__100)        
-        return __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111
+    import cirugias_peticion
     try:
-        __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111 = _100__111(folios,dic)
+        __100,__101,__102,__103,__104,__105,__106,__107,__108,__109,__110,__111 = cirugias_peticion.main(__6,__5)
     except Exception as e:
         print(e)
         print("falló _100__111")
@@ -1789,7 +1704,7 @@ def main(Paciente,row,Fcorte,Eps):
     ###################################
     def _140__148(folios):
         _140 = None
-        _146 = None
+        _146 = "1"
         patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
         for folio in folios:
             folio = folio.replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," ")
@@ -1810,7 +1725,7 @@ def main(Paciente,row,Fcorte,Eps):
                 start = folio.find("reg.")
                 frag = folio[start:start+60]
                 if 'psicologia' in frag:
-                    _146 = " " # 1
+                    _146 = "2" # 1
 
 
         if _140 == None:
@@ -2061,7 +1976,7 @@ def main(Paciente,row,Fcorte,Eps):
             
 
         elif (int(__45)==1) and (int(__100)==1) and (int(__112)!=1):
-            __157 = '5'
+            __157 = '6' # aqui iba 5
             __41 = '2'
             
 
@@ -2071,7 +1986,7 @@ def main(Paciente,row,Fcorte,Eps):
             
 
         elif (int(__45)!=1) and (int(__100)==1) and (int(__112)==1):
-            __157 = '6'
+            __157 = '5'
             __41 = '2'
             
         
