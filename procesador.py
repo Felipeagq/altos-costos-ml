@@ -408,6 +408,9 @@ def main(Paciente,row,Fcorte,Eps):
             __9 = '9111'
         else:
             __9 = '9629'
+        
+        if __5 == 'TI':
+            __9 = '9998' 
         # ocupación
         #__9 = aux(texto,'ocupacion:',True)
 
