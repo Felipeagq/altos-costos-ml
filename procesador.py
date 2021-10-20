@@ -551,12 +551,13 @@ def main(Paciente,row,Fcorte,Eps):
                 diag = mode(diagnosticos)
                 print(diag)
                 __17 = diag
-                return __17.replace("\n","").replace("c","C")
+                return __17.replace("\n","").replace("c","C").upper()
                 
             except:
                 return 'No hubo diagnostico'
     try:
         __17 = _17(folios,dic,__6,__5)
+        __17 = __17.upper()
     except:
         print("fallo __17")
 
@@ -870,7 +871,7 @@ def main(Paciente,row,Fcorte,Eps):
 ###################
 ### PROSTATA 37 ###
 ###################
-    def _37_(folios,dic):
+    def _37_(folios,dic,diag):
         from scipy import stats 
         lista_eliminar = ['na','0','gleason','gleasson','score']
         [dic['37'].pop(key,None) for key in lista_eliminar]
@@ -889,11 +890,14 @@ def main(Paciente,row,Fcorte,Eps):
 
             grado = stats.mode(resultado)[0][0]
         except:
-            if encontrado == 0:
-                grado = '98'
+            diag = diag.upper()
+            if diag == "C61X":
+                grado = " "
+            else:
+                grado = "98"
         return grado 
     try:
-        __37 = _37_(folios,dic)
+        __37 = _37_(folios,dic,__17)
     except:
         print("fallo _37_")
 
@@ -1172,6 +1176,7 @@ def main(Paciente,row,Fcorte,Eps):
                         __53 = '97'
                         __54 = '97'
                         __55 = "1"
+                        __56 = " "
                         __57 = hormo_fechas[0]
                         __58 = "1"
                         __59 = "80010054401"
@@ -1179,14 +1184,14 @@ def main(Paciente,row,Fcorte,Eps):
                         __61 = len(list(med_encontrados2[0]))
                         encontrados = list(med_encontrados2[0]).copy()
                         for i in range(12):
-                            encontrados.append('98')
+                            encontrados.append('97')
                         __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]                
                         __74 = "2"
                         __75 = "1800-01-01"
                         __76 = "3"
                         __77 = "98"
                         if len(hormo_fechas)>1:
-                            __78 = " "
+                            __78 = "97"
                             __79 = "1845-01-01" #hormo_fechas[-1]
                             __80 = '98' 
                             __81 = '98'
@@ -1203,11 +1208,11 @@ def main(Paciente,row,Fcorte,Eps):
                             print("TUVO HORMONOTERAPIA")
                         else:
                             __78 = " "
-                            __79 = "97"
-                            __80 = '97' 
-                            __81 = '97'
-                            __82 = '97'
-                            __83 = '97'
+                            __79 = "1845-01-01"
+                            __80 = '98' 
+                            __81 = '98'
+                            __82 = '98'
+                            __83 = '98'
                             encontrados = []
                             for i in range(12):
                                 encontrados.append('98')
@@ -1229,7 +1234,7 @@ def main(Paciente,row,Fcorte,Eps):
                         __53 = '97'
                         __54 = '97'
                         __55 = "98"
-                        __56 = " "
+                        __56 = "98"
                         __57 = "1845-01-01"
                         __58 = "98"
                         __59 = "98"
@@ -1243,7 +1248,7 @@ def main(Paciente,row,Fcorte,Eps):
                         __75 = "1845-01-01"
                         __76 = "98"
                         __77 = "98" 
-                        __78 = " "
+                        __78 = "98"
                         __79 = "1845-01-01"
                         __80 = '98' 
                         __81 = '98'
@@ -1293,7 +1298,7 @@ def main(Paciente,row,Fcorte,Eps):
                 __83 = 'N/A'
                 encontrados = []
                 for i in range(12):
-                    encontrados.append('N/A')
+                    encontrados.append('98')
                 __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
                 __96 = "N/A"
                 __97 = "1845-01-01"
@@ -1692,9 +1697,16 @@ def main(Paciente,row,Fcorte,Eps):
         print("__112:", __112)
         print("__116:",__116)
 
-        return __112,__113,__114,__116,__117,__118,__120,__121,__122
+        if __112 == "98":
+            __115 = "98"
+            __124 = "98"
+        if __112 == "1":
+            __115 = " "
+            __124 = " "
+
+        return __112,__113,__114,__115,__116,__117,__118,__120,__121,__122,__124
     try:
-        __112,__113,__114,__116,__117,__118,__120,__121,__122 = _112__131(folios,dic)
+        __112,__113,__114,__115,__116,__117,__118,__120,__121,__122,__124 = _112__131(folios,dic)
     except Exception as e:
         print(e)
         print("falló _112__131")
@@ -1728,13 +1740,13 @@ def main(Paciente,row,Fcorte,Eps):
                 start = folio.find("reg.")
                 frag = folio[start:start+60]
                 if 'psicologia' in frag:
-                    _146 = "2" # 1
+                    _146 = "1" # 1
 
 
         if _140 == None:
             _140 = "2"
             _141 = "2"
-            _146 = " " # 2
+            _146 = "2" # 2
             _147 =  "1845-01-01"
             _148 = "98" # "80010054401"
         _142,_143,_144,_145 = ("2","2","2","2")
@@ -1946,9 +1958,7 @@ def main(Paciente,row,Fcorte,Eps):
             #45  = quimio
             #100 = cirugia
             #112 = radio
-            
-            
-            __160 = '0' # inferir
+            __160 = '9' # inferir
             __161 = '1' #inferir
             __163 = '1845-01-01' # ¿como evaluar persona con aseguramiento?     
             __164 = '98'        
@@ -1964,38 +1974,45 @@ def main(Paciente,row,Fcorte,Eps):
         if  (int(__45)==1) and (int(__100)!=1) and (int(__112)!=1):
             __157 = '2'
             __41 = '2'
+            __161 = "1"
             
             
 
         elif (int(__45)!=1) and (int(__100)==1) and (int(__112)!=1):
             __157 = '3'
             __41 = '2'
+            __161 = "1"
             
             
 
         elif (int(__45)!=1) and (int(__100)!=1) and (int(__112)==1):
             __157 = '1'
             __41 = '2'
+            __161 = "1"
             
 
         elif (int(__45)==1) and (int(__100)==1) and (int(__112)!=1):
             __157 = '6' # aqui iba 5
             __41 = '2'
+            __161 = "1"
             
 
         elif (int(__45)==1) and (int(__100)!=1) and (int(__112)==1):
             __157 = '4'
             __41 = '2'
+            __161 = "1"
             
 
         elif (int(__45)!=1) and (int(__100)==1) and (int(__112)==1):
             __157 = '5'
             __41 = '2'
+            __161 = "1"
             
         
         elif (int(__45)==1) and (int(__100)==1) and (int(__112)==1):
             __157 = '10'
             __41 = '2'
+            __161 = "1"
             
 
         else:
@@ -2005,6 +2022,16 @@ def main(Paciente,row,Fcorte,Eps):
         if __159 == "2": # paciente fallecido
             __157 = '98'
         
+        if __160 == "9":
+            __161 = "8"
+        
+        if __160 == "7":
+            __161 = "9"
+
+        if __157 == "9":
+            __161 = "3"
+                 
+
         
         return __157,__158,__159,__160,__161,__162,__163,__164,__165,__166,__41
     try:
