@@ -762,32 +762,6 @@ def main(Paciente,row,Fcorte,Eps):
 
 
 
-    """####################
-    ### VARIABLE 40 ####
-    ####################
-    lista_eliminar = ['na','ia']
-    [dic['40'].pop(key,None) for key in lista_eliminar]
-    lista_agregar = ['el reporte biopsia', 'dx en','años de evolucion']
-    [dic['40'].update({key:None}) for key in lista_agregar]
-    def _40(folios,dic,__29):
-        from scipy import stats
-        resultado = []
-        variable = None
-        for folio in folios:
-            for llave in dic['40'].keys():
-                if llave in folio:
-                    variable = llave
-                    resultado.append(dic['40'][llave])
-        if __29 == '20':
-            return " " # 2
-        if variable == None:
-            return ' ' # 99
-        # return stats.mode(resultado)[0][0]
-        return " "
-    try:
-        __40 = _40(folios,dic,__29)
-    except:
-        print("falló __40")"""
 
 
     ####################
@@ -944,7 +918,9 @@ def main(Paciente,row,Fcorte,Eps):
 
     print("100 : ",__100)
 
-
+    ###################################
+    ### RADIOTERAPIA ###
+    ###################################
 
     print("-- -- --RADIOTERAPIA-- -- -- ")
     lista_eliminar = ['na',' na']
@@ -1098,11 +1074,6 @@ def main(Paciente,row,Fcorte,Eps):
     #########################################
     ### TRABAJANDO CON WORKBOOK DE EXCELL ###
     #########################################
-    #wb = Workbook() # creamos objeto de Excel
-    #wb.save('prueba2.xlsx') 
-
-
-    #wb.create_sheet('CAC',0)
 
 
 
@@ -1117,6 +1088,13 @@ def main(Paciente,row,Fcorte,Eps):
             ws.cell(row=row,column=i,value=" ")
 
     wb.save("prueba2.xlsx")
+
+
+
+
+    #########################################
+    ### COMIENZO DE  FUNCION COMO MAIN.PY ###
+    #########################################
 
 if __name__ == '__main__':
     hcs = glob.glob('*.pdf')

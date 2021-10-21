@@ -4,7 +4,7 @@ clone:
   lfs: true
 
 options:
-  max-time: 15
+  max-time: 30
 
 definitions:
   steps:
