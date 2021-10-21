@@ -1,5 +1,6 @@
 import requests
 import json
+import re
 
 ############################
 ### QUIMIOTERAPIA 45 -77 ###

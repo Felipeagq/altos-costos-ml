@@ -1,7 +1,7 @@
 ####################
 ### RADIOTERAPIA ###
 ####################
-
+import re
 
 
 def _112__131(folios,dic):

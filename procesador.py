@@ -961,12 +961,13 @@ def main(Paciente,row,Fcorte,Eps):
         print(e)
         print("falló _112__131")
         pass
-    print("Salio de radio")
+    print("Salio de radio\n")
 
 
     ###################################
     ### DOLOR Y CUIDADOS PALIATIVOS ###
     ###################################
+    print("-- -- --Dolor  y Cuidado -- -- -- ")
     def _140__148(folios):
         _140 = None
         _146 = "1"
@@ -1006,56 +1007,14 @@ def main(Paciente,row,Fcorte,Eps):
         __140,__141,__142,__143,__144,__145,__146,__147,__148 = _140__148(folios)
     except:
         print("falló _140__148")
+    print(__140,__141,__142,__143,__144,__145,__146,__147,__148)
+    print("\n")
 
-
-    """
-    ###################
-    ### PSICOLOGIA ###
-    ###################
-    def _146__148(folios,anterior):
-        _146 = None
-        for folio in folios:
-            here = []
-            for i in range(len(folio)-5):
-                sub = folio[i:i+4] # n-grams de caracteres
-                if sub == 'reg.':
-                    here.append(i)
-
-            for ii in here:
-                frag = folio[ii:ii+30]
-                if 'psicologia' in frag:
-                    start = folio.find('fecha') + 6
-                    end = start + 10
-                    try:
-                        fecha = folio[start:end]
-                        fecha = fecha.split('/')
-                        fecha = fecha[::-1]
-                        _147 = '-'.join(fecha)
-                        if _147.replace(' ','').isalpha():
-                            _147 = '1845-01-01'
-                    except:
-                        _147 = 'problema'
-                    _146 =  "1"
-                    
-                    break
-            if _146 == "1":
-                break
-        if _146 == None:
-            _146 = "2"
-            _147 = "1845-01-01"
-        _148 = "98" # "80010054401"
-        return _146,_147,_148
-    __146,__147,__148 = _146__148(folios)
-    print('psicologia')
-    print(f'==>146: {__146}')
-    print(f'==>147: {__147}')
-    print(f'==>148: {__148}')
-    print(' ')
-    """
-    print("entrando a nutricion")
+   
     ###################
     ### NUTRICION ###
     ###################
+    print("-- -- -- Nutricion -- -- -- ")
     def _152__156(folios):
         _152 = "98"
         patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
