@@ -434,7 +434,7 @@ def main(Paciente,row,Fcorte,Eps):
         else:
             __13 = '5'
         # residencia
-        municipio = paciente.get("state","BARRANQUILLA")
+        municipio = paciente.get("city","BARRANQUILLA")
         data = pd.read_csv('municipios.csv',sep=',')
         try:
             codigo = data[data['municipio']==municipio]['codigo'].values[0]

@@ -26,64 +26,23 @@ def _157__166(folios,dic,__45,__100,__112,__6,__5,__140):
     print("entrando a resultado final")
     __157 = "98"
     print(__157)
-    try:
-        print("Entró en el try")
-        header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
-        res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
-        persona = json.loads(res.text)
-        if persona["data"] is not None:
-            for n in persona["data"]:
-                if n["deceased"] == 1:
-                    print("persona encontrada muerta")
-                    __159 = "2"
-                    __163 = n["deathDate"][:10]
-                    print("variables",__159,__163)
-                    break
-                else:
-                    print("entro al else")
-                    __159 = "1"
-                    __163 = "1845-01-01"
-        else:
-            raise Exception
-    except:
-        print("Comenzóel except")
-        dic['159'].clear()
-        lista_agregar = ['pcte fallecio','se declara muerte clinica','paciente fallecido','declara fallecido','se entrega acta de defuncion','declara paciente fallecida','declara fallecido','declara fallecida', 'sin signos vitales','declarada paciente fallecida','declarado paciente fallecido', 'acta defuncion','sala de paz','sala de reposo','morgue','anuncian defuncion','anunciar muerte','certificado defuncion']
-        [dic['159'].update({key:'2'}) for key in lista_agregar]
-        patron_fecha = "[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]"
-        print("Antes del for")
-        for key in dic['159'].keys():
-            folios[-1] = folios[-1].replace('\n',' ')
-            here = findKeyWord(folios[-1],key,5)
-            
-            if key in folios[-1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
-                print("encontrado muerto -1")
-                __159 = '2'
-                fechas = re.findall(patron_fecha,folios[-1].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
-                fecha = fechas[0]
-                __163 = '-'.join(fecha.split("/")[::-1])
-                break
+    header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
+    res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
+    persona = json.loads(res.text)
 
-            elif key in folios[-2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
-                print("encontrado muerto -2")
-                __159 = '2'
-                fechas = re.findall(patron_fecha,folios[-2].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
-                fecha = fechas[0]
-                __163 = '-'.join(fecha.split("/")[::-1])                
-                break
-            
-            
+    paciente = persona["data"][0]
 
-            elif key in folios[-3].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "):
-                print("encontrado muerto -3")
-                __159 = '2'
-                fechas = re.findall(patron_fecha,folios[-3].replace("\n"," ").replace("  "," ").replace("   "," ").replace("  "," "))
-                fecha = fechas[0]
-                __163 = '-'.join(fecha.split("/")[::-1])                
-                break            
-            else:
-                __159 = '1'
-    print("salio del try except")
+    if paciente["deathState"] == 1:
+        print("persona encontrada muerta")
+        __159 = "2"
+        __163 = paciente["deathDate"][:10]
+        print("variables",__159,__163)
+    else:
+        print("entro al else")
+        __159 = "1"
+        __163 = "1845-01-01"
+
+    # Datos hasta el momento
     print("__159",__159)
     print("__45",__45)
     print("__100",__100)
@@ -96,8 +55,7 @@ def _157__166(folios,dic,__45,__100,__112,__6,__5,__140):
         __158 = '99'
         __160 = '4'
         __161 = '12' 
-
-        __164 = '1' # buscar en el texto y pregunta si hay area especifica. KWIC
+        __164 = '1' 
     else: # si se encuentra vivo
 
         __158 = '5' # A EVALUAR
@@ -123,45 +81,36 @@ def _157__166(folios,dic,__45,__100,__112,__6,__5,__140):
         __157 = '2'
         __41 = '2'
         __161 = "1"
-        
-        
 
     elif (int(__45)!=1) and (int(__100)==1) and (int(__112)!=1):
         __157 = '3'
         __41 = '2'
         __161 = "1"
-        
-        
 
     elif (int(__45)!=1) and (int(__100)!=1) and (int(__112)==1):
         __157 = '1'
         __41 = '2'
-        __161 = "1"
-        
+        __161 = "1"    
 
     elif (int(__45)==1) and (int(__100)==1) and (int(__112)!=1):
         __157 = '6' # aqui iba 5
         __41 = '2'
         __161 = "1"
-        
 
     elif (int(__45)==1) and (int(__100)!=1) and (int(__112)==1):
         __157 = '4'
         __41 = '2'
         __161 = "1"
-        
 
     elif (int(__45)!=1) and (int(__100)==1) and (int(__112)==1):
         __157 = '5'
         __41 = '2'
         __161 = "1"
-        
     
     elif (int(__45)==1) and (int(__100)==1) and (int(__112)==1):
         __157 = '10'
         __41 = '2'
         __161 = "1"
-        
 
     else:
         __157 = '9'
