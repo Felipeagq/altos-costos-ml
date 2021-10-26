@@ -376,7 +376,8 @@ def main(Paciente,row,Fcorte,Eps):
             __3 = paciente.get("fLastname","NONE")
             __4 = paciente.get("sLastname","NONE")
         # nombres
-        except:
+        except Exception as e:
+            print(e)
             __1 = name[0].upper()            
             __2 = name[1].upper()            
             __3 = name[2].upper()            
@@ -793,117 +794,14 @@ def main(Paciente,row,Fcorte,Eps):
     ## QUIMIOTERAPIA ##
     ###################
     import quimioterapia
-
+    print("-- -- --RADIOTERAPIA-- -- -- ")
     try:
-        __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76,__79, __80, __81, __82, __83, __84, __85, __86, __87, __88, __89, __90, __91, __92, __93, __94, __95, __96, __97, __98, __99 = quimioterapia._45__77_(folios,__17,__6,__5)
+        __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76,__77,__78,__79, __80, __81, __82, __83, __84, __85, __86, __87, __88, __89, __90, __91, __92, __93, __94, __95, __96, __97, __98, __99 = quimioterapia.main(__6,__5,__17)
     except Exception as e:
         print(e)
         print("falló _45__77_")
 
     print("-- -- -- -- -- -- -- -- -- -- -- --")
-
-
-
-
-
-    """
-    ############################
-    ### QUIMIOTERAPIA 78 -77 ###
-    ############################
-    def _78__99_(folios,diag,__55):
-        # identifico todos los folios donde sale la palabra clave 
-        quimios = []
-        leucemias = ['C910', 'C920', 'C924', 'C925', 'C930','C940', 'C942', 'C918', 'C926', 'C928', 'C933']
-        if diag in leucemias:
-            leucemia = True
-        else:
-            leucemia = False            
-        for i in range(len(folios)):
-            if ('se inicia protocolo de quimioterapia' in folios[i]) or ('se administra segun protocolo de quimioterapia' in folios[i]) or ('aplica protocolo de quimioterapia' in folios[i]) or ('aplica quimioterapia segun protocolo' in folios[i]) or (' DA INICIO A PROTOCOLO DE QUIMIOTERAPIA'.lower() in folios[i]) or ('ADMINISTRA QUIMIOTERAPIA'.lower() in folios[i]) or ('ADMINISTRA PROTOGOLO DE QUIMIOTERAPIA'.lower() in folios[i]):
-                quimios.append(i)
-                
-        if len(quimios)>1 :
-            #__78 = '2' # revisar
-            __78 = " "
-            start = folios[quimios[-1]].find('fecha') + 6
-            end = start + 10
-            fecha = folios[quimios[-1]][start:end]
-            fecha = fecha.split('/')
-            fecha = fecha[::-1]
-
-            __79 = '-'.join(fecha)
-            __80 = '1'
-            __81 = '80010054401'
-            __82 = '98'
-            ## medicamentos ##
-            encontrados = []
-            data = pd.read_csv('atc_medicamentos.csv')
-            data['descripcion_atc'] = data['descripcion_atc'].apply(lambda x: lower(x))
-            data['descripcion_atc'] = data['descripcion_atc'].apply(lambda x: normalize(x))
-            medicamentos = list(data['descripcion_atc'].unique())
-
-            for medicamento in medicamentos:
-                if medicamento in folios[quimios[0]]:
-                    if leucemia == False:
-                        if medicamento == 'dexametasona':
-                            continue                        
-                    values = data[data['descripcion_atc']==medicamento]['codigo_atc'].values[0]
-                    encontrados.append(values)
-            encontrados = set(encontrados)
-            encontrados = list(encontrados)
-            cuantos = str(len(encontrados))
-            for i in range(12):
-                encontrados.append('97')
-            __83 = cuantos
-            __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
-            if 'intratecal' in folios[quimios[-1]]:
-                __96 = '1'
-            else:
-                __96 = '2'
-            if  'termina infusion de quimioterapia sin complicaciones' in folios[quimios[0]]:
-                __98 = '1'
-            else : 
-                __98 = 'N/A'                 
-            __97 = "1800-01-01"
-            __99 = '98'
-        else:
-            __78 = '98'
-            __79 = '1845-01-01'
-            __80 = '98'
-            __81 = '98'
-            __82 = '98'
-            __83 = '98'
-            __84 = '98'
-            __85 = '98'
-            __86 = '98'
-            __87 = '98'
-            __88 = '98'
-            __89 = '98'
-            __90 = '98'
-            __91 = '98'
-            __92 = '98'
-            __93 = '98'
-            __94 = '98'
-            __95 = '98'
-            __96 = '98'
-            __97 = '1845-01-01'
-            __98 = '98'
-            __99 = '98'
-            #__73 = '986
-            if __55 == 1:
-                __78 = '97'
-                #__78 = " "
-        __79 = " "
-        __97 = " "
-        return __78,__79,__55,__80,__81,__82,__83,__84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95,__96,__97,__98,__99
-    try:
-        __78,__79,__55,__80,__81,__82,__83,__84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95,__96,__97,__98,__99 = _78__99_(folios,__17,__55)
-    except:
-        print("falló _78__99_")
-    """ 
-
-
-
 
     
     ###############
@@ -1051,6 +949,7 @@ def main(Paciente,row,Fcorte,Eps):
         return _152,_153,_154,_155,_156
     try:
         __152,__153,__154,__155,__156 = _152__156(folios)
+        print(__152,__153,__154,__155,__156)
     except Exception as e:
         print("falló _152__156")
         print(e)
@@ -1115,7 +1014,10 @@ if __name__ == '__main__':
     eps = 'prueba'
     for paciente in pacientes:
         try:
+            lon = len(f"== == == == == {paciente} / {row} == == == == ==")
+            print("="*lon)
             print(f'== == == == == {paciente} / {row} == == == == ==')
+            print("="*lon)
             main(paciente,row,f,eps)
         except Exception as e:
             print(e)
