@@ -3,6 +3,8 @@ import glob
 import pandas as pd
 import json 
 import re
+import peticion
+
 
 
 def main(C,CC,diag):
@@ -50,47 +52,12 @@ def main(C,CC,diag):
             print(Quimios)
             cantidad_quimios = len(Quimios)
             if cantidad_quimios == 0:
-                print("No tuvo quimios")
-                __45 = "98"
-                __46 = "98"
-                __47 = '98' 
-                __48 = '98'
-                __49 = '98'
-                __50 = '98'
-                __51 = '98'
-                __52 = '98'
-                __53 = '98'
-                __54 = '98'
-                __55 = "98"
-                __56 = "98"
-                __57 = "1845-01-01"
-                __58 = "98"
-                __59 = "98"
-                __60 = "98"
-                __61 = "98"
-                encontrados = []
-                for i in range(12):
-                    encontrados.append('98')
-                __62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
-                __74 = "2"
-                __75 = "1845-01-01"
-                __76 = "1"
-                __77 = "98"        
-                __78 = "97"
-                __79 = "1845-01-01" #hormo_fechas[-1]
-                __80 = '98' 
-                __81 = '98'
-                __82 = '98'
-                __83 = '98'
-                encontrados = []
-                for i in range(12):
-                    encontrados.append('98')
-                __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
-                __96 = "98"
-                __97 = "1845-01-01"
-                __98 = "98"
-                __99 = "98"        
                 print("lectura de folios para ver si tuvo hormonoterapia")
+                try:
+                    __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76,__77,__78,__79, __80, __81, __82, __83, __84, __85, __86, __87, __88, __89, __90, __91, __92, __93, __94, __95, __96, __97, __98, __99 = peticion.main(C,CC,diag)
+                except Exception as e:
+                    print(e)
+                    print("lectura de folios para ver si tuvo hormonoterapia")
 
             # SI TUVO PERO UNA SOLA QUIMIOTERAPIA
             if cantidad_quimios == 1:
@@ -163,7 +130,7 @@ def main(C,CC,diag):
                 __75 = Quimios[0][1]
                 __76 = "1"
                 __77 = "98"        
-                __78 = "97"
+                __78 = "98"
                 __79 = Quimios[-1][0] #hormo_fechas[-1]
                 __80 = '1' 
                 __81 = '80010054401'
@@ -267,7 +234,7 @@ def main(C,CC,diag):
 
     
 if __name__ == '__main__':
-    cedulas = ["8713010","28104919","30723970","72044663"]
+    cedulas = ["8713010","28104919","30723970","72044663","40797605"]
     for c in cedulas:
         print("\n","--"*50)
         __45,__46,__47,__48,__49,__50,__51,__52,__53,__54,__55,__56,__57,__58,__59,__60,__61,__62,__63,__64,__65,__66,__67,__68,__69,__70,__71,__72,__73,__74,__75,__76,__77,__78,__79, __80, __81, __82, __83, __84, __85, __86, __87, __88, __89, __90, __91, __92, __93, __94, __95, __96, __97, __98, __99 = main(c,"CC","C625")
