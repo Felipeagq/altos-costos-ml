@@ -22,7 +22,8 @@ def findKeyWord(text,keyWord,n):
     return here
 
 
-def _157__166(folios,dic,__45,__100,__112,__6,__5,__140):
+def _157__166(folios,dic,__45,__100,__112,__6,__5,__59,__72,__95,__104):
+    abandono = False
     print("entrando a resultado final")
     __157 = "98"
     print(__157)
@@ -60,18 +61,21 @@ def _157__166(folios,dic,__45,__100,__112,__6,__5,__140):
 
         __158 = '5' # A EVALUAR
         if "paciente abandon" in folios[-1]:
+            abandono = True
             __158 = '6'
-        #45  = quimio
-        #100 = cirugia
-        #112 = radio
-        __160 = '9' # inferir
-        __161 = '1' #inferir
-        __163 = '1845-01-01' # ¿como evaluar persona con aseguramiento?     
+            __160 = '9' 
+            __161 = '8'
+        else:
+            __160 = '0' 
+            __161 = '1' 
+        __163 = '1845-01-01' 
         __164 = '98'        
         
-    if "paciente abandon" in folios[-1]:
-        __158 = '6'
-        __161 = '8'
+    # if "paciente abandon" in folios[-1]: # ALTA VOLUNTRIA
+    #     abandono = True
+    #     __158 = '6'
+    #     __160 = '7'
+    #     __161 = '9'
     __165 = '98'
     __162 = '1845-01-01'
     __166 = '2021-01-01' # encontrar alguna forma de cambiar la fecha de corte ¿cada cuanto es la fecha de corte? 
@@ -114,6 +118,7 @@ def _157__166(folios,dic,__45,__100,__112,__6,__5,__140):
 
     else:
         __157 = '9'
+        __161 = '3'
         __41 = '3'
 
     if __159 == "2": # paciente fallecido
@@ -127,7 +132,25 @@ def _157__166(folios,dic,__45,__100,__112,__6,__5,__140):
 
     if __157 == "9":
         __161 = "3"
-                
+
+    if __159 == "1":
+        if abandono == False:
+            manejos_oncologicos = (__59,__72,__95,__104)
+            print(list(set(manejos_oncologicos)))
+            if "2" in manejos_oncologicos:
+                __158 = "97"
+            else:
+                __158 = "5"
+
+            if "3" in manejos_oncologicos:
+                __158 = "97"
+            else:
+                __158 = "5"
+            if list(set(manejos_oncologicos))[0]=='98' and len(list(set(manejos_oncologicos))[0])==1:
+                print(set(manejos_oncologicos))
+                __158 = "7"
+        else:
+            __158 ="6"
 
     
     return __157,__158,__159,__160,__161,__162,__163,__164,__165,__166,__41

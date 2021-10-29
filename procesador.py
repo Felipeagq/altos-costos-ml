@@ -465,7 +465,12 @@ def main(Paciente,row,Fcorte,Eps):
             ws.cell(row=row,column=i,value="N/A")
             wb.save("prueba2.xlsx")
 
-
+    # VERSION DEL APLICATIVO #
+    ##########################
+    wb = load_workbook(filename="prueba2.xlsx")
+    ws = wb['CAC']
+    ws.cell(row=1,column=1,value="v1.1.0")
+    wb.save("prueba2.xlsx")
     
     ###################
     ### VARIABLE 17 ###
@@ -1018,7 +1023,19 @@ def main(Paciente,row,Fcorte,Eps):
     ######################################
     import resultado_final
     try:
-        __157,__158,__159,__160,__161,__162,__163,__164,__165,__166,__41 = resultado_final._157__166(folios,dic,__45,__100,__112,__6,__5,__140)
+        __157,__158,__159,__160,__161,__162,__163,__164,__165,__166,__41 = resultado_final._157__166(folios,dic,__45,__100,__112,__6,__5,__76,__98,__121,__130)
+        print(f"""
+        __157 = {__157}
+        __158 = {__158}
+        __159 = {__159}
+        __160 = {__160}
+        __161 = {__161}
+        __162 = {__162}
+        __163 = {__163}
+        __164 = {__164}
+        __165 = {__165}
+        __166 = {__166}
+        """)
     except Exception as e:
         print(e)
         print("falló _157__166")
@@ -1061,7 +1078,7 @@ if __name__ == '__main__':
 
         continue
     
-    pacientes = glob.glob('*21658713*.txt')
+    pacientes = glob.glob('*32672854*.txt')
     pacientes = glob.glob('HISTORIA*.txt')
     print(f"La cantidad de pacientes es {len(pacientes)}")
 
