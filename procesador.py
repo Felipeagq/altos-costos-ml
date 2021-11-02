@@ -795,6 +795,19 @@ def main(Paciente,row,Fcorte,Eps):
         print("falló __41")
 
 
+    import antecedentes
+    print("-- -- -- ANTECEDENTES -- -- --")
+    try:
+        __18,__19,__20,__21,__22,__23,__24,__25,__26,__27,__28,__29,__30,__31,__32,__33,__34,__35,__36,__37,__38,__39,__40,__41,__42,__43,__44 = antecedentes.main(__6,__5,folios)
+    except Exception as e:
+        print(e)
+        print("Fallo antecedentes")
+
+
+
+
+
+
     ###################
     ## QUIMIOTERAPIA ##
     ###################
