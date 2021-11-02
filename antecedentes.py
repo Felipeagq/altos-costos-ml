@@ -22,6 +22,7 @@ def main(C:str, CC:str, folio:str) -> dict:
     if persona["msg"] == "Ok":
         persona = persona["data"][0]
 
+        ## ESTADIFICACION ##
         __18 = persona["FECHA_DX_CANCER"]
         __19 = persona["FECHA_REMISION"]
         __20 = persona["FECHA_INGRESO"]
@@ -37,15 +38,27 @@ def main(C:str, CC:str, folio:str) -> dict:
         __29 = persona["ESTADIFICACION"]
         __29 = re.findall("[0-9]+",__29)[0]
         __30 = persona["FECHA_PRUEBA"]
+
+        ## CANCER MAMA ##
         __31 = "True / False"
         __32 = "FEHCA_HER2"
         __33 = persona["RESULTADO_HER_2"]
+
+        ## CANCER COLORECTAL ##
         __34 = persona["ESTADIO_DUKES"]
         __35 = "FECHA_DUKES"
+
+        ## HODGKIN ##
         __36 = persona["ESTADIO_LINFOMA"]
+
+        ## LINFOMA ##
         __37 = persona["ESCALA_GLEASON"]
+
+        ## LEUCEMIA - LINFOMA ##
         __38 = persona.get("RIESGO_LEUCEMIA","N/A")
         __39 = persona["FECHA_CLASIFICACION_RIESGO"]
+
+        ## ANTECEDENTES ##
         __40 = "N/A"
         __41 = "N/A"
         __42 = "N/A"
