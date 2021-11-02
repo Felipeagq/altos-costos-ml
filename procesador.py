@@ -469,7 +469,7 @@ def main(Paciente,row,Fcorte,Eps):
     ##########################
     wb = load_workbook(filename="prueba2.xlsx")
     ws = wb['CAC']
-    ws.cell(row=1,column=1,value="v1.1.0")
+    ws.cell(row=1,column=1,value="v1.1.2")
     wb.save("prueba2.xlsx")
     
     ###################
