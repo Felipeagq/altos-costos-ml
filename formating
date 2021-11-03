@@ -1,0 +1,159 @@
+SELECT	dbo.PreguntasVariables(@docPac, @tipDocPac, @folio, 1, 'FTAC1') FECHA_DX_CANCER,
+			dbo.PreguntasVariables(@docPac, @tipDocPac, @folio, 2, 'FTAC1') FECHA_REMISION,
+			dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,3, 'FTAC1') FECHA_INGRESO,
+			dbo.PreguntasVariables(@docPac, @tipDocPac, @folio, 4, 'FTAC1') FECHA_RECOLECCION_MUESTRA,
+			dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,5, 'FTAC1') FECHA_INFORME,
+		    
+
+CASE dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,123, 'FTAC1')  
+                WHEN '1' THEN 'Bien diferenciado (grado 1)' 
+                WHEN '2' THEN 'Moderadamente diferenciado (grado 2)' 
+                WHEN '3' THEN 'Mal diferenciado (grado 3)' 
+                WHEN '4' THEN 'Anaplásico o indiferenciado (grado 4)' 
+                WHEN '5' THEN 'Es un cancer solido cuyo reporte de patologia no incluye la descripcion de la diferenciacion celular' 
+                WHEN '6' THEN 'No se realizo estudio histopatologico'
+END AS GRADO_DIFERENCIACION,
+			
+
+CASE dbo.PreguntasVariables(@docPac, @tipDocPac, @folio, 14, 'FTAC1')   
+                WHEN '1' THEN 'ec 0 (tumor in situ)' 
+                WHEN '4' THEN 'ec IIA o 2a' 
+                WHEN '5' THEN 'ec IIB'
+                WHEN '6' THEN 'ec IIIA o 3a'
+                WHEN '7' THEN 'ec IIIB o 3b'
+                WHEN '8' THEN 'ec IIIC o 3c'
+                WHEN '9' THEN 'ec IV o 4'
+                WHEN '10' THEN 'ec III o 3'
+                WHEN '11' THEN 'ec IIC o 2c'
+                WHEN '12' THEN 'ec IVA o 4a'
+                WHEN '13' THEN 'ec IVB o 4b'
+                WHEN '14' THEN 'ec IA1'
+                WHEN '15' THEN 'ec IA2'
+                WHEN '16' THEN 'ec IAB'
+                WHEN '17' THEN 'ec IIID o 3d'
+                WHEN '18' THEN 'ec I o 1'
+                WHEN '19' THEN 'ec II o 2'
+                WHEN '20' THEN 'ec IA1'
+                WHEN '21' THEN 'ec IA2'
+                WHEN '22' THEN 'ec IB1'
+                WHEN '23' THEN 'ec IB2'
+                WHEN '24' THEN 'ec IIA1'
+                WHEN '25' THEN 'ec IIA2'
+                WHEN '26' THEN 'ec IVA o 4a'
+                WHEN '27' THEN 'ec IVB o 4b'
+                WHEN '28' THEN 'ec IIIC1 o 3c1'
+                WHEN '29' THEN 'ec IIIC2 o 3c2'
+                WHEN '30' THEN 'ec IB3'
+                WHEN '31' THEN 'ec IC1'
+                WHEN '32' THEN 'ec IC2'
+                WHEN '33' THEN 'ec IC3'
+                WHEN '34' THEN 'ec IC o 1c'
+                WHEN '35' THEN 'ec IS o 1s'
+                WHEN '36' THEN 'ec IVC o 4c'
+                WHEN '37' THEN 'ec 4S(para neuroblastoma)'
+                WHEN '38' THEN 'ec V o 5'
+                WHEN '39' THEN 'No Aplica' 
+END AS ESTADIFICACION,
+				
+dbo.PreguntasVariables(@docPac, @tipDocPac, @folio, 54, 'FTAC1') FECHA_PRUEBA,
+			    
+
+CASE   dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,55, 'FTAC1')    
+                WHEN '1' THEN 'Positivo'
+                WHEN '2' THEN 'Negativo'
+                WHEN '3' THEN 'Equivoco o indeterminado'
+                WHEN '4' THEN 'Cero o negativo'
+END AS RESULTADO_HER_2,
+			    
+
+CASE  dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,60, 'FTAC1')      
+                WHEN '1' THEN 'A'
+                WHEN '2' THEN 'B'
+                WHEN '3' THEN 'C'
+                WHEN '4' THEN 'D'
+								                                           
+END AS ESTADIO_DUKES,
+				
+
+CASE   dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,65, 'FTAC1')      
+                WHEN '1' THEN 'Estadio I'
+                WHEN '2' THEN 'Estadio II'
+                WHEN '3' THEN 'Estadio III'
+                WHEN '4' THEN 'Estadio IV'
+                WHEN '5' THEN 'Estadio IA'
+                WHEN '6' THEN 'Estadio IB'
+                WHEN '7' THEN 'Estadio IIA'
+                WHEN '8' THEN 'Estadio IIB'
+                WHEN '9' THEN 'Estadio IIIA'
+                WHEN '10' THEN 'Estadio IIIB'
+                WHEN '11' THEN  'Estadio IVA' 
+                WHEN '12' THEN  'Estadio IVB' 
+                WHEN '13' THEN 'Extranodal cualquier estadio'
+                WHEN '14' THEN  'Primario SNC' 
+                WHEN '15' THEN  'Primario Mediastinal' 
+                WHEN '16' THEN  'Primario de otros organos' 
+END AS ESTADIO_LINFOMA,
+				
+
+CASE  dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,82, 'FTAC1')    	   
+                WHEN '1' THEN 'Gleason ? 6: ? 3+3'
+                WHEN '2' THEN 'Gleason 7: 3+4'
+                WHEN '3' THEN 'Gleason 7: 4+3'
+                WHEN '4' THEN 'Gleason 8: 4+4 o 3+5 o 5+3'
+                WHEN '5' THEN 'Gleason 9 o 10: 4+5 o 5+4 o 5+5'
+END AS ESCALA_GLEASON,
+				
+
+CASE dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,88, 'FTAC1')        
+                WHEN '1' THEN 'Bajo riesgo'
+                WHEN '2' THEN 'Riesgo intemedio bajo'
+                WHEN '3' THEN 'Intermedio'
+                WHEN '4' THEN 'Riesgo intemedio alto'
+                WHEN '5' THEN 'Riesgo alto'
+END AS RIESGO_LEUCEMIA,
+				
+
+CASE dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,94, 'FTAC1')         
+                WHEN '1' THEN 'Riesgo estandar, bajo'
+                WHEN '2' THEN 'Riesgo intermedio'
+                WHEN '3' THEN 'Riesgo alto' 
+END AS CLASIFICACION_RIESGO_ADULTOS,
+				
+
+CASE dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,98, 'FTAC1')         
+                WHEN '1' THEN 'Riesgo estandar, favorable'
+                WHEN '2' THEN 'Riesgo intermedio'
+                WHEN '3' THEN 'Riesgo alto, desfavorable'
+END AS CLASIFICACION_RIESGO_PEDIATRICO,
+
+				
+dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,102, 'FTAC1') FECHA_CLASIFICACION_RIESGO,
+				
+dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,104, 'FTAC1') OBSERVACION,
+				
+
+CASE  dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,105, 'FTAC1')        
+                WHEN '1' THEN 'Neoadyuvancia'
+                WHEN '2' THEN 'Tratamiento inicial curativo'
+                WHEN '3' THEN 'Manejo de recaida'
+                WHEN '4' THEN 'Manejo de enfermedad metastasica'
+                WHEN '5' THEN 'Manejo paliativo (sin manejo de recaida ni enfermedad metastasica'
+                WHEN '6' THEN 'Adyuvancia'
+END AS UBICACION_ESQUEMA_QUIMIOTERAPIA,
+				
+
+CASE  dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,111, 'FTAC1')         
+                WHEN '1' THEN 'Neoadyuvancia'
+                WHEN '2' THEN 'Tratamiento curativo'
+                WHEN '3' THEN 'Adyuvancia'
+                WHEN '4' THEN 'Manejo de recaida'
+                WHEN '5' THEN 'Manejo de enfermedad metastasica'
+                WHEN '6' THEN 'Manejo paliativo (sin manejo de recaida ni enfermedad metastasica'
+END AS UBICACION_ESQUEMA_RADIO_BRAQUITERAPIA,
+				
+
+CASE  dbo.PreguntasVariables(@docPac, @tipDocPac, @folio,119, 'FTAC1')         
+                WHEN '1' THEN 'Tecnica conformacional 3d'
+                WHEN '2' THEN 'Tecnico convencional'
+                WHEN '3' THEN 'Braquiterapia'
+END AS TIPO_RADIO_APLICADA

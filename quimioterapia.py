@@ -95,7 +95,7 @@ def main(C,CC,diag):
                 __83 = '98'
                 encontrados = []
                 for i in range(12):
-                    encontrados.append('97')
+                    encontrados.append('98')
                 __84,__85,__86,__87,__88,__89,__90,__91,__92,__93,__94,__95 = encontrados[0],encontrados[1],encontrados[2],encontrados[3],encontrados[4],encontrados[5],encontrados[6],encontrados[7],encontrados[8],encontrados[9],encontrados[10],encontrados[11]
                 __96 = "98"
                 __97 = "1845-01-01"
