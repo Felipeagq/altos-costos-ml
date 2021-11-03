@@ -13,7 +13,7 @@ def main(C:str, CC:str, folio:str) -> dict:
             CC: tipo de documento"""
         header = {"X-Authorization":"OcUacy2Q3REsQX4KPA2x7LnMYrNo0HthgAIFt6YKYvuQNOSimUgzPGMcFyN376jJ"}
         link = f"http://190.131.222.108:8088/api/v1/macna/get/patient/alto-cost-format/{C}/type/{CC}/folio/{folio}"
-        print(link)
+        
         res = requests.get(url= link,headers=header,timeout=60)
         persona = json.loads(res.text)
         return persona
@@ -125,6 +125,7 @@ def main(C:str, CC:str, folio:str) -> dict:
         her = persona["RESULTADO_HER_2"]
         codigo_her = her_2.get(her,"98")
         if codigo_her == "98":
+            __33 = "98"
             __31 = "1"
             __32 = " "
         else:
@@ -173,6 +174,7 @@ def main(C:str, CC:str, folio:str) -> dict:
 
         ## LINFOMA ##
         gleason = persona["ESCALA_GLEASON"]
+        print(gleason)
         if gleason != None:
             estadio_gleason = re.findall(r"[0-9]+",gleason)
             if estadio_gleason == []:
@@ -189,6 +191,8 @@ def main(C:str, CC:str, folio:str) -> dict:
                     __37 = "14"
                 if codigo_gleason == '9':
                     __37 = "15"
+                else:
+                    __37 = "98"
         else:
             __37 = "98"
 
@@ -214,7 +218,7 @@ def main(C:str, CC:str, folio:str) -> dict:
         __43 = "1845-01-01"
         __44 = "99"
 
-        print(persona)
+
     else:
         __18 = " "
         __19 = " "
