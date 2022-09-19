@@ -100,6 +100,7 @@ def main(fecha,eps,cliente_mqtt,hash):
     })
     cliente_mqtt.publish(hash,data)    
     for hc in hcs:
+        print(hc)
         # convertimos los .pdf en .txt
         #pdf_to_txt(hc[:-4],cliente_mqtt)
         procentaje = f'{round(((actual/n) *100),3)}%'
@@ -218,6 +219,8 @@ def main(fecha,eps,cliente_mqtt,hash):
     for hc in hcs:
         try:
             os.remove(hc)
+            cliente_mqtt.publish(hash,hc)
+            print(f"se eliminó {hc}")
         except:
             continue
     

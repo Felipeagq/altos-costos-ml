@@ -1,10 +1,10 @@
-# Importamos la libreria
-import fitz
-import cv2
-import os
-import sys
-import pandas as pd
-import pytesseract
+# # Importamos la libreria
+# import fitz
+# import cv2
+# import os
+# import sys
+# import pandas as pd
+# import pytesseract
 
 """
 # 3 GENERAR EL TEXTO A PARTIR DEL PDF
