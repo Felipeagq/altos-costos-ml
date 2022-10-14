@@ -54,7 +54,7 @@ def descargar_prefix(prefix, quantity):
     quantity = int(quantity)
     print(f"la cantidad es {quantity}")
     bandera = True
-    print(pages)
+    print('pages main:', pages)
     vueltas = 1
     while bandera:
         print(f"voy por la vuelta {vueltas}")
@@ -106,49 +106,66 @@ def handle_connect(client, userdata, flags, rc):
 @mqtt.on_message()
 def handle_messages(client, userdata, message):
     mensaje = message.payload.decode()
-    print(mensaje)
-    time.sleep(5)
+    print('el mensaje inicial es:', mensaje)
+    time.sleep(2)
+    # try:
+    mensaje = json.loads(mensaje)
     try:
-        mensaje = json.loads(mensaje)
-        print("MENSAJE")
-        print('========================================')
-        print(mensaje)
-        print('========================================')
         fcorte = mensaje['datos']['fcorte']
         eps = mensaje['datos']['eps']
         ref = mensaje['datos']['ref']
         hash = mensaje['datos']['hash']
-        mqtt_2 = Mqtt(app)
-        mqtt_2._connect()
-        while not mqtt_2.connected:
-            print('Conectando')
-            mqtt_2._connect()
-            time.sleep(0.5)
+    except Exception as e:
+        print('Entra a la excepcion debido a este error:', e)
+        mensaje['datos'] = {}
+        mensaje['datos']['fcorte'] = '2022-09-26'
+        mensaje['datos']['eps'] = 'Testing'
+        mensaje['datos']['ref'] = '045f9ced2e0761b38f4490e798f29a12'
+        mensaje['datos']['hash'] = '045f9ced2e0761b38f4490e798f29a12'
 
-        link = main.main(fcorte, eps, mqtt_2, hash)
-        try:
-            print("en el try")
-            data = json.dumps({
-                "hash": hash,
-                "step": "finished",
-                "percentage": "100%",
-                "page": "done",
-                "link": link
-            })
-            mqtt_2.publish(hash, data)
-            print("en el finally")
-        except Exception as e:
-            print(e)
-            print("en el except")
-            data = json.dumps({
-                "hash": hash,
-                "step": "failed",
-                "percentage": 0,
-                "link": " "
-            })
-            mqtt_2.publish(hash, data)
-    except:
-        pass
+    print("MENSAJE")
+    print('========================================')
+    print('El mnensaje que se muestra entre las barras es:', mensaje)
+    print('========================================')
+
+    fcorte = mensaje['datos']['fcorte']
+    eps = mensaje['datos']['eps']
+    ref = mensaje['datos']['ref']
+    hash = '045f9ced2e0761b38f4490e798f29a12'
+    mqtt_2 = Mqtt(app)
+    mqtt_2._connect()
+    while not mqtt_2.connected:
+        print('Conectando')
+        mqtt_2._connect()
+        time.sleep(1)
+
+    link = main.main(fcorte, eps, mqtt_2, hash)
+    try:
+        print("en el try")
+        data = json.dumps({
+            "hash": hash,
+            "step": "finished",
+            "percentage": "100%",
+            "page": "done",
+            "link": link
+        })
+        print("en el finally")
+        print('hash de la app principal:', hash)
+        print('data de la app principal:', data)
+        mqtt_2.publish(hash, data)
+
+    except Exception as e:
+        print('')
+        print("en el except")
+        data = json.dumps({
+            "hash": hash,
+            "step": "failed",
+            "percentage": 0,
+            "link": " "
+        })
+        mqtt_2.publish(hash, data)
+    # except:
+    #     pass
 
 
 # La primera ruta del backend_2, para verificar que este ok

@@ -31,24 +31,38 @@ def _157__166(folios,dic,__45,__100,__112,__6,__5,__59,__72,__95,__104):
     res = requests.get(f"http://190.131.222.108:8088/api/v1/macna/patient/{__6}/type/{__5}/information",headers=header)
     persona = json.loads(res.text)
 
-    paciente = persona["data"][0]
+
+    paciente = {'deathState': 'NONE'}
+    print('persona:', persona)
+    try:
+        paciente = persona["data"][0]
+        print('el paciente es :', paciente)
+    except Exception as e:
+        print('La excepcion de paciente es:', e)
+    if paciente['deathState'] == 'NONE':
+        paciente['deathState'] = "NONE"
+
+    print('diccionario del paciente:', paciente)
 
     if paciente["deathState"] == 1:
         print("persona encontrada muerta")
         __159 = "2"
         __163 = paciente["deathDate"][:10]
-        print("variables",__159,__163)
     else:
         print("entro al else")
         __159 = "1"
         __163 = "1845-01-01"
 
+    print("__159:", __159)
+    print("__163:", __163)
+
+
     # Datos hasta el momento
-    print("__159",__159)
-    print("__45",__45)
-    print("__100",__100)
-    print("__112",__112)
-    print(__157)
+    print("__159:", __159)
+    print("__45:", __45)
+    print("__100:", __100)
+    print("__112:", __112)
+    print('__157:', __157)
 
     if __159 == "2": # paciente fallecido    
         print("paciente fallecido")

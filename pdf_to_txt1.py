@@ -1,4 +1,5 @@
 # Importamos la libreria
+from base64 import encode
 import fitz
 import cv2
 import os
@@ -6,6 +7,7 @@ import sys
 import glob
 import pandas as pd
 import pytesseract
+from chardet import detect
 
 """
 # 3 GENERAR EL TEXTO A PARTIR DEL PDF
@@ -14,7 +16,7 @@ Tercer paso de Altos Costos:
 colocando "==>" en cada FOLIO y colocando "$$" en cada seccion 
 """ 
 
-#pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
 def normalize(s):
     de = ['MOTIVO DE CONSULTA',
@@ -65,7 +67,7 @@ def pdf_to_txt(documento):
     # Guardamos la pagina 0 como imagen 
     page = documento[0]
     pix = page.get_pixmap()
-    pix.writeImage("page-{}.png".format(page.number))
+    pix.pil_save("page-{}.png".format(page.number))
 
     imagen = cv2.imread('page-{}.png'.format(page.number))
     (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 245, imagen.shape[1], imagen.shape[0]
@@ -104,7 +106,7 @@ def pdf_to_txt(documento):
     paginas = len(documento)
     for pagina in range(0,paginas):
         page = documento[pagina]
-        text = page.getText("text")
+        text = page.get_text("text")
         texto.append(text)
         if os.path.exists("page-{}.png".format(page.number)):
             os.remove("page-{}.png".format(page.number))
@@ -113,11 +115,11 @@ def pdf_to_txt(documento):
         os.remove("inferior.png")
     if os.path.exists("superior.png"):
         os.remove("superior.png")
-
-    file = open(f"{paciente}.txt","a")
+    
+    file = open(f"{paciente}.txt","w",  encoding = 'utf-8', errors='ignore')
     for text in texto:
         text = normalize(text)
-        file.write(text.replace('FOLIO','==> FOLIO'))
+        file.write(text)
     file.close()
 
 

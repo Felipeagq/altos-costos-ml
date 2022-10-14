@@ -18,7 +18,13 @@ import cv2
 import os
 import sys
 import pandas as pd
+from PIL import Image
 import pytesseract
+import re
+
+
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+
 load_dotenv()
 
 # Creamos el cliente s3
@@ -83,13 +89,15 @@ def create_presigned_url(cliente, bucket_name, object_name, expiration=604800):
     # The response contains the presigned URL
     return response
 
+fcorte1 = ''
+eps1 = ''
 
 # Función principal
 def main(fecha,eps,cliente_mqtt,hash):
     # Enumeramos todos los archivos .pdf
     hcs = glob.glob('*.pdf')
     n = (len(hcs))*2 +1
-    print(f'El numero de total de procentajes{n}')
+    print(f'El numero de total de procentajes: {n}')
     actual = 1 
     data = json.dumps({
         "hash":hash,
@@ -116,27 +124,50 @@ def main(fecha,eps,cliente_mqtt,hash):
         print('comenzó pdf_to_txt')
         # Ruta del documento de pdf
         pdf_documento = '{}.pdf'.format(hc[:-4])
-
+        print('pdf_documento: ', pdf_documento)
         # Creamos el objeto del documento de pdf abierto
-        documento = fitz.open(pdf_documento)
-
+        pdf_documento = fitz.open(pdf_documento)
+        print('pdf_documento: ', pdf_documento)
         # Guardamos la pagina 0 como imagen 
+        texto = []
+        print('texto: ', texto)
+        documento = fitz.open(pdf_documento)
+        print('documento: ', documento)
         page = documento[0]
+        print('page_1: ', page)
         pix = page.get_pixmap()
-        pix.writeImage("page-{}.jpg".format(page.number))
-
+        print('pix: ', pix)
+        print('page.number: ', page.number)
+        pix.pil_save("page-{}.jpg".format(page.number))
+        print("pix.pil_save: ", pix.pil_save("page-{}.jpg".format(page.number)))
         imagen = cv2.imread('page-{}.jpg'.format(page.number))
+        # print('imagen: ', imagen)
+        print('imagen.shape[1]: ', imagen.shape[1])
+        print('imagen.shape[0]: ', imagen.shape[0])
         (x,y,w,h,x2,y2) = 0,0, imagen.shape[1], 245, imagen.shape[1], imagen.shape[0]
+        print((x,y,w,h,x2,y2))
         superior = imagen[y:y+h,x:x+w]
+        # print('superior: ', superior)
         cv2.imwrite('superior.jpg',superior)
 
-
         imagen = cv2.imread('superior.jpg')
+
+        # print('imagen superior: ', imagen)
+
         imagen = cv2.resize(imagen,(1268,460)) 
-        text = pytesseract.image_to_string(imagen,lang='spa')
+
+        # print('imagen con dimensiones cambiadas: ', imagen)
+        print('page.number: ', page.number)
+
+        # print('current_directory: ', os.getcwd())
+
+        text = pytesseract.image_to_string(Image.open('page-{}.jpg'.format(page.number)),lang='spa')
+
+        # print('text: ', text)
 
         paciente = text[text.index('HISTORIA CLÍNICA No.'):text.index('HISTORIA CLÍNICA No.') + text[text.index('HISTORIA CLÍNICA No.'):].index('\n')]
-        print(paciente)
+        
+        # print('0paciente:', paciente)
 
         texto = text
         #texto = texto.lower()
@@ -152,27 +183,36 @@ def main(fecha,eps,cliente_mqtt,hash):
         texto = texto.replace("Atención Especial","\nAtención Especial")
         texto = texto.replace("\n\nDiscapacidad","\nDiscapacidad")
         texto = texto.replace("Grupo Poblacional","\nGrupo Poblacional")
-        #print(texto)
+        
+        # print('el texto que se muestra es: ', texto)
+        print('1paciente: ', paciente)
+
         file = open(f"{paciente}.txt","w")
         file.write(texto)
         file.close()
 
-        texto = []
-        documento = fitz.open(pdf_documento)
         paginas = len(documento)
+
+        print('paginas: ', paginas)
+        print('documento: ', documento)
+
         for pagina in range(0,paginas):
             page = documento[pagina]
-            text = page.getText("text")
-            texto.append(text)
+            # print('page_2: ', page)
+            text = page.get_text("text")
+            # print('type(texto): ', type(texto))
+            texto.join(text)
             pagina_actual = page.number + 1
+            print('pagina_actual: ', pagina_actual)
             data_step = json.dumps({
                 "hash":hash,
                 "step" : "processing",
                 "percentage":procentaje,
                 "page" : f"{pagina_actual}/{paginas}",
                 "link": " "
-            })        
-            print(f"Vamos por la pagina {pagina_actual} / {paginas}")
+            })
+            # print('data_step: ', data_step)        
+            # print(f"Vamos por la pagina {pagina_actual} / {paginas}")
             cliente_mqtt.publish(hash,data_step)
             if os.path.exists("page-{}.png".format(page.number)):
                 os.remove("page-{}.png".format(page.number))
@@ -192,28 +232,36 @@ def main(fecha,eps,cliente_mqtt,hash):
     pacientes = glob.glob('HISTORIA*.txt')
     row = 7
     # Procesamos cada 'HISTORIA*.txt' y lo colocamos en el xlsx
-    for paciente in pacientes:
-        try:
-            print(paciente)
-            procesador.main(paciente,row,fecha,eps)
-        except:
-            print(f"el proceso de {paciente} explotó")
-        print(row,paciente)
-        time.sleep(0.5)
-        procentaje = f'{((actual/n) *100)}%'
-        data = json.dumps({
-        "hash":hash,
-        "step" : "processing",
-        "percentage":procentaje,
-        "page": "done",
-        "link": " "
-        })
-        actual = actual + 1
-        cliente_mqtt.publish(hash,data)
-        # aqui va el MQTT
-        row = row + 1
-        
-        print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
+    fcorte1 = fecha
+    eps1 = eps
+    print('pacientes:', pacientes)
+    try:
+        for paciente in pacientes:
+            try:
+                print('2paciente:', paciente)
+                procesador.main(paciente,row,fecha,eps)
+            except Exception as e:
+                print('La excepcion que se da es:', e)
+                print(f"el proceso de {paciente} explota")
+            # print('row:', row)
+            print('3paciente:', paciente)
+            time.sleep(0.5)
+            procentaje = f'{((actual/n) *100)}%'
+            data = json.dumps({
+            "hash":hash,
+            "step" : "processing",
+            "percentage":procentaje,
+            "page": "done",
+            "link": " "
+            })
+            actual = actual + 1
+            print('actual: ', actual)
+            cliente_mqtt.publish(hash,data)
+            # aqui va el MQTT
+            row = row + 1
+            print('-- -- -- -- -- -- -- -- -- -- -- -- -- -- ')
+    except Exception as e:
+        print('el error de la excepcion es:', e)
 
     # Eliminamos los .pdf del local
     for hc in hcs:
@@ -242,28 +290,30 @@ def main(fecha,eps,cliente_mqtt,hash):
         Bucket = "macna-data",
         Key= f"pdf-upload/,/MACNA-{eps}-{fecha}-{int(timestamp)}.xlsx"
     )
-    print(response)
+    print('response:', response)
     archivo_file.close()
     # Generamos el link de descarga del xlsx
     print("generamos link")
     link =  create_presigned_url(s3_client,"macna-data",f"pdf-upload/,/MACNA-{eps}-{fecha}-{int(timestamp)}.xlsx")
+
+    print('link:', link)
     
-    time.sleep(5)
+    time.sleep(1)
     
     ##Borramos las modificaciones realizadas en el .xlsx
-    row = 7
-    wb = load_workbook(filename="prueba2.xlsx")
-    ws = wb['CAC']
-    for i in range(n):
-        for i in range(1,167):
-            try:
-                # Borramos la celda.
-                ws.cell(row=row,column=i,value=" ")
-            except:
-                continue
-        row = row + 1
-    # Guardamos los cambios realizados
-    wb.save("prueba2.xlsx")
+    # row = 7
+    # wb = load_workbook(filename="prueba2.xlsx")
+    # ws = wb['CAC']
+    # for i in range(n):
+    #     # for i in range(1,167):
+    #     #     try:
+    #     #         # Borramos la celda.
+    #     #         ws.cell(row=row,column=i,value=" ")
+    #     #     except:
+    #     #         continue
+    #     row = row + 1
+    # # Guardamos los cambios realizados
+    # wb.save("prueba2.xlsx")
     
     ##Eliminamos los 'HISTORIA*.txt' generados
     for paciente in pacientes:
